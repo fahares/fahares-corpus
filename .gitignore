@@ -1,0 +1,11 @@
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+.idea/
+.vscode/
+
+# Build artifacts & logs
+*.log
+*.tmp
+fankha-full.txt
