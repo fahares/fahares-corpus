@@ -5,7 +5,15 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Build artifacts & logs
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Build artifacts & data dumps
 *.log
 *.tmp
 fankha-full.txt
+json/
+*.tar.gz
+*.json.gz
