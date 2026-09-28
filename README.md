@@ -65,7 +65,7 @@ fahares-corpus/
 به منظور سبک نگاه داشتن مخزن گیت و تسهیل عملیات Clone، فایل‌های ۱.۱ گیگابایتی JSON در تاریخچه گیت کامیت نشده‌اند. شما می‌توانید به دو روش بسیار ساده آن‌ها را دریافت یا تولید کنید:
 
 ### روش ۱: دانلود مستقیم پکیج رسمی آماده (پیشنهادی)
-کل ۳۴ فایل JSON در قالب یک فایل فشرده ۹۸ مگابایتی در [بخش Releases گیتهاب](https://github.com/fahares/fahares-corpus/releases/tag/v1.0.1) در دسترس است. برای دانلود و استخراج خودکار:
+کل ۳۴ فایل JSON در قالب یک فایل فشرده ۹۸ مگابایتی در [بخش Releases گیتهاب](https://github.com/fahares/fahares-corpus/releases/tag/v1.1.0) در دسترس است. برای دانلود و استخراج خودکار:
 
 ```bash
 chmod +x scripts/download_json.sh
@@ -75,7 +75,7 @@ chmod +x scripts/download_json.sh
 یا دانلود مستقیم با `curl`:
 ```bash
 mkdir -p json
-curl -L https://github.com/fahares/fahares-corpus/releases/download/v1.0.1/fahares_json_v1.0.1.tar.gz | tar -xz -C json/
+curl -L https://github.com/fahares/fahares-corpus/releases/download/v1.1.0/fahares_json_v1.1.0.tar.gz | tar -xz -C json/
 ```
 
 ### روش ۲: بیلد محلی از روی فایل‌های متنی با پایتون
@@ -112,6 +112,7 @@ python3 scripts/parse_all_volumes.py
       "language": "زبان (فارسی، عربی، ترکی)",
       "author_name": "نام مؤلف",
       "author_death_date": "تاریخ وفات",
+      "raw_text": "متن خام مدخل اثر در مأخذ چاپی (بدون بخش نسخه‌ها)",
       "manuscripts": [
         {
           "sequence_number": 1,

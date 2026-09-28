@@ -136,6 +136,7 @@ class WorkEntry:
     page_start: Optional[int] = None
     page_end: Optional[int] = None
     manuscripts: List[Manuscript] = field(default_factory=list)
+    raw_text: Optional[str] = None
 
 @dataclass
 class ReferralEntry:
@@ -765,6 +766,7 @@ class FankhaParser:
             ms_blocks.append((curr_ms_lines, curr_ms_start_page, curr_ms_end_page))
 
         self._parse_work_preamble(work, preamble_lines)
+        work.raw_text = "\n".join([lines[0]] + preamble_lines).strip()
 
         for seq, (ms_lines, ms_sp, ms_ep) in enumerate(ms_blocks, 1):
             ms = self._parse_manuscript(ms_lines, ms_sp, ms_ep, seq, is_hetero, is_id_uncertain)
