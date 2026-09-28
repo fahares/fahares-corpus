@@ -616,26 +616,32 @@ class FankhaParser:
         entries = []
         curr_entry_lines = []
         curr_page = 1
+        last_content_page = 1
         entry_start_page = 1
 
         for line in lines:
+            stripped = line.strip()
+            clean_line = PAGE_TAG_PATTERN.sub('', stripped).strip()
+            is_work_header = clean_line.startswith('● ')
+            is_referral = '←' in clean_line and not is_work_header and not clean_line.startswith('آغاز') and not clean_line.startswith('انجام')
+
+            if is_work_header or is_referral:
+                if curr_entry_lines:
+                    entries.append((curr_entry_lines, entry_start_page, last_content_page))
+                    curr_entry_lines = []
+                entry_start_page = curr_page
+
             page_matches = PAGE_TAG_PATTERN.findall(line)
             if page_matches:
                 curr_page = int(page_matches[-1])
 
-            stripped = line.strip()
-            is_work_header = stripped.startswith('● ')
-            is_referral = '←' in stripped and not is_work_header and not stripped.startswith('آغاز') and not stripped.startswith('انجام')
-
-            if (is_work_header or is_referral) and curr_entry_lines:
-                entries.append((curr_entry_lines, entry_start_page, curr_page))
-                curr_entry_lines = []
-                entry_start_page = curr_page
+            if clean_line:
+                last_content_page = curr_page
 
             curr_entry_lines.append(line)
 
         if curr_entry_lines:
-            entries.append((curr_entry_lines, entry_start_page, curr_page))
+            entries.append((curr_entry_lines, entry_start_page, last_content_page))
 
         return entries
 
@@ -697,34 +703,71 @@ class FankhaParser:
         )
 
         preamble_lines = []
-        ms_blocks: List[List[str]] = []
+        ms_blocks: List[Tuple[List[str], int, int]] = []
         curr_ms_lines: List[str] = []
+        curr_ms_start_page = None
+        curr_ms_end_page = None
         in_ms_section = False
+        active_page = start_page
+
+        h_pages = PAGE_TAG_PATTERN.findall(lines[0])
+        if h_pages:
+            active_page = int(h_pages[-1])
 
         for line in lines[1:]:
             clean_l = PAGE_TAG_PATTERN.sub('', line).strip()
-            if ('شماره نسخه:' in clean_l or 'شماره نسخه :' in clean_l) and not in_ms_section:
-                in_ms_section = True
-                if curr_ms_lines:
-                    ms_blocks.append(curr_ms_lines)
-                    curr_ms_lines = []
-            elif in_ms_section and ('شماره نسخه:' in clean_l or 'شماره نسخه :' in clean_l):
-                if curr_ms_lines:
-                    ms_blocks.append(curr_ms_lines)
-                    curr_ms_lines = []
+            is_ms_header = ('شماره نسخه:' in clean_l or 'شماره نسخه :' in clean_l)
+            is_page_tag_only = bool(clean_l == '' and line.strip())
 
-            if not in_ms_section:
-                preamble_lines.append(line)
-            else:
+            if is_ms_header:
+                if not in_ms_section:
+                    in_ms_section = True
+                else:
+                    if curr_ms_lines:
+                        ms_blocks.append((curr_ms_lines, curr_ms_start_page, curr_ms_end_page))
+                        curr_ms_lines = []
+
+                stripped = line.strip()
+                if stripped.startswith('<!--'):
+                    m = PAGE_TAG_PATTERN.match(stripped)
+                    if m:
+                        active_page = int(m.group(1))
+
+                curr_ms_start_page = active_page
+
+                p_matches = PAGE_TAG_PATTERN.findall(line)
+                if p_matches:
+                    active_page = int(p_matches[-1])
+                curr_ms_end_page = active_page
                 curr_ms_lines.append(line)
 
+            elif not in_ms_section:
+                p_matches = PAGE_TAG_PATTERN.findall(line)
+                if p_matches:
+                    active_page = int(p_matches[-1])
+                preamble_lines.append(line)
+
+            else:
+                if is_page_tag_only:
+                    p_matches = PAGE_TAG_PATTERN.findall(line)
+                    if p_matches:
+                        active_page = int(p_matches[-1])
+                    curr_ms_lines.append(line)
+                else:
+                    p_matches = PAGE_TAG_PATTERN.findall(line)
+                    if p_matches:
+                        active_page = int(p_matches[-1])
+                    if clean_l:
+                        curr_ms_end_page = active_page
+                    curr_ms_lines.append(line)
+
         if curr_ms_lines:
-            ms_blocks.append(curr_ms_lines)
+            ms_blocks.append((curr_ms_lines, curr_ms_start_page, curr_ms_end_page))
 
         self._parse_work_preamble(work, preamble_lines)
 
-        for seq, ms_lines in enumerate(ms_blocks, 1):
-            ms = self._parse_manuscript(ms_lines, start_page, seq, is_hetero, is_id_uncertain)
+        for seq, (ms_lines, ms_sp, ms_ep) in enumerate(ms_blocks, 1):
+            ms = self._parse_manuscript(ms_lines, ms_sp, ms_ep, seq, is_hetero, is_id_uncertain)
             if ms:
                 work.manuscripts.append(ms)
 
@@ -930,15 +973,15 @@ class FankhaParser:
         if clean_desc:
             work.description = clean_desc
 
-    def _parse_manuscript(self, ms_lines: List[str], current_page: int, fallback_seq: int, is_work_heterogeneous: bool = False, is_work_identification_uncertain: bool = False) -> Optional[Manuscript]:
+    def _parse_manuscript(self, ms_lines: List[str], page_start: int, page_end: int, fallback_seq: int, is_work_heterogeneous: bool = False, is_work_identification_uncertain: bool = False) -> Optional[Manuscript]:
         raw_text = "\n".join(ms_lines).strip()
         if not raw_text:
             return None
 
         ms = Manuscript(
             sequence_number=fallback_seq,
-            page_start=current_page,
-            page_end=current_page,
+            page_start=page_start,
+            page_end=page_end,
             is_distinct_work=is_work_heterogeneous,
             is_identification_uncertain=is_work_identification_uncertain,
             raw_text=raw_text
@@ -958,11 +1001,6 @@ class FankhaParser:
             ms.shelfmark = header_match.group(3).strip()
 
         rem_text = "\n".join(ms_lines[1:]).strip() if len(ms_lines) > 1 else ""
-
-        ms_pages = [int(p) for p in PAGE_TAG_PATTERN.findall(raw_text)]
-        if ms_pages:
-            ms.page_start = ms_pages[0]
-            ms.page_end = ms_pages[-1]
 
         extracted_spans: List[str] = []
 
