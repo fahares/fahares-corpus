@@ -1232,12 +1232,59 @@ class FankhaParser:
             ms.copy_place = re.sub(r'\[[^\]]*\]?', '', place_m.group(1)).strip()
             extracted_spans.append(place_m.group(0))
 
-        folios_m = re.search(r'(?:^|[؛،\s])(?<!\bدر\s)(?<!\bبه\s)(\d+[\d\s\/\-–\.]*(?:صص|ص|گ|برگ|ورق|صفحه)(?!\w)(?:\s*\([^)]+\))?)', rem_text)
-        if folios_m:
-            ms.folios = folios_m.group(1).strip()
-            extracted_spans.append(folios_m.group(1).strip())
-            if any(w in ms.folios for w in ['هامش', 'حاشیه']):
-                ms.has_marginal_notes = True
+        # Folios extraction: robust multi-candidate scoring to avoid capturing defects/partial page notes (e.g. 21صفحه آغاز نونویس)
+        folio_candidates = []
+        rem_len = len(rem_text)
+        folio_pat = re.compile(r'(?:^|[؛،\s])(?<!\bدر\s)(?<!\bاز\s)(?<!\bبه\s)(?<!\bتا\s)(\d+[\d\s\/\-–\.]*(?:صص|ص|گ|برگ|ورق|صفحه)(?!\w)(?:\s*\([^)]+\))?)')
+        for fm in folio_pat.finditer(rem_text):
+            f_val = fm.group(1).strip()
+            num_m = re.search(r'^\d+', f_val)
+            if not num_m:
+                continue
+            f_num = int(num_m.group(0))
+            if f_num <= 0 or f_num > 6000:
+                continue
+
+            span_start = fm.start()
+            span_end = fm.end()
+            post_ctx = rem_text[span_end:min(rem_len, span_end + 60)]
+            pre_ctx = rem_text[max(0, span_start - 30):span_start]
+
+            score = 0
+            # Negative context: defects, partial copies, notes
+            if re.search(r'(?:نونویس|نو نویس|افتادگی|افتاده|ناقص|نانوشته|سفید|الحاق|اضافی|برگ\s*شمار)', post_ctx):
+                score -= 100
+            if re.search(r'(?:از|تا|در|حدود|فقط|شامل|دارای)\s*$', pre_ctx):
+                score -= 50
+
+            # Positive context: proximity to standard physical codicological elements
+            if re.search(r'سطر|سطور', post_ctx):
+                score += 45
+            if re.search(r'اندازه|سم|\[ف:', post_ctx):
+                score += 35
+            if re.search(r'(?:کاغذ|جلد):', pre_ctx):
+                score += 30
+            if 'گ' in f_val:
+                score += 15
+
+            # Positional score: physical characteristics appear at the end of the entry
+            ratio = span_start / max(1, rem_len)
+            score += int(ratio * 30)
+
+            folio_candidates.append({
+                'val': f_val,
+                'score': score,
+                'span': fm.group(0).strip(' ؛،\n'),
+            })
+
+        if folio_candidates:
+            folio_candidates.sort(key=lambda x: x['score'], reverse=True)
+            best_folio = folio_candidates[0]
+            if best_folio['score'] >= 0 or len(folio_candidates) == 1:
+                ms.folios = best_folio['val']
+                extracted_spans.append(best_folio['span'])
+                if any(w in ms.folios for w in ['هامش', 'حاشیه']):
+                    ms.has_marginal_notes = True
 
         # Explicit text dimensions: ابعاد متن: / اندازه متن: / سطح نوشته:
         text_dim_m = re.search(r'(?:^|[؛،\n])\s*(?:ابعاد متن|اندازه متن|سطح نوشته):\s*([^؛،\n\[]+)', rem_text)
@@ -1474,9 +1521,9 @@ class FankhaParser:
 
         res_clean = re.sub(r'<!--[^>]+-->', ' ', res_clean)
         res_clean = re.sub(r'(?:^|[؛،\s])و(?=[؛،\s]|$)', ' ', res_clean)
-        res_clean = re.sub(r'^[؛،\s\n\-]+|[؛،\s\n\-]+$', ' ', res_clean)
-        res_clean = re.sub(r'[؛،\n\-]{2,}', ' ', res_clean)
-        res_clean = re.sub(r'\s+', ' ', res_clean).strip(' ؛،-')
+        res_clean = re.sub(r'^[؛،\s\n\-\.]+|[؛،\s\n\-\.]+$', ' ', res_clean)
+        res_clean = re.sub(r'[؛،\n\-\.]{2,}', ' ', res_clean)
+        res_clean = re.sub(r'\s+', ' ', res_clean).strip(' ؛،-.')
 
         if len(re.findall(r'[\u0600-\u06FF]', res_clean)) >= 3 and res_clean.strip() not in ['تاریخ', 'آغاز', 'انجام', 'سطر', 'سطور', 'برابر', 'محرر', 'کاتب']:
             ms.residual_notes = res_clean
