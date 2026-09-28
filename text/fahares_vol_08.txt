@@ -13960,78 +13960,44 @@ tašrīḥ-ul aflāk
 
 108. تهران؛ ملی؛ شماره نسخه: 1049/4
 آغاز: برابر؛ انجام: صور الافلاک و الله اعلم.
-خط: نسخ و نستعلیق، بی‌کا، تا: قرن 13؛ جلد: تیماج مشکی، 42ص (168- 209)، 18 سطر (8×15)، اندازه: 15×20/5سم [ف:
-` or something?
+خط: نسخ و نستعلیق، بی‌کا، تا: قرن 13؛ جلد: تیماج مشکی، 42ص (168- 209)، 18 سطر (8×15)، اندازه: 15×20/5سم [ف: 3 - 60]
 
-In the right column, the last line of text has `... اندازه: 15×20/5سم [ف:`. And the left column starts with `[60 - 3]`.
+109. قم؛ گلپایگانی؛ شماره نسخه: 8971/2-59/191
+آغاز: برابر
+فقط سه برگ اول را دارد؛ خط: نسخ، بی‌کا، تا: قرن 13؛ افتادگی: انجام؛ 3گ (38-40)، 11 سطر، اندازه: 11×17سم [ف: 2 - 936]
 
-If the annotator transcribed image by image:
+110. تهران؛ مجلس؛ شماره نسخه: 6679/1
+خط: نسخ، بی‌کا، تا: قرن 13؛ محشی؛ جلد: مقوایی، عطف پارچه‌ای خاکستری، 14گ (1ر-14ر)، اندازه: 12×20/5سم [ف: 20 - 197]
 
-Left column line 1: `[60 - 3]`.
+111. تهران؛ دانشگاه؛ شماره نسخه: 957/2
+آغاز و انجام: برابر
+خط: نستعلیق، بی‌کا، تا: شنبه 18 ربیع الاول 1202ق؛ محشی؛ [ف: 4 - 858]
 
-Wait, why did Rule 1 say:
+112. تهران؛ مجلس؛ شماره نسخه: 1835/1
+آغاز و انجام: برابر
+کا: محمد پسر ملا بنیاد علی مراغی، تا: 1205ق؛ کاغذ: فرنگی، جلد: تیماج مشکی، 224ص (1-224)، اندازه: 15×21سم [ف: 9 - 483]
 
-"Keep exact quotes «...», parentheses (...), and brackets [...]. NEVER break brackets across lines (write "[ف: 135-8]", never "[ف:\n[135-8]")."
+113. قم؛ حجتیه؛ شماره نسخه: 699/4
+خط: نسخ، کا: محمد حسین موسوی، تا: 1208ق [ف: 121]
 
-Notice where this rule appears! It's under Rule 1 (ABSOLUTE VERBATIM FIDELITY).
+114. تهران؛ مجلس؛ شماره نسخه: 6163
+خط: نسخ، کا: محمد صادق خاتون آبادی منجم، تا: 1226ق؛ محشی با نشان «منه» و از کاتب و از «صدر»؛ کاغذ: فرنگی سفید، جلد: تیماج مشکی، 22ص، اندازه: 12×20سم [ف: 19 - 159]
 
-Why did the author put `(write "[ف: 135-8]", never "[ف:\n[135-8]")`؟
+115. تهران؛ مجلس؛ شماره نسخه: 6340/5
+خط: شکسته نستعلیق، کا: محمد باقر بن قربانعلی مازندرانی، تا: 1228ق؛ محشی با نشان «میر صدرالدین» که ظاهراً از شرح صدرالدین محمد صادق موسوی بر تشریح الافلاک (= تفریح الادراک) است؛ کاغذ: فرنگی آبی و زرد، جلد: تیماج مشکی، 17ص (105-121)، 17 سطر، اندازه: 13/5×21سم [ف: 19 - 360]
 
-Because people/models often transcribe:
+116. قم؛ مرعشی؛ شماره نسخه: 38/1
+آغاز و انجام: برابر
+خط: نستعلیق نازیبا، کا: محمد علی، تا: 1232ق؛ محشی؛ جلد: تیماج قهوه‌ای، 14گ (2پ-15ر)، 12 سطر، اندازه: 10×17سم [ف: 1 - 48]
 
-`[ف:` `[135-8]`
-And the author is saying: do NOT write that, write `[ف: 135-8]` on ONE line!
+117. تهران؛ لغت نامه دهخدا؛ شماره نسخه: 46/1
+خط: نستعلیق، بی‌کا، تا: سه‌شنبه 25 ربیع الثانی 1233ق؛ جلد: تیماج سرخ، قطع: خشتی [نشریه: 3 - 35]
 
-This specifically tells us that when `[ف:` is followed by `[135-8]`, the bracket `[` is NOT repeated!
+118. مشهد؛ شیخ علی حیدر؛ شماره نسخه: 448/2
+آغاز و انجام: برابر
+خط: نستعلیق، کا: محسن بن عبدالکریم تنکابنی جیلانی، تا: 1233ق، جا: اصفهان مدرسه السلطانية؛ جلد: عادی، 13گ (32پ-44ر)، 20 سطر، اندازه: 10×21سم [مؤید: 1 - 362]
 
-Wait, but what if it's broken across columns?
-
-If preceding text has `[ف:`, and this column continues it: Does it continue with `60 - 3]` or `[60 - 3]`؟
-
-Wait! If it was one continuous transcription that was split:
-
-In the continuous transcription, entry 108 was:
-
-`... اندازه: 15×20/5سم [ف: 60 - 3]` (or `[ف: 3 - 60]`).
-When the prompt author created the benchmark, they split it between columns!
-
-If the continuous text was:
-
-`... اندازه: 15×20/5سم [ف: 60 - 3]`
-And the right column ended at `[ف:`,
-
-then what remained for the left column?
-
-`60 - 3]`!
-Wait! But what if the continuous text was `[ف: 3 - 60]`؟
-
-Wait, look at the prompt:
-
-Line 1: `[60 - 3]`.
-
-Wait, look at line 14:
-
-`[ف: 9 - 483]`
-Look at line 19:
-
-`[ف: 19 - 159]`
-Look at line 25:
-
-`[ف: 19 - 360]`
-Look at line 28:
-
-`[ف: 1 - 48]`
-In all these, the volume is first: 9, 19, 19, 1.
-
-Now look at entry 108:
-
-It is: `تهران؛ ملی؛ شماره نسخه: 1049/4`
-Catalog of National Library of Iran, Volume 3, page 60!
-
-Wait, in line 1, what is printed?
-
-`[60 - 3]`
-Wait, why is 60 before 3
+119. قم؛ گلپایگانی؛ شماره نسخه: 8845/2-59/65
 
 <!-- page: 260 -->
 آغاز: برابر
