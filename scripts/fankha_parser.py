@@ -1241,7 +1241,7 @@ class FankhaParser:
             if scribe_m:
                 s_val = scribe_m.group(1).strip()
                 extracted_spans.append(scribe_m.group(0))
-                if re.search(r'^=?\s*مؤلف(?:\s*\(گویا\))?$', s_val):
+                if re.search(r'^(?:(?:کاتب|محرر)\s*=\s*)?مؤلف(?:\s*\(گویا\))?$', s_val):
                     ms.is_autograph = True
                     ms.scribe = None
                     ms.scribe_name = None
@@ -1249,12 +1249,28 @@ class FankhaParser:
                     ms.scribe = s_val
                     ms.scribe_name = s_val
 
-        if any(w in rem_text for w in ['کاتب = مؤلف', 'کاتب=مؤلف', 'محرر = مؤلف', 'محرر=مؤلف', 'به خط مؤلف', 'بخط مؤلف', 'به خط خود مؤلف', 'به خط خود شاعر']):
-            ms.is_autograph = True
-            if ms.scribe and re.search(r'^=?\s*مؤلف(?:\s*\(گویا\))?$', ms.scribe.strip()):
+        AUTOGRAPH_NEG_PATTERNS = [
+            r'(?:از روی|از رو|منقول از|نقل از|رونویسی از|استنساخ از|مطابق|بر اساس)\s+(?:نسخه|نسخه‌ای|نسخه ای|نسخه ی|اصل)?\s*(?:که\s+)?(?:به\s*خط|بخط)\s*(?:خود\s*)?(?:مؤلف|مصنف|شاعر)',
+            r'(?:مقابله|تصحیح|تطبیق)\s*(?:شده\s*)?(?:با|توسط|از روی)?\s*(?:نسخه|نسخه‌ای|نسخه ای|نسخه ی|اصل)?\s*(?:که\s+)?(?:به\s*خط|بخط)\s*(?:خود\s*)?(?:مؤلف|مصنف|شاعر)',
+            r'با\s*نسخه(?:\s+ای|\s+ی)?\s*(?:که\s+)?(?:به\s*خط|بخط)\s*(?:خود\s*)?(?:مؤلف|مصنف|شاعر)\s*(?:مقابله|تصحیح|سنجیده)',
+            r'نسخه\s*(?:به\s*خط|بخط)\s*(?:خود\s*)?(?:مؤلف|مصنف|شاعر)\s*تصحیح\s*شده',
+            r'(?:حواشی|حاشیه|حواشی و تصحیحات|تصحیحات|تعلیقات|یادداشت|یادداشت‌ها|علامت‌های بلاغی|علامت بلاغ|بلاغ|اجازه|اجازات|ملحقات|پنج خط|چند سطر|ظهر ورق|پشت برگ|پشت صفحه|روی برگ اول)\s*(?:[^\n؛،]+?)?(?:به\s*خط|بخط)\s*(?:خود\s*)?(?:مؤلف|مصنف|شاعر)',
+            r'نسخه\s*اصل\s*(?:آن|این|کتاب)?\s*(?:به\s*خط|بخط)\s*مؤلف',
+        ]
+        has_autograph_neg = any(re.search(p, rem_text) for p in AUTOGRAPH_NEG_PATTERNS)
+
+        if not has_autograph_neg:
+            is_explicit_kateb_moallef = any(w in rem_text for w in ['کاتب = مؤلف', 'کاتب=مؤلف', 'محرر = مؤلف', 'محرر=مؤلف'])
+            has_khatt_moallef = any(w in rem_text for w in ['به خط مؤلف', 'بخط مؤلف', 'به خط خود مؤلف', 'به خط خود شاعر'])
+
+            if is_explicit_kateb_moallef:
+                ms.is_autograph = True
                 ms.scribe = None
                 ms.scribe_name = None
-            extracted_spans.extend(['کاتب = مؤلف', 'کاتب=مؤلف', 'محرر = مؤلف', 'محرر=مؤلف', 'به خط مؤلف', 'بخط مؤلف', 'به خط خود مؤلف', 'به خط خود شاعر'])
+                extracted_spans.extend(['کاتب = مؤلف', 'کاتب=مؤلف', 'محرر = مؤلف', 'محرر=مؤلف'])
+            elif has_khatt_moallef and ms.scribe is None:
+                ms.is_autograph = True
+                extracted_spans.extend(['به خط مؤلف', 'بخط مؤلف', 'به خط خود مؤلف', 'به خط خود شاعر'])
 
         if re.search(r'(?:^|[؛،\s])(?:بی‌تا|بی تا)(?:[؛،\s]|$)', rem_text):
             ms.is_bita = True
