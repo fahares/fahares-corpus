@@ -31,6 +31,15 @@ COMPOUND_SUBJECTS_WHITELIST = [
     'عروض و قافیه', 'ادیان و مذاهب'
 ]
 
+SPLIT_COMPOUND_SUBJECTS_MAP = {
+    'فلسفه و کلام': ['فلسفه', 'کلام و اعتقادات'],
+    'فقه و اصول': ['فقه', 'اصول فقه'],
+    'فقه و اصول فقه': ['فقه', 'اصول فقه'],
+    'صرف و نحو': ['صرف', 'نحو'],
+    'تاریخ و جغرافیا': ['تاریخ', 'جغرافیا'],
+    'دعا و فقه': ['دعا', 'فقه'],
+}
+
 @dataclass
 class Manuscript:
     sequence_number: Optional[int] = None
@@ -180,7 +189,8 @@ def is_language_str(s: str) -> bool:
     clean = PAGE_TAG_PATTERN.sub('', s).strip()
     clean = re.sub(r'[a-zA-Z\'].*', '', clean).strip()
     clean = clean.replace('عربى', 'عربی')
-    words = re.split(r'[\s،,و/\-]+', clean)
+    clean = re.sub(r'\s+و\s+', ' ', clean)
+    words = re.split(r'[\s،,/\-]+', clean)
     words = [w for w in words if w and w not in ('و', 'به', 'یا', 'زبان')]
     if not words:
         return False
@@ -225,7 +235,8 @@ def parse_languages(lang_str: Optional[str]) -> Tuple[List[str], Optional[str], 
                         langs.append(norm_l)
             return langs if langs else [normalize_lang_name(tgt)], source_lang, target_lang, False
 
-    words = re.split(r'[\s،,و/\-]+', s)
+    s_clean = re.sub(r'\s+و\s+', ' ', s)
+    words = re.split(r'[\s،,/\-]+', s_clean)
     res = []
     for w in words:
         if w in KNOWN_LANGUAGES:
@@ -293,13 +304,26 @@ def parse_subjects(subj_str: Optional[str]) -> List[str]:
     for cs in COMPOUND_SUBJECTS_WHITELIST:
         if s == cs:
             return [cs]
+            
+    if s in SPLIT_COMPOUND_SUBJECTS_MAP:
+        return list(SPLIT_COMPOUND_SUBJECTS_MAP[s])
     
     parts = re.split(r'[،,]+', s)
     res = []
     for part in parts:
-        p = part.strip()
-        if not p:
+        p = part.strip(' -–—ـ/،,:\t')
+        if not p or p in ('-', '–', '—', 'ـ', '؟', '?'):
             continue
+        p = p.replace('ي', 'ی').replace('ك', 'ک')
+        p = re.sub(r'[ \t]{2,}', ' ', p).strip()
+        if not p or p in ('-', '–', '—', 'ـ', '؟', '?'):
+            continue
+        if is_language_str(p):
+            continue
+        if p in SPLIT_COMPOUND_SUBJECTS_MAP:
+            res.extend(SPLIT_COMPOUND_SUBJECTS_MAP[p])
+            continue
+            
         found_wl = False
         for cs in COMPOUND_SUBJECTS_WHITELIST:
             if p == cs:
@@ -308,7 +332,14 @@ def parse_subjects(subj_str: Optional[str]) -> List[str]:
                 break
         if not found_wl:
             res.append(p)
-    return res
+            
+    seen = set()
+    final_res = []
+    for r in res:
+        if r not in seen:
+            seen.add(r)
+            final_res.append(r)
+    return final_res
 
 KNOWN_SCRIPTS_LIST = [
     'شکسته نستعلیق', 'نستعلیق', 'شکسته', 'تعلیق', 'رقعه', 'کوفی', 'ثلث',
@@ -475,18 +506,21 @@ def parse_header_line(clean_header: str) -> Tuple[List[str], Optional[str], Opti
     elif len(parts) == 2:
         part2 = parts[1].strip()
         # Handle leading hyphen indicating missing subject (e.g. /- فارسی)
-        if (part2.startswith('-') or part2.startswith('–')) and is_language_str(part2.lstrip('-– ')):
-            return titles, None, part2.lstrip('-– ').strip()
+        if (part2.startswith('-') or part2.startswith('–') or part2.startswith('—') or part2.startswith('ـ')) and is_language_str(part2.lstrip('-–—ـ ')):
+            return titles, None, part2.lstrip('-–—ـ ').strip()
 
-        if '-' in part2:
-            sub_parts = [sp.strip() for sp in part2.split('-') if sp.strip()]
+        if '-' in part2 or '–' in part2:
+            sub_parts = [sp.strip() for sp in re.split(r'[-–—ـ]', part2) if sp.strip()]
             if len(sub_parts) == 2 and is_language_str(sub_parts[1]):
                 return titles, sub_parts[0], sub_parts[1]
         
         if is_language_str(part2):
             return titles, None, part2
         else:
-            return titles, part2, None
+            clean_part2 = re.sub(r'[\s\-–—ـ:،,.]+$', '', part2).strip()
+            if not clean_part2 or clean_part2 in ('-', '–', '—', 'ـ', '؟', '?'):
+                clean_part2 = None
+            return titles, clean_part2, None
     else:
         remaining = parts[1:]
         lang_parts = []
@@ -495,16 +529,22 @@ def parse_header_line(clean_header: str) -> Tuple[List[str], Optional[str], Opti
         
         language = '، '.join(lang_parts) if lang_parts else None
         
-        # If remaining starts with '؟', drop it if followed by a real subject
-        if len(remaining) > 1 and remaining[0] in ('؟', '?', '-', '–'):
+        # If remaining starts with '؟' or dash, drop it if followed by a real subject
+        if len(remaining) > 1 and remaining[0] in ('؟', '?', '-', '–', '—', 'ـ'):
             remaining = remaining[1:]
             
         subject = '، '.join(remaining) if remaining else None
-        if subject in ('-', '–', '؟', '?'):
+        if subject:
+            subject = re.sub(r'[\s\-–—ـ:،,.]+$', '', subject).strip()
+            if not subject or subject in ('-', '–', '—', 'ـ', '؟', '?'):
+                subject = None
+                
+        if subject and is_language_str(subject) and not language:
+            language = subject
             subject = None
             
-        if subject and '-' in subject and not language:
-            sub_parts = [sp.strip() for sp in subject.split('-') if sp.strip()]
+        if subject and ('-' in subject or '–' in subject) and not language:
+            sub_parts = [sp.strip() for sp in re.split(r'[-–—ـ]', subject) if sp.strip()]
             if len(sub_parts) == 2 and is_language_str(sub_parts[1]):
                 subject = sub_parts[0]
                 language = sub_parts[1]
