@@ -22,7 +22,7 @@ CONTENT_WORDS_RE = re.compile(r'(?:فصل|باب|مقاله|میمر|جزء|قس
 KNOWN_LANGUAGES = {
     'فارسی', 'عربی', 'ترکی', 'اردو', 'عبری', 'سریانی', 'پهلوی',
     'اوستایی', 'کردی', 'پشتو', 'فرانسوی', 'فرانسه', 'انگلیسی', 'لاتین', 'لری',
-    'ارمنی', 'هندی', 'پنجابی'
+    'ارمنی', 'هندی', 'پنجابی', 'عرب', 'فارسى'
 }
 
 COMPOUND_SUBJECTS_WHITELIST = [
@@ -191,11 +191,20 @@ def parse_languages(lang_str: Optional[str]) -> Tuple[List[str], Optional[str], 
         return [], None, None, False
     s = PAGE_TAG_PATTERN.sub('', lang_str).strip()
     s = re.sub(r'[a-zA-Z\'].*', '', s).strip()
-    s = s.replace('عربى', 'عربی')
+    s = s.replace('عربى', 'عربی').replace('فارسى', 'فارسی')
     
     is_uncertain = False
     source_lang = None
     target_lang = None
+
+    def normalize_lang_name(name: str) -> str:
+        if name == 'فرانسه':
+            return 'فرانسوی'
+        if name in ('عرب', 'عربى'):
+            return 'عربی'
+        if name == 'فارسى':
+            return 'فارسی'
+        return name
 
     if re.search(r'یا|یا اینکه|مردد|شاید', s):
         is_uncertain = True
@@ -206,19 +215,23 @@ def parse_languages(lang_str: Optional[str]) -> Tuple[List[str], Optional[str], 
         src = m_trans.group(1).strip()
         tgt = m_trans.group(2).strip()
         if src in KNOWN_LANGUAGES or tgt in KNOWN_LANGUAGES:
-            source_lang = src if src in KNOWN_LANGUAGES else None
-            target_lang = tgt if tgt in KNOWN_LANGUAGES else None
+            source_lang = normalize_lang_name(src) if src in KNOWN_LANGUAGES else None
+            target_lang = normalize_lang_name(tgt) if tgt in KNOWN_LANGUAGES else None
             langs = []
             for l in [src, tgt]:
-                if l in KNOWN_LANGUAGES and l not in langs:
-                    langs.append(l)
-            return langs if langs else [tgt], source_lang, target_lang, False
+                if l in KNOWN_LANGUAGES:
+                    norm_l = normalize_lang_name(l)
+                    if norm_l not in langs:
+                        langs.append(norm_l)
+            return langs if langs else [normalize_lang_name(tgt)], source_lang, target_lang, False
 
     words = re.split(r'[\s،,و/\-]+', s)
     res = []
     for w in words:
-        if w in KNOWN_LANGUAGES and w not in res:
-            res.append(w)
+        if w in KNOWN_LANGUAGES:
+            norm_w = normalize_lang_name(w)
+            if norm_w not in res:
+                res.append(norm_w)
     return (res if res else [s]), source_lang, target_lang, is_uncertain
 
 def extract_title_form_and_clean(primary_title: str) -> Tuple[str, Optional[str]]:
@@ -475,17 +488,27 @@ def parse_header_line(clean_header: str) -> Tuple[List[str], Optional[str], Opti
         else:
             return titles, part2, None
     else:
-        subject = parts[1].strip()
-        language = parts[2].strip()
-        if subject in ('-', '–'):
+        remaining = parts[1:]
+        lang_parts = []
+        while remaining and is_language_str(remaining[-1]):
+            lang_parts.insert(0, remaining.pop())
+        
+        language = '، '.join(lang_parts) if lang_parts else None
+        
+        # If remaining starts with '؟', drop it if followed by a real subject
+        if len(remaining) > 1 and remaining[0] in ('؟', '?', '-', '–'):
+            remaining = remaining[1:]
+            
+        subject = '، '.join(remaining) if remaining else None
+        if subject in ('-', '–', '؟', '?'):
             subject = None
-        if language.startswith('-') or language.startswith('–'):
-            language = language.lstrip('-– ').strip()
+            
         if subject and '-' in subject and not language:
             sub_parts = [sp.strip() for sp in subject.split('-') if sp.strip()]
             if len(sub_parts) == 2 and is_language_str(sub_parts[1]):
                 subject = sub_parts[0]
                 language = sub_parts[1]
+                
         return titles, subject, language
 
 def parse_date_triad(date_raw: Optional[str]) -> Tuple[Optional[int], Optional[int], Optional[int]]:
