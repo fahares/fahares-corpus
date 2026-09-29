@@ -1270,11 +1270,12 @@ class FankhaParser:
             ms.is_identification_uncertain = True
             extracted_spans.extend(['همانندی نامعلوم', 'همانندی غیر معلوم', 'کتاب ناشناخته'])
 
-        # 12. Commissioned by (به دستور / به فرمایش / به امر / به خواهش / به التماس / به فرموده / برای / به نام)
-        comm_m = re.search(r'(?:^|[؛،\n])\s*([^؛،\n]*?(?:به دستور|به فرمایش|به امر|به خواهش|به التماس|به فرموده|به نام|برای)[:\s]\s*[^؛\n\[]+)', rem_text)
+        # 12. Commissioned by (به دستور / به فرمایش / به امر / به خواهش / به التماس / به فرموده / برای / به نام / حسب الامر / ...)
+        COMMISSION_PREFIXES = r'(?:(?:بنا\s*به|به)\s*(?:دستور|فرموده|فرمایش|امر|فرمان|خواهش|درخواست|تقاضای|استدعای|اشاره|اشارت|طلب|نام|اهتمام|سعی|رسم|قلم)|حسب\s*(?:الامر|فرموده|خواهش|فرمایش|الطلب)|برای\s+|جهت\s+|به\s*جهت\s+|به‌جهت\s+|برسم\s+)'
+        comm_m = re.search(r'(?:^|[؛،\n])\s*([^؛،\n]*?' + COMMISSION_PREFIXES + r'[:\s]\s*[^؛\n\[]+)', rem_text)
         if comm_m:
             full_comm_span = comm_m.group(1).strip()
-            inner_m = re.search(r'(?:به دستور|به فرمایش|به امر|به خواهش|به التماس|به فرموده|به نام|برای)[:\s]\s*([^؛\n\[]+)', full_comm_span)
+            inner_m = re.search(COMMISSION_PREFIXES + r'[:\s]\s*([^؛\n\[]+)', full_comm_span)
             if inner_m:
                 c_val = inner_m.group(1).strip()
                 c_val = re.sub(r'\s*(?:کتابت شده|نوشته شده|تحریر شده|نگاشته شده|انجام شده).*$', '', c_val).strip()
@@ -1343,11 +1344,28 @@ class FankhaParser:
             ms.is_bita = True
             extracted_spans.extend(['بی‌تا', 'بی تا'])
 
-        DATE_STOP = r'(?:[؛\n\[]|،\s*(?:جا:|خط:|کا:|کاتب:|محرر:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر)))'
+        CODICOLOGICAL_LEAKS = r'(?:اهدایی[:\s]|خریداری(?:\s+از)?|وقف(?:\s+بر|:\s*)?|تملک[:\s]|افتادگی[:\s]|با\s+سرلوح|محشی(?:\s+با|\s+به|[؛،\s]|$)|الذریعه|از\s+روی|پس\s+از)'
+        DATE_STOP = r'(?:[؛\n\[]|،\s*(?:' + COMMISSION_PREFIXES + r'|' + CODICOLOGICAL_LEAKS + r'|جا:|خط:|کا:|کاتب:|محرر:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر)))'
         date_m = re.search(r'(?:^|[؛،\n])\s*تا:\s*([^؛\n\[]+?)(?=' + DATE_STOP + r'|$)', rem_text)
         if date_m:
             ms.copy_date_raw = re.sub(r'\[[^\]]*\]?', '', date_m.group(1)).strip()
             extracted_spans.append(date_m.group(0))
+
+        if ms.copy_date_raw:
+            patron_split = re.search(r'^(.*?)[,،]\s*(' + COMMISSION_PREFIXES + r'|' + CODICOLOGICAL_LEAKS + r')(.*)$', ms.copy_date_raw)
+            if patron_split:
+                clean_date = patron_split.group(1).strip(' ،,')
+                leaked_prefix = patron_split.group(2)
+                leaked_rest = patron_split.group(3)
+                leaked_part = (leaked_prefix + leaked_rest).strip()
+                ms.copy_date_raw = clean_date
+                if not ms.commissioned_by and re.match(r'^' + COMMISSION_PREFIXES, leaked_prefix):
+                    inner_comm = re.search(COMMISSION_PREFIXES + r'[:\s]*(.*)$', leaked_part)
+                    if inner_comm:
+                        c_val = inner_comm.group(1).strip()
+                        c_val = re.sub(r'\s*(?:کتابت شده|نوشته شده|تحریر شده|نگاشته شده|انجام شده).*$', '', c_val).strip()
+                        if c_val:
+                            ms.commissioned_by = c_val
 
         PLACE_STOP = r'(?:[؛\n\[]|،\s*(?:تا:|خط:|کا:|کاتب:|محرر:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر)))'
         place_m = re.search(r'(?:^|[؛،\n])\s*جا:\s*([^؛\n\[]+?)(?=' + PLACE_STOP + r'|$)', rem_text)
