@@ -6,6 +6,7 @@ the Fankha text corpus into rich, relational-ready JSON with multi-subject/langu
 date triad sorting, volume/page ranges, and granular citations.
 """
 
+import os
 import re
 import json
 import sys
@@ -262,6 +263,7 @@ def clean_author(raw_author: str) -> Tuple[str, str]:
     elif re.search(r'[؟\?]|ظاهراً|ظاهرا|احتمالاً|احتمالا|گویا', s):
         status = "probable"
 
+    clean = s
     clean = re.sub(r'^(?:[؟\?\s\:]|منسوب به|شاید از|ظاهراً از|ظاهرا از|ظاهراً|ظاهرا|احتمالاً از|احتمالا از|احتمالاً|احتمالا|گویا از|گویا)+', '', clean).strip(' :؟?')
     clean = re.sub(r'\s*\([؟\?]\)', '', clean).strip()
     clean = re.sub(r'[؟\?]', '', clean).strip()
@@ -1617,8 +1619,16 @@ def main():
     arg1 = sys.argv[1]
     if arg1.isdigit():
         vol_num = int(arg1)
-        input_file = f"sources/text/fahares_vol_{vol_num:02d}.txt"
-        output_file = sys.argv[2] if len(sys.argv) > 2 else f"sources/json/fahares_vol_{vol_num:02d}.json"
+        candidates = [
+            f"text/fankha/fankha_vol_{vol_num:02d}.txt",
+            f"sources/text/fankha/fankha_vol_{vol_num:02d}.txt",
+            f"text/fankha_vol_{vol_num:02d}.txt",
+            f"sources/text/fankha_vol_{vol_num:02d}.txt",
+            f"text/fahares_vol_{vol_num:02d}.txt",
+            f"sources/text/fahares_vol_{vol_num:02d}.txt",
+        ]
+        input_file = next((c for c in candidates if os.path.exists(c)), candidates[0])
+        output_file = sys.argv[2] if len(sys.argv) > 2 else f"json/fankha/fankha_vol_{vol_num:02d}.json"
     else:
         input_file = arg1
         m = re.search(r'vol_(\d+)', input_file)

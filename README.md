@@ -53,17 +53,19 @@
 
 ```text
 fahares-corpus/
-├── text/                         # ۳۴ فایل متنی پیراسته، ممیزی‌شده و استاندارد
-│   ├── fahares_vol_01.txt
-│   └── ...
-│   └── fahares_vol_34.txt
+├── text/                         # متون پیراسته، ممیزی‌شده و استاندارد کاتالوگ‌ها
+│   └── fankha/                   # ۳۴ جلد متن فهرستگان نسخه‌های خطی ایران (فنخا)
+│       ├── fankha_vol_01.txt
+│       └── ...
+│       └── fankha_vol_34.txt
 ├── scripts/                      # خط لوله استخراج و ابزارهای تکرارپذیری علمی
 │   ├── fankha_parser.py          # موتور پارسر تحلیلی تک‌جلدی (Zero-dependency Python)
 │   ├── parse_all_volumes.py      # اسکریپت اجرای موازی چندپردازنده‌ای روی ۳۴ جلد در ۱۶۴ ثانیه
 │   ├── audit_shelfmark_leaks.py  # ابزار ممیزی و پایش یکپارچگی شماره نسخه‌ها و بافت کالبدشناسی
 │   ├── download_json.sh          # اسکریپت دانلود مستقیم بسته آماده JSON از ریلیزهای گیتهاب
 │   └── build_full_text.sh        # اسکریپت تجمیع ۳۴ جلد در فایل یکپارچه fankha-full.txt
-├── json/                         # محل قرارگیری ۳۴ فایل JSON (مستثنی از گیت جهت سبکی مخزن)
+├── json/                         # محل قرارگیری فایل‌های JSON کاتالوگ‌ها (مستثنی از گیت)
+│   └── fankha/                   # ۳۴ فایل JSON فنخا (fankha_vol_01.json تا 34)
 └── README.md                     # شناسنامه، آمار کلان و مستندات فنی
 ```
 
@@ -98,7 +100,7 @@ python3 scripts/parse_all_volumes.py
 
 ## ۵. ساختار مدل داده‌های JSON (Schema Overview)
 
-هر فایل JSON خروجی (`fahares_vol_XX.json`) ساختاری منظم و به فرمت زیر دارد:
+هر فایل JSON خروجی (`fankha_vol_XX.json`) ساختاری منظم و به فرمت زیر دارد:
 
 ```json
 {

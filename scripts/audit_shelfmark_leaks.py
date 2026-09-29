@@ -106,7 +106,8 @@ def classify_remainder(rem_text):
     return "الگوی د: یادداشت محتوایی یا توضیحی کوتاه بدون مشخصات کالبدشناسی"
 
 def audit_all():
-    vol_files = sorted(TEXT_DIR.glob("fahares_vol_*.txt"), key=lambda p: int(re.search(r'\d+', p.name).group()))
+    vol_files = list(TEXT_DIR.glob("fankha/fankha_vol_*.txt")) or list(TEXT_DIR.glob("fankha_vol_*.txt")) or list(TEXT_DIR.glob("fahares_vol_*.txt"))
+    vol_files = sorted(vol_files, key=lambda p: int(re.search(r'\d+', p.name).group()))
     
     true_leaks = []
     shelfmark_typos = []

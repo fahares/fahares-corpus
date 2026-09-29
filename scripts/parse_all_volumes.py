@@ -19,8 +19,13 @@ from fankha_parser import FankhaParser
 
 def parse_single_volume(vol: int, corpus_text_dir: str, output_dir: str) -> Dict[str, Any]:
     """Worker function to parse a single volume in an isolated process."""
-    input_file = os.path.join(corpus_text_dir, f"fahares_vol_{vol:02d}.txt")
-    output_file = os.path.join(output_dir, f"fahares_vol_{vol:02d}.json")
+    candidates = [
+        os.path.join(corpus_text_dir, f"fankha_vol_{vol:02d}.txt"),
+        os.path.join(corpus_text_dir, "fankha", f"fankha_vol_{vol:02d}.txt"),
+        os.path.join(corpus_text_dir, f"fahares_vol_{vol:02d}.txt"),
+    ]
+    input_file = next((c for c in candidates if os.path.exists(c)), candidates[0])
+    output_file = os.path.join(output_dir, f"fankha_vol_{vol:02d}.json")
 
     if not os.path.exists(input_file):
         return {'volume': vol, 'error': f"{input_file} not found"}
@@ -69,11 +74,13 @@ def parse_single_volume(vol: int, corpus_text_dir: str, output_dir: str) -> Dict
 
 def main():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    corpus_text_dir = os.path.join(repo_root, "text")
+    corpus_text_dir = os.path.join(repo_root, "text/fankha")
+    if not os.path.isdir(corpus_text_dir):
+        corpus_text_dir = os.path.join(repo_root, "text")
     if not os.path.isdir(corpus_text_dir):
         corpus_text_dir = os.path.join(repo_root, "sources/text")
 
-    output_dir = os.path.join(repo_root, "json")
+    output_dir = os.path.join(repo_root, "json/fankha")
     os.makedirs(output_dir, exist_ok=True)
 
     # Dynamic CPU detection with 1 core reserved for system safety

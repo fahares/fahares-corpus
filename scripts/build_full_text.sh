@@ -9,7 +9,10 @@ echo "Building combined corpus file: $OUTPUT_FILE ..."
 > "$OUTPUT_FILE"
 
 for vol in $(seq -w 1 34); do
-    VOL_FILE="$ROOT_DIR/text/fahares_vol_${vol}.txt"
+    VOL_FILE="$ROOT_DIR/text/fankha/fankha_vol_${vol}.txt"
+    if [ ! -f "$VOL_FILE" ]; then
+        VOL_FILE="$ROOT_DIR/text/fahares_vol_${vol}.txt"
+    fi
     if [ -f "$VOL_FILE" ]; then
         echo "Appending volume $vol ..."
         cat "$VOL_FILE" >> "$OUTPUT_FILE"
