@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-RELEASE_TAG="v1.1.0"
+RELEASE_TAG="v1.1.1"
 REPO="fahares/fahares-corpus"
 ARCHIVE_NAME="fahares_json_${RELEASE_TAG}.tar.gz"
 DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ARCHIVE_NAME}"

@@ -1,20 +1,71 @@
 #!/usr/bin/env python3
 """
-Batch parser for all 34 volumes of the Fankha corpus.
-Generates sources/json/fahares_vol_01.json to fahares_vol_34.json
-and calculates comprehensive corpus-wide statistics.
+High-performance multi-process batch parser for all 34 volumes of the Fankha corpus.
+Generates json/fahares_vol_01.json to json/fahares_vol_34.json and calculates comprehensive corpus-wide statistics.
+Dynamically detects system CPU cores and reserves 1 core for system headroom.
 """
 
 import os
 import sys
 import time
 import json
-from dataclasses import asdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, Any
 
 # Add scripts directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fankha_parser import FankhaParser
+
+
+def parse_single_volume(vol: int, corpus_text_dir: str, output_dir: str) -> Dict[str, Any]:
+    """Worker function to parse a single volume in an isolated process."""
+    input_file = os.path.join(corpus_text_dir, f"fahares_vol_{vol:02d}.txt")
+    output_file = os.path.join(output_dir, f"fahares_vol_{vol:02d}.json")
+
+    if not os.path.exists(input_file):
+        return {'volume': vol, 'error': f"{input_file} not found"}
+
+    t0 = time.time()
+    parser = FankhaParser(vol)
+    parser.parse_file(input_file)
+    parser.export_json(output_file, indent=2)
+    elapsed = time.time() - t0
+
+    works_count = len(parser.works)
+    refs_count = len(parser.referrals)
+    mss = [m for w in parser.works for m in w.manuscripts]
+    mss_count = len(mss)
+    clean_count = sum(1 for m in mss if not m.residual_notes)
+    residuals_count = mss_count - clean_count
+    clean_pct = (clean_count / mss_count * 100) if mss_count > 0 else 0
+
+    return {
+        'volume': vol,
+        'elapsed_sec': round(elapsed, 2),
+        'works': works_count,
+        'referrals': refs_count,
+        'manuscripts': mss_count,
+        'clean_manuscripts': clean_count,
+        'clean_pct': round(clean_pct, 2),
+        'residual_manuscripts': residuals_count,
+        'dates_parsed': sum(1 for m in mss if m.copy_date_raw or m.is_bita),
+        'scribes_parsed': sum(1 for m in mss if m.scribe or m.is_bika or m.is_autograph),
+        'citations_parsed': sum(1 for m in mss if m.catalog_citation),
+        'scripts_parsed': sum(1 for m in mss if m.script or m.scripts),
+        'folios_parsed': sum(1 for m in mss if m.folios),
+        'lines_parsed': sum(1 for m in mss if m.lines),
+        'dimensions_parsed': sum(1 for m in mss if m.dimensions),
+        'bindings_parsed': sum(1 for m in mss if m.binding),
+        'incipits_matched_or_parsed': sum(1 for m in mss if m.incipit_text or m.incipit_matches_work),
+        'explicits_matched_or_parsed': sum(1 for m in mss if m.explicit_text or m.explicit_matches_work),
+        'is_autograph': sum(1 for m in mss if m.is_autograph),
+        'is_ruled': sum(1 for m in mss if m.is_ruled),
+        'is_illuminated': sum(1 for m in mss if m.is_illuminated),
+        'is_illustrated': sum(1 for m in mss if m.is_illustrated),
+        'is_collated': sum(1 for m in mss if m.is_collated),
+        'ownership_and_seals': sum(1 for m in mss if m.ownership_and_seals),
+    }
+
 
 def main():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,78 +76,46 @@ def main():
     output_dir = os.path.join(repo_root, "json")
     os.makedirs(output_dir, exist_ok=True)
 
-    volumes_stats = []
-    grand_start_time = time.time()
-
-    total_corpus_works = 0
-    total_corpus_referrals = 0
-    total_corpus_manuscripts = 0
-    total_corpus_clean_mss = 0
-    total_corpus_residuals_mss = 0
+    # Dynamic CPU detection with 1 core reserved for system safety
+    total_cpus = os.cpu_count() or 1
+    max_workers = max(1, total_cpus - 1)
 
     print("=" * 80)
-    print("STARTING BATCH PARSING OF ALL 34 VOLUMES OF FAHARES (FANKHA)")
+    print("STARTING MULTI-CORE BATCH PARSING OF ALL 34 VOLUMES OF FAHARES (FANKHA)")
+    print(f"Detected CPUs: {total_cpus} | Active Worker Processes: {max_workers} (1 core reserved for OS)")
     print("=" * 80)
     print(f"{'Vol':>4} | {'Time':>7} | {'Works':>7} | {'Refs':>6} | {'MSS':>7} | {'Clean MSS':>9} | {'Clean %':>8} | {'Residuals':>9}")
     print("-" * 80)
 
-    for vol in range(1, 35):
-        input_file = os.path.join(corpus_text_dir, f"fahares_vol_{vol:02d}.txt")
-        output_file = os.path.join(output_dir, f"fahares_vol_{vol:02d}.json")
+    grand_start_time = time.time()
+    results_dict = {}
 
-        if not os.path.exists(input_file):
-            print(f"ERROR: {input_file} not found!")
-            continue
-
-        t0 = time.time()
-        parser = FankhaParser(vol)
-        parser.parse_file(input_file)
-        parser.export_json(output_file, indent=2)
-        elapsed = time.time() - t0
-
-        works_count = len(parser.works)
-        refs_count = len(parser.referrals)
-        mss = [m for w in parser.works for m in w.manuscripts]
-        mss_count = len(mss)
-        clean_count = sum(1 for m in mss if not m.residual_notes)
-        residuals_count = mss_count - clean_count
-        clean_pct = (clean_count / mss_count * 100) if mss_count > 0 else 0
-
-        total_corpus_works += works_count
-        total_corpus_referrals += refs_count
-        total_corpus_manuscripts += mss_count
-        total_corpus_clean_mss += clean_count
-        total_corpus_residuals_mss += residuals_count
-
-        vol_stat = {
-            'volume': vol,
-            'elapsed_sec': round(elapsed, 2),
-            'works': works_count,
-            'referrals': refs_count,
-            'manuscripts': mss_count,
-            'clean_manuscripts': clean_count,
-            'clean_pct': round(clean_pct, 2),
-            'residual_manuscripts': residuals_count,
-            'dates_parsed': sum(1 for m in mss if m.copy_date_raw or m.is_bita),
-            'scribes_parsed': sum(1 for m in mss if m.scribe or m.is_bika or m.is_autograph),
-            'citations_parsed': sum(1 for m in mss if m.catalog_citation),
-            'scripts_parsed': sum(1 for m in mss if m.script or m.scripts),
-            'folios_parsed': sum(1 for m in mss if m.folios),
-            'lines_parsed': sum(1 for m in mss if m.lines),
-            'dimensions_parsed': sum(1 for m in mss if m.dimensions),
-            'bindings_parsed': sum(1 for m in mss if m.binding),
-            'incipits_matched_or_parsed': sum(1 for m in mss if m.incipit_text or m.incipit_matches_work),
-            'explicits_matched_or_parsed': sum(1 for m in mss if m.explicit_text or m.explicit_matches_work),
-            'is_autograph': sum(1 for m in mss if m.is_autograph),
-            'is_ruled': sum(1 for m in mss if m.is_ruled),
-            'is_illuminated': sum(1 for m in mss if m.is_illuminated),
-            'is_illustrated': sum(1 for m in mss if m.is_illustrated),
-            'is_collated': sum(1 for m in mss if m.is_collated),
-            'ownership_and_seals': sum(1 for m in mss if m.ownership_and_seals),
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(parse_single_volume, vol, corpus_text_dir, output_dir): vol
+            for vol in range(1, 35)
         }
-        volumes_stats.append(vol_stat)
 
-        print(f"{vol:4d} | {elapsed:6.2f}s | {works_count:7d} | {refs_count:6d} | {mss_count:7d} | {clean_count:9d} | {clean_pct:7.1f}% | {residuals_count:9d}")
+        for future in as_completed(futures):
+            vol = futures[future]
+            try:
+                res = future.result()
+                results_dict[vol] = res
+                if 'error' in res:
+                    print(f"{vol:4d} | ERROR: {res['error']}")
+                else:
+                    print(f"{res['volume']:4d} | {res['elapsed_sec']:6.2f}s | {res['works']:7d} | {res['referrals']:6d} | {res['manuscripts']:7d} | {res['clean_manuscripts']:9d} | {res['clean_pct']:7.1f}% | {res['residual_manuscripts']:9d}")
+            except Exception as exc:
+                print(f"{vol:4d} | EXCEPTION: {exc}")
+
+    # Sort results sequentially for reporting
+    volumes_stats = [results_dict[vol] for vol in sorted(results_dict.keys()) if 'error' not in results_dict[vol]]
+
+    total_corpus_works = sum(v['works'] for v in volumes_stats)
+    total_corpus_referrals = sum(v['referrals'] for v in volumes_stats)
+    total_corpus_manuscripts = sum(v['manuscripts'] for v in volumes_stats)
+    total_corpus_clean_mss = sum(v['clean_manuscripts'] for v in volumes_stats)
+    total_corpus_residuals_mss = sum(v['residual_manuscripts'] for v in volumes_stats)
 
     total_elapsed = time.time() - grand_start_time
     total_clean_pct = (total_corpus_clean_mss / total_corpus_manuscripts * 100) if total_corpus_manuscripts > 0 else 0
@@ -107,6 +126,8 @@ def main():
 
     summary = {
         'total_volumes': len(volumes_stats),
+        'total_cpus_detected': total_cpus,
+        'active_workers': max_workers,
         'total_elapsed_seconds': round(total_elapsed, 2),
         'total_works': total_corpus_works,
         'total_referrals': total_corpus_referrals,
@@ -135,12 +156,13 @@ def main():
         'volumes': volumes_stats
     }
 
-    os.makedirs("scratch", exist_ok=True)
-    summary_path = "scratch/parsing_summary_all_34_volumes.json"
+    os.makedirs(os.path.join(repo_root, "scratch"), exist_ok=True)
+    summary_path = os.path.join(repo_root, "scratch/parsing_summary_all_34_volumes.json")
     with open(summary_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
     print(f"\nSaved detailed summary to {summary_path}")
+
 
 if __name__ == "__main__":
     main()
