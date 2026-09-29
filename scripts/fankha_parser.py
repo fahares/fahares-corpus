@@ -262,10 +262,12 @@ def clean_author(raw_author: str) -> Tuple[str, str]:
     elif re.search(r'[؟\?]|ظاهراً|ظاهرا|احتمالاً|احتمالا|گویا', s):
         status = "probable"
 
-    clean = s
     clean = re.sub(r'^(?:[؟\?\s\:]|منسوب به|شاید از|ظاهراً از|ظاهرا از|ظاهراً|ظاهرا|احتمالاً از|احتمالا از|احتمالاً|احتمالا|گویا از|گویا)+', '', clean).strip(' :؟?')
     clean = re.sub(r'\s*\([؟\?]\)', '', clean).strip()
     clean = re.sub(r'[؟\?]', '', clean).strip()
+    clean = re.sub(r'\s+([،,])', r'\1', clean)
+    clean = re.sub(r'([،,])\s*', r'\1 ', clean)
+    clean = re.sub(r'\s+', ' ', clean).strip(' :،,')
 
     return (clean if clean else s), status
 
