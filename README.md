@@ -167,6 +167,17 @@ python3 scripts/parse_all_volumes.py
 
 ---
 
-## ۶. مجوز و نحوه ارجاع (License & Citation)
+## ۶. متادیتای مآخذ، فهارس و راهنمای مقدمه فنخا (Catalogs & Metadata)
+
+در پوشه [`catalogs/`](catalogs/)، داده‌های استخراج‌شده، جداول تفصیلی و مستندات فنی مقدمه جلد اول فنخا نگهداری می‌شوند:
+* **[`catalogs/fankha_intro_guide.md`](catalogs/fankha_intro_guide.md):** راهنمای جامع رموز، اصطلاحات نسخه‌شناسی (`ف:`, `مخ`, `د.ث`, `کاتب=مؤلف`, `همانند`, `وابسته به`), کدهای اختصاری کتابخانه‌ها، آوانگاری لاتین، گفتار تحلیلی تاریخ فهرست‌نگاری و کارنامه ۱۰۰ فهرست‌نگار مرجع کشور.
+* **[`catalogs/fankha_master_catalogs_table.md`](catalogs/fankha_master_catalogs_table.md):** جدول تفصیلی ۲۵۹ مجلد کلان کشور با ذکر مشخصات کتاب‌شناختی، پدیدآورندگان، ناظران و الگوهای ارجاع.
+* **[`catalogs/fankha_catalogs_master_verified.json`](catalogs/fankha_catalogs_master_verified.json):** نسخه ساختاریافته JSON از ۲۵۹ مجلد مرجع فوق با کلیدهای استاندارد.
+* **[`catalogs/fankha_complete_catalogs_table.md`](catalogs/fankha_complete_catalogs_table.md):** جدول جامع کل ۷۴۷ منبع و مأخذ چاپی و مخطوط در ۳۰ شهر و ۳۴۴ کتابخانه و مجموعه خطی.
+* **[`catalogs/fankha_catalogs_parsed.json`](catalogs/fankha_catalogs_parsed.json):** نسخه ساختاریافته JSON از کل ۷۴۷ منبع فهارس نسخ خطی.
+
+---
+
+## ۷. مجوز و نحوه ارجاع (License & Citation)
 
 این پیکره و ابزارهای استخراجی آن در چارچوب اصول **داده‌های باز (Open Data)** و با هدف خدمت به جامعه پژوهشگران ادبیات، نسخه‌شناسی، فهرست‌نگاری، تاریخ و علوم انسانی دیجیتال عرضه شده است.

@@ -1,0 +1,5445 @@
+[
+  {
+    "id": 1,
+    "city": "تهران",
+    "library_fankha": "مدرسه عالی سپهسالار",
+    "library_db_id": 22,
+    "library_db_name": "سپهسالار",
+    "catalog_series": "فهرست کتابخانه مدرسه عالی سپهسالار",
+    "volume_number": 1,
+    "volume_title": "جلد اول: کتب خطی عربی و فارسی",
+    "manuscript_range": "۱-۵۰۰",
+    "catalogers": [
+      "ابن یوسف شیرازی"
+    ],
+    "supervisors": [],
+    "publisher": "مطبعه مجلس",
+    "year": "۱۳۱۵",
+    "pages": "۶۹۶",
+    "citation_pattern": "ف: 1",
+    "notes": "دانشکده معقول و منقول"
+  },
+  {
+    "id": 2,
+    "city": "تهران",
+    "library_fankha": "مدرسه عالی سپهسالار",
+    "library_db_id": 22,
+    "library_db_name": "سپهسالار",
+    "catalog_series": "فهرست کتابخانه مدرسه عالی سپهسالار",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: کتب خطی فارسی، عربی، ترکی",
+    "manuscript_range": "۵۰۱-۱۰۰۰",
+    "catalogers": [
+      "ابن یوسف شیرازی"
+    ],
+    "supervisors": [],
+    "publisher": "مطبعه مجلس",
+    "year": "۱۳۱۸",
+    "pages": "۷۹۱",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 3,
+    "city": "تهران",
+    "library_fankha": "مدرسه عالی سپهسالار",
+    "library_db_id": 22,
+    "library_db_name": "سپهسالار",
+    "catalog_series": "فهرست کتابخانه مدرسه عالی سپهسالار",
+    "volume_number": 3,
+    "volume_title": "جلد سوم: کتب خطی آ - ث",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی منزوی",
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [
+      "علینقی منزوی (تصحیح و تجدید نظر)"
+    ],
+    "publisher": "چاپخانه دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۵۴۶",
+    "citation_pattern": "ف: 3",
+    "notes": "دبیران دانشگاه تهران"
+  },
+  {
+    "id": 4,
+    "city": "تهران",
+    "library_fankha": "مدرسه عالی سپهسالار",
+    "library_db_id": 22,
+    "library_db_name": "سپهسالار",
+    "catalog_series": "فهرست کتابخانه مدرسه عالی سپهسالار",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم: کتب خطی ج - ذ",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی منزوی",
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [
+      "علینقی منزوی (تصحیح و تجدید نظر)"
+    ],
+    "publisher": "چاپخانه دانشگاه تهران",
+    "year": "۱۳۴۶",
+    "pages": "۵۶۰",
+    "citation_pattern": "ف: 4",
+    "notes": "دبیران دانشگاه تهران"
+  },
+  {
+    "id": 5,
+    "city": "تهران",
+    "library_fankha": "مدرسه عالی سپهسالار",
+    "library_db_id": 22,
+    "library_db_name": "سپهسالار",
+    "catalog_series": "فهرست کتابخانه مدرسه عالی سپهسالار",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم: کتب خطی ر - ی",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی منزوی",
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [
+      "محمدتقی دانش‌پژوه (تجدید نظر)"
+    ],
+    "publisher": "چاپخانه دانشگاه تهران",
+    "year": "۱۳۵۶",
+    "pages": "۷۷۱",
+    "citation_pattern": "ف: 5",
+    "notes": "دبیران دانشگاه تهران"
+  },
+  {
+    "id": 6,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 1,
+    "volume_title": "جلد اول: کتب راجع به قرآن و دعا",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۰",
+    "pages": "۲۷۵",
+    "citation_pattern": "ف: 1",
+    "notes": "اهدایی سید محمد مشکوه به کتابخانه دانشگاه تهران"
+  },
+  {
+    "id": 7,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: کتب ادبی",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۲",
+    "pages": "۸۹۸",
+    "citation_pattern": "ف: 2",
+    "notes": "اهدایی سید محمد مشکوه به کتابخانه دانشگاه تهران"
+  },
+  {
+    "id": 8,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 3,
+    "volume_title": "جلد سوم - بخش اول: کتب فلسفی، عرفانی، کلامی",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۲",
+    "pages": "۶۸۹",
+    "citation_pattern": "ف: 3",
+    "notes": "اهدایی سید محمد مشکوه"
+  },
+  {
+    "id": 9,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 4,
+    "volume_title": "جلد سوم - بخش دوم (مجلد چهارم): تاریخ فلسفه، طب، ریاضی",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۲",
+    "pages": "۳۵۸",
+    "citation_pattern": "ف: 4",
+    "notes": "صفحات ۶۹۳-۱۰۵۱"
+  },
+  {
+    "id": 10,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 5,
+    "volume_title": "جلد سوم - بخش سوم (مجلد پنجم): اخبار، اصول، فقه",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۵",
+    "pages": "۱۰۵۴",
+    "citation_pattern": "ف: 5",
+    "notes": "صفحات ۱۰۵۵-۲۱۰۹"
+  },
+  {
+    "id": 11,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 6,
+    "volume_title": "جلد سوم - بخش چهارم (مجلد ششم): ذیل اخبار، اصول، فقه",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۵",
+    "pages": "۴۸۶",
+    "citation_pattern": "ف: 6",
+    "notes": "صفحات ۲۱۱۴-۲۶۰۰"
+  },
+  {
+    "id": 12,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتابخانه دانشگاه تهران (اهدایی مشکوه)",
+    "volume_number": 7,
+    "volume_title": "جلد سوم - بخش پنجم (مجلد هفتم): دومین ذیل کتب فقهی و اخباری",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۸",
+    "pages": "۲۰۷",
+    "citation_pattern": "ف: 7",
+    "notes": "صفحات ۲۶۰۱-۲۸۰۸"
+  },
+  {
+    "id": 13,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم",
+    "manuscript_range": "۱۲۳۱-۲۱۲۰",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۹",
+    "pages": "۷۵۹",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 14,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 9,
+    "volume_title": "جلد نهم",
+    "manuscript_range": "۲۱۲۱-۲۶۲۹",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۷۴۳",
+    "citation_pattern": "ف: 9",
+    "notes": "صفحات ۷۶۱-۱۵۰۴"
+  },
+  {
+    "id": 15,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 10,
+    "volume_title": "جلد دهم",
+    "manuscript_range": "۲۶۳۰-۳۰۶۲",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۴۹۵",
+    "citation_pattern": "ف: 10",
+    "notes": "صفحات ۱۵۰۵-۲۰۰۰"
+  },
+  {
+    "id": 16,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 11,
+    "volume_title": "جلد یازدهم",
+    "manuscript_range": "۳۰۶۳-۳۴۶۹",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۵۰۱",
+    "citation_pattern": "ف: 11",
+    "notes": "صفحات ۲۰۰۱-۲۵۰۲"
+  },
+  {
+    "id": 17,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 12,
+    "volume_title": "جلد دوازدهم",
+    "manuscript_range": "۳۴۹۷-۴۰۱۳",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۵۰۵",
+    "citation_pattern": "ف: 12",
+    "notes": "صفحات ۲۵۰۳-۳۰۰۸"
+  },
+  {
+    "id": 18,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 13,
+    "volume_title": "جلد سیزدهم",
+    "manuscript_range": "۴۰۱۴-۴۵۷۹",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۵۰۳",
+    "citation_pattern": "ف: 13",
+    "notes": "صفحات ۳۰۰۹-۳۵۱۲"
+  },
+  {
+    "id": 19,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 14,
+    "volume_title": "جلد چهاردهم",
+    "manuscript_range": "۴۵۸۰-۴۹۴۴",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۰",
+    "pages": "۵۵۱",
+    "citation_pattern": "ف: 14",
+    "notes": "صفحات ۳۵۱۳-۴۰۶۴"
+  },
+  {
+    "id": 20,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 15,
+    "volume_title": "جلد پانزدهم",
+    "manuscript_range": "۴۹۴۵-۵۴۰۰",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۵",
+    "pages": "۱۷۹",
+    "citation_pattern": "ف: 15",
+    "notes": "صفحات ۴۰۶۵-۴۲۴۴"
+  },
+  {
+    "id": 21,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 16,
+    "volume_title": "جلد شانزدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۵۷",
+    "pages": "۷۶۸",
+    "citation_pattern": "ف: 16",
+    "notes": ""
+  },
+  {
+    "id": 22,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 17,
+    "volume_title": "جلد هفدهم",
+    "manuscript_range": "۸۰۰۱-۱۰۰۵۰",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۶۴",
+    "pages": "۵۴۰",
+    "citation_pattern": "ف: 17",
+    "notes": ""
+  },
+  {
+    "id": 23,
+    "city": "تهران",
+    "library_fankha": "دانشکده ادبیات دانشگاه تهران",
+    "library_db_id": 17,
+    "library_db_name": "ادبیات",
+    "catalog_series": "فهرست کتب خطی کتابخانه دانشکده ادبیات",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "دانشکده ادبیات",
+    "year": "۱۳۳۹",
+    "pages": "۶۸۰",
+    "citation_pattern": "ف: 1",
+    "notes": "ضمیمه مجله دانشکده ادبیات"
+  },
+  {
+    "id": 24,
+    "city": "تهران",
+    "library_fankha": "دانشکده ادبیات دانشگاه تهران",
+    "library_db_id": 17,
+    "library_db_name": "ادبیات",
+    "catalog_series": "فهرست کتب خطی کتابخانه دانشکده ادبیات",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: مجموعه وقفی علی‌اصغر حکمت",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "دانشکده ادبیات",
+    "year": "۱۳۴۱",
+    "pages": "۱۰۴",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 25,
+    "city": "تهران",
+    "library_fankha": "دانشکده ادبیات دانشگاه تهران",
+    "library_db_id": 17,
+    "library_db_name": "ادبیات",
+    "catalog_series": "فهرست کتب خطی کتابخانه دانشکده ادبیات",
+    "volume_number": 3,
+    "volume_title": "جلد سوم: مجموعه امام جمعه کرمان اهدایی احمد جوادی",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "دانشکده ادبیات",
+    "year": "۱۳۴۴",
+    "pages": "۲۴۱",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 26,
+    "city": "تهران",
+    "library_fankha": "دانشکده الهیات دانشگاه تهران",
+    "library_db_id": 40,
+    "library_db_name": "الهیات",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه دانشکده الهیات",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدباقر حجتی"
+    ],
+    "supervisors": [
+      "محمدتقی دانش‌پژوه (تحقیق و نظارت)"
+    ],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۵",
+    "pages": "۱۲۲۷",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 27,
+    "city": "تهران",
+    "library_fankha": "دانشکده حقوق دانشگاه تهران",
+    "library_db_id": 26,
+    "library_db_name": "حقوق",
+    "catalog_series": "فهرست کتب خطی کتابخانه دانشکده حقوق",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۳۹",
+    "pages": "۶۰۲",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 28,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست میکروفیلم‌های کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۴۸",
+    "pages": "۷۲۴",
+    "citation_pattern": "فیلمها ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 29,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست میکروفیلم‌های کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۵۳",
+    "pages": "۶۴۲",
+    "citation_pattern": "فیلمها ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 30,
+    "city": "تهران",
+    "library_fankha": "دانشگاه تهران",
+    "library_db_id": 3,
+    "library_db_name": "دانشگاه",
+    "catalog_series": "فهرست میکروفیلم‌های کتابخانه مرکزی دانشگاه تهران",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه",
+      "فخری راستکار"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات دانشگاه تهران",
+    "year": "۱۳۶۳",
+    "pages": "۶۳۰",
+    "citation_pattern": "فیلمها ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 31,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 1,
+    "volume_title": "جلد اول: کتب فارسی",
+    "manuscript_range": "۱-۵۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۲",
+    "pages": "۵۲۴",
+    "citation_pattern": "ف: 1",
+    "notes": "چاپ سوم"
+  },
+  {
+    "id": 32,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: کتب فارسی",
+    "manuscript_range": "۵۰۱-۱۰۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۲",
+    "pages": "۶۰۹",
+    "citation_pattern": "ف: 2",
+    "notes": "چاپ سوم"
+  },
+  {
+    "id": 33,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 3,
+    "volume_title": "جلد سوم: کتب فارسی",
+    "manuscript_range": "۱۰۰۱-۱۵۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۶۹",
+    "pages": "۶۲۰",
+    "citation_pattern": "ف: 3",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 34,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم: کتب فارسی",
+    "manuscript_range": "۱۵۰۱-۲۰۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۱",
+    "pages": "۵۵۳",
+    "citation_pattern": "ف: 4",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 35,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم: کتب فارسی",
+    "manuscript_range": "۲۰۰۱-۲۵۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۶۵",
+    "pages": "۷۲۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 36,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 6,
+    "volume_title": "جلد ششم: کتب فارسی",
+    "manuscript_range": "۲۵۰۱-۳۰۸۳",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۹۴۲",
+    "citation_pattern": "ف: 6",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 37,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 7,
+    "volume_title": "جلد هفتم: کتب عربی",
+    "manuscript_range": "۱-۵۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۴۵۰",
+    "citation_pattern": "ف: 7",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 38,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم: کتب عربی",
+    "manuscript_range": "۵۰۱-۱۰۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۵۳۲",
+    "citation_pattern": "ف: 8",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 39,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 9,
+    "volume_title": "جلد نهم: کتب عربی",
+    "manuscript_range": "۱۰۰۱-۱۵۰۰",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۵۹۴",
+    "citation_pattern": "ف: 9",
+    "notes": ""
+  },
+  {
+    "id": 40,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 10,
+    "volume_title": "جلد دهم: کتب عربی",
+    "manuscript_range": "۱۵۰۱-۱۹۷۵",
+    "catalogers": [
+      "عبدالله انوار"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۵۸",
+    "pages": "۷۳۶",
+    "citation_pattern": "ف: 10",
+    "notes": "و ضمیمه از ف ۳۰۶۴ تا ف ۳۰۸۳"
+  },
+  {
+    "id": 41,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 11,
+    "volume_title": "جلد یازدهم: کتب عربی",
+    "manuscript_range": "۱۹۷۶-۲۳۰۰",
+    "catalogers": [
+      "علینقی منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۵",
+    "pages": "۸۵۳",
+    "citation_pattern": "ف: 11",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 42,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 12,
+    "volume_title": "جلد دوازدهم: کتب عربی",
+    "manuscript_range": "۲۳۰۱-۲۶۰۰",
+    "catalogers": [
+      "حبیب‌الله عظیمی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۲",
+    "pages": "۶۲۰",
+    "citation_pattern": "ف: 12",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 43,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 13,
+    "volume_title": "جلد سیزدهم: کتب عربی",
+    "manuscript_range": "۲۶۰۱-۲۹۰۰",
+    "catalogers": [
+      "حبیب‌الله عظیمی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۵",
+    "pages": "۴۷۲",
+    "citation_pattern": "ف: 13",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 44,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 14,
+    "volume_title": "جلد چهاردهم: کتب عربی",
+    "manuscript_range": "۲۹۰۱-۳۲۰۰",
+    "catalogers": [
+      "امیره ضمیری",
+      "زهره معیری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۵",
+    "pages": "۳۳۱",
+    "citation_pattern": "ف: 14",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 45,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 15,
+    "volume_title": "جلد پانزدهم: کتب عربی",
+    "manuscript_range": "۳۲۰۱-۳۵۰۰",
+    "catalogers": [
+      "امیره ضمیری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۰",
+    "pages": "۳۳۵",
+    "citation_pattern": "ف: 15",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 46,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 16,
+    "volume_title": "جلد شانزدهم: کتب عربی",
+    "manuscript_range": "۳۵۰۱-۳۸۰۰",
+    "catalogers": [
+      "حبیب‌الله عظیمی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۴۹۱",
+    "citation_pattern": "ف: 16",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 47,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 17,
+    "volume_title": "جلد هفدهم: کتب عربی",
+    "manuscript_range": "۳۸۰۱-۴۱۰۰",
+    "catalogers": [
+      "علینقی منزوی",
+      "حبیب‌الله عظیمی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۷۹",
+    "pages": "۴۸۳",
+    "citation_pattern": "ف: 17",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 48,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 18,
+    "volume_title": "جلد هیجدهم: کتب عربی",
+    "manuscript_range": "۴۱۰۱-۴۴۰۰ع",
+    "catalogers": [
+      "زهره معیری"
+    ],
+    "supervisors": [
+      "حبیب‌الله عظیمی (نظارت)"
+    ],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۱",
+    "pages": "۴۱۰",
+    "citation_pattern": "ف: 18",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 49,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 19,
+    "volume_title": "جلد نوزدهم: کتب عربی",
+    "manuscript_range": "۴۴۰۱-۴۷۰۰ع",
+    "catalogers": [
+      "امیره ضمیری",
+      "زهره معیری"
+    ],
+    "supervisors": [
+      "حبیب‌الله عظیمی (نظارت)"
+    ],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۱",
+    "pages": "۴۱۰",
+    "citation_pattern": "ف: 19",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 50,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ایران",
+    "library_db_id": 11,
+    "library_db_name": "ملی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه ملی ایران",
+    "volume_number": 20,
+    "volume_title": "جلد بیست و دوم: کتب عربی (قرآن‌ها)",
+    "manuscript_range": "۶۰۵۰-۶۵۵۰ع",
+    "catalogers": [
+      "رضا خانی‌پور"
+    ],
+    "supervisors": [
+      "حبیب‌الله عظیمی (نظارت)"
+    ],
+    "publisher": "کتابخانه ملی جمهوری اسلامی ایران",
+    "year": "۱۳۸۳",
+    "pages": "۳۸۹",
+    "citation_pattern": "ف: 20",
+    "notes": "چاپ اول"
+  },
+  {
+    "id": 51,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": "سنا ج۱",
+    "volume_title": "مجلس سنا - جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه",
+      "بهاءالدین علمی انواری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۵۰",
+    "pages": "۴۱۱",
+    "citation_pattern": "سنا: ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 52,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": "سنا ج۲",
+    "volume_title": "مجلس سنا - جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه",
+      "بهاءالدین علمی انواری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۵۹",
+    "pages": "۵۲۰",
+    "citation_pattern": "سنا: ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 53,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "یوسف اعتصامی"
+    ],
+    "supervisors": [],
+    "publisher": "مطبعه مجلس",
+    "year": "۱۳۱۱",
+    "pages": "۵۳۹",
+    "citation_pattern": "ف: 2",
+    "notes": "مطبوعات کتابخانه"
+  },
+  {
+    "id": 54,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "ابن یوسف شیرازی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (چاپ مجدد با اصلاح و تکمیل)"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۵۳",
+    "pages": "۷۸۲",
+    "citation_pattern": "ف: 3",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 55,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۳۵",
+    "pages": "۴۷۹",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 56,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۵",
+    "pages": "۶۱۲",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 57,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 6,
+    "volume_title": "جلد ششم",
+    "manuscript_range": "",
+    "catalogers": [
+      "سعید نفیسی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۴",
+    "pages": "۳۳۱",
+    "citation_pattern": "ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 58,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 7,
+    "volume_title": "جلد هفتم: مجموعه اهدایی امام جمعه خویی",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۶",
+    "pages": "۶۶۳",
+    "citation_pattern": "ف: 7",
+    "notes": ""
+  },
+  {
+    "id": 59,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم",
+    "manuscript_range": "",
+    "catalogers": [
+      "فخری راستکار"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۵۲۹",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 60,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 9.1,
+    "volume_title": "جلد نهم - بخش اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۶",
+    "pages": "۴۵۰",
+    "citation_pattern": "ف: 9/1",
+    "notes": "اداره بررسی و تحقیق"
+  },
+  {
+    "id": 61,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 9.2,
+    "volume_title": "جلد نهم - بخش دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۵۰۸",
+    "citation_pattern": "ف: 9/2",
+    "notes": "صفحات ۴۵۱-۹۵۸"
+  },
+  {
+    "id": 62,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 10.1,
+    "volume_title": "جلد دهم - بخش اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری",
+      "علامه اوحدی",
+      "ابراهیم دیباجی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (تجدید نظر و تحقیق)"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۵۵۵",
+    "citation_pattern": "ف: 10/1",
+    "notes": ""
+  },
+  {
+    "id": 63,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 10.2,
+    "volume_title": "جلد دهم - بخش دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۵۱۹",
+    "citation_pattern": "ف: 10/2",
+    "notes": "صفحات ۵۵۶-۱۰۷۵"
+  },
+  {
+    "id": 64,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 10.3,
+    "volume_title": "جلد دهم - بخش سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۸",
+    "pages": "۵۹۴",
+    "citation_pattern": "ف: 10/3",
+    "notes": "صفحات ۱۰۸۱-۱۶۷۵"
+  },
+  {
+    "id": 65,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 10.4,
+    "volume_title": "جلد دهم - بخش چهارم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۵۲",
+    "pages": "۵۵۳",
+    "citation_pattern": "ف: 10/4",
+    "notes": "صفحات ۱۶۷۷-۲۲۳۰"
+  },
+  {
+    "id": 66,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 11,
+    "volume_title": "جلد یازدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۵",
+    "pages": "۴۶۱",
+    "citation_pattern": "ف: 11",
+    "notes": "تحریر و چاپ و فهرست توسط احمد منزوی زیر نظر اساتید"
+  },
+  {
+    "id": 67,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 12,
+    "volume_title": "جلد دوازدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۶",
+    "pages": "۴۳۹",
+    "citation_pattern": "ف: 12",
+    "notes": ""
+  },
+  {
+    "id": 68,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 13,
+    "volume_title": "جلد سیزدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۶",
+    "pages": "۴۳۸",
+    "citation_pattern": "ف: 13",
+    "notes": ""
+  },
+  {
+    "id": 69,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 14,
+    "volume_title": "جلد چهاردهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۴۶۷",
+    "citation_pattern": "ف: 14",
+    "notes": ""
+  },
+  {
+    "id": 70,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 15,
+    "volume_title": "جلد پانزدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۷",
+    "pages": "۴۶۱",
+    "citation_pattern": "ف: 15",
+    "notes": ""
+  },
+  {
+    "id": 71,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 16,
+    "volume_title": "جلد شانزدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد منزوی"
+    ],
+    "supervisors": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "علینقی منزوی"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۸",
+    "pages": "۳۸۷",
+    "citation_pattern": "ف: 16",
+    "notes": ""
+  },
+  {
+    "id": 72,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 17,
+    "volume_title": "جلد هفدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۸",
+    "pages": "۴۲۴",
+    "citation_pattern": "ف: 17",
+    "notes": ""
+  },
+  {
+    "id": 73,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 18,
+    "volume_title": "جلد هیجدهم: کتب اهدایی رهی معیری",
+    "manuscript_range": "",
+    "catalogers": [
+      "فخری راستکار"
+    ],
+    "supervisors": [
+      "تقی تفضلی (شرح حال و نقد)"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۴۸",
+    "pages": "۱۶۰",
+    "citation_pattern": "ف: 18",
+    "notes": ""
+  },
+  {
+    "id": 74,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 19,
+    "volume_title": "جلد نوزدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۵۰",
+    "pages": "۴۶۴",
+    "citation_pattern": "ف: 19",
+    "notes": ""
+  },
+  {
+    "id": 75,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 20,
+    "volume_title": "جلد بیستم",
+    "manuscript_range": "۶۴۱۱-۷۰۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۴۶۰",
+    "citation_pattern": "ف: 20",
+    "notes": ""
+  },
+  {
+    "id": 76,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 21,
+    "volume_title": "جلد بیست و یکم",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۵۷",
+    "pages": "۴۶۹",
+    "citation_pattern": "ف: 21",
+    "notes": ""
+  },
+  {
+    "id": 77,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 22,
+    "volume_title": "جلد بیست و دوم: اهدایی سید محمدصادق طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۷۴",
+    "pages": "۵۱۶",
+    "citation_pattern": "ف: 22",
+    "notes": ""
+  },
+  {
+    "id": 78,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 23,
+    "volume_title": "جلد بیست و سوم: اهدایی سید محمدصادق طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۷۶",
+    "pages": "۵۰۸",
+    "citation_pattern": "ف: 23",
+    "notes": ""
+  },
+  {
+    "id": 79,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 23.2,
+    "volume_title": "جلد بیست و سوم بخش دوم: اهدایی طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "عبدالحسین حائری"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات مجلس",
+    "year": "۱۳۷۸",
+    "pages": "۴۵۶",
+    "citation_pattern": "ف: 23/2",
+    "notes": "صفحات ۵۱۰-۹۶۶"
+  },
+  {
+    "id": 80,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 24,
+    "volume_title": "جلد بیست و چهارم: اهدایی طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمد طباطبائی بهبهانی (منصور)"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت و مقدمه)"
+    ],
+    "publisher": "چاپخانه مجلس",
+    "year": "۱۳۸۱",
+    "pages": "۵۰۲",
+    "citation_pattern": "ف: 24",
+    "notes": ""
+  },
+  {
+    "id": 81,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 24.2,
+    "volume_title": "جلد ۲/۲۴: اهدایی طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود نظری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۲۵۰",
+    "citation_pattern": "ف: 24/2",
+    "notes": ""
+  },
+  {
+    "id": 82,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 24.3,
+    "volume_title": "جلد ۳/۲۴: اهدایی طباطبائی",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمد طباطبائی بهبهانی (منصور)"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۱۶۰",
+    "citation_pattern": "ف: 24/3",
+    "notes": ""
+  },
+  {
+    "id": 83,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 25,
+    "volume_title": "جلد بیست و پنجم",
+    "manuscript_range": "۷۰۰۱-۷۵۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۶",
+    "pages": "۵۲۸",
+    "citation_pattern": "ف: 25",
+    "notes": ""
+  },
+  {
+    "id": 84,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 26,
+    "volume_title": "جلد بیست و ششم",
+    "manuscript_range": "۷۵۰۱-۸۰۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۶",
+    "pages": "۵۴۲",
+    "citation_pattern": "ف: 26",
+    "notes": ""
+  },
+  {
+    "id": 85,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 27.1,
+    "volume_title": "جلد ۱/۲۷",
+    "manuscript_range": "۸۰۰۱-۸۲۰۰",
+    "catalogers": [
+      "جواد بشری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۵۶۴",
+    "citation_pattern": "ف: 27/1",
+    "notes": ""
+  },
+  {
+    "id": 86,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 27.2,
+    "volume_title": "جلد ۲/۲۷",
+    "manuscript_range": "۸۲۰۱-۸۴۰۰",
+    "catalogers": [
+      "محمود نظری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۱۳۰",
+    "citation_pattern": "ف: 27/2",
+    "notes": ""
+  },
+  {
+    "id": 87,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 28,
+    "volume_title": "جلد بیست و هشتم",
+    "manuscript_range": "۸۴۰۱-۸۸۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۲۸۸",
+    "citation_pattern": "ف: 28",
+    "notes": ""
+  },
+  {
+    "id": 88,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 29.1,
+    "volume_title": "جلد ۱/۲۹",
+    "manuscript_range": "۸۸۰۱-۹۰۰۰",
+    "catalogers": [
+      "محمدحسین حکیم"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۹۰",
+    "pages": "۵۸۵",
+    "citation_pattern": "ف: 29/1",
+    "notes": ""
+  },
+  {
+    "id": 89,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 29.2,
+    "volume_title": "جلد ۲/۲۹",
+    "manuscript_range": "۹۰۰۱-۹۲۰۰",
+    "catalogers": [
+      "محمدحسین حکیم"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۹۰",
+    "pages": "۴۵۶",
+    "citation_pattern": "ف: 29/2",
+    "notes": "صفحات ۵۸۷-۱۰۴۳"
+  },
+  {
+    "id": 90,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 30,
+    "volume_title": "جلد سی‌ام",
+    "manuscript_range": "۹۲۰۱-۹۶۰۰",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۳۲۸",
+    "citation_pattern": "ف: 30",
+    "notes": ""
+  },
+  {
+    "id": 91,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 31,
+    "volume_title": "جلد سی و یکم",
+    "manuscript_range": "۹۶۰۱-۱۰۰۰۰",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۲۳۰",
+    "citation_pattern": "ف: 31",
+    "notes": ""
+  },
+  {
+    "id": 92,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 32,
+    "volume_title": "جلد سی و دوم",
+    "manuscript_range": "۱۰۰۰۱-۱۰۴۰۰",
+    "catalogers": [
+      "محمود نظری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۳۸۳",
+    "citation_pattern": "ف: 32",
+    "notes": ""
+  },
+  {
+    "id": 93,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 33.1,
+    "volume_title": "جلد ۱/۳۳",
+    "manuscript_range": "۱۰۴۰۱-۱۰۸۰۰",
+    "catalogers": [
+      "محمود طیار مراغی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۲۶۴",
+    "citation_pattern": "ف: 33/1",
+    "notes": ""
+  },
+  {
+    "id": 94,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 33.2,
+    "volume_title": "جلد ۲/۳۳",
+    "manuscript_range": "۱۰۸۰۱-۱۱۶۰۰",
+    "catalogers": [
+      "محمود طیار مراغی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۲۳۸",
+    "citation_pattern": "ف: 33/2",
+    "notes": ""
+  },
+  {
+    "id": 95,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 34,
+    "volume_title": "جلد سی و چهارم",
+    "manuscript_range": "۱۱۶۰۱-۱۲۰۰۰",
+    "catalogers": [
+      "محسن صادقی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۲۰۴",
+    "citation_pattern": "ف: 34",
+    "notes": ""
+  },
+  {
+    "id": 96,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 35,
+    "volume_title": "جلد سی و پنجم",
+    "manuscript_range": "۱۲۰۰۱-۱۲۵۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۶",
+    "pages": "۴۹۴",
+    "citation_pattern": "ف: 35",
+    "notes": ""
+  },
+  {
+    "id": 97,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 36,
+    "volume_title": "جلد سی و ششم",
+    "manuscript_range": "۱۲۵۰۱-۱۳۵۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۷",
+    "pages": "۵۲۶",
+    "citation_pattern": "ف: 36",
+    "notes": ""
+  },
+  {
+    "id": 98,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 37,
+    "volume_title": "جلد سی و هفتم",
+    "manuscript_range": "۱۳۵۰۱-۱۴۰۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۷",
+    "pages": "۶۹۴",
+    "citation_pattern": "ف: 37",
+    "notes": ""
+  },
+  {
+    "id": 99,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 38,
+    "volume_title": "جلد سی و هشتم",
+    "manuscript_range": "۱۴۰۰۱-۱۴۵۰۰",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [
+      "عبدالحسین حائری (نظارت)"
+    ],
+    "publisher": "دفتر تبلیغات اسلامی",
+    "year": "۱۳۷۷",
+    "pages": "۷۲۵",
+    "citation_pattern": "ف: 38",
+    "notes": ""
+  },
+  {
+    "id": 100,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 40.2,
+    "volume_title": "جلد ۲/۴۰: اهدایی کریم‌زاده تبریزی",
+    "manuscript_range": "۴۰۱-۵۱۰",
+    "catalogers": [
+      "حسین متقی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۸",
+    "pages": "۵۱۰",
+    "citation_pattern": "ف: 40/2",
+    "notes": ""
+  },
+  {
+    "id": 101,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 41,
+    "volume_title": "جلد چهل و یکم",
+    "manuscript_range": "۱۴۵۰۱-۱۴۹۰۰",
+    "catalogers": [
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۳۶۰",
+    "citation_pattern": "ف: 41",
+    "notes": ""
+  },
+  {
+    "id": 102,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 43,
+    "volume_title": "جلد چهل و سوم",
+    "manuscript_range": "۱۵۳۰۱-۱۵۷۰۰",
+    "catalogers": [
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۳۱۰",
+    "citation_pattern": "ف: 43",
+    "notes": ""
+  },
+  {
+    "id": 103,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 44,
+    "volume_title": "جلد چهل و چهارم",
+    "manuscript_range": "۱۵۷۰۱-۱۶۱۰۰",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۹",
+    "pages": "۳۲۴",
+    "citation_pattern": "ف: 44",
+    "notes": ""
+  },
+  {
+    "id": 104,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 45,
+    "volume_title": "جلد چهل و پنجم",
+    "manuscript_range": "۱۶۱۰۱-۱۶۵۰۰",
+    "catalogers": [
+      "سید صادق حسینی اشکوری",
+      "یوسف بیگ باباپور"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۹۰",
+    "pages": "۳۴۰",
+    "citation_pattern": "ف: 45",
+    "notes": ""
+  },
+  {
+    "id": 105,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": 47.1,
+    "volume_title": "جلد ۱/۴۷",
+    "manuscript_range": "۱۶۹۰۱-۱۷۱۰۰",
+    "catalogers": [
+      "احسان‌الله شکراللهی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۹۰",
+    "pages": "۲۶۵",
+    "citation_pattern": "ف: 47/1",
+    "notes": ""
+  },
+  {
+    "id": 106,
+    "city": "تهران",
+    "library_fankha": "کتابخانه مجلس شورای اسلامی",
+    "library_db_id": 4,
+    "library_db_name": "مجلس",
+    "catalog_series": "فهرست کتابخانه مجلس شورای اسلامی",
+    "volume_number": "مختصر",
+    "volume_title": "فهرست مختصر نسخه‌های خطی مجلس",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمد طباطبائی بهبهانی (منصور)"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه و موزه مجلس",
+    "year": "۱۳۸۶",
+    "pages": "۱۳۰۵",
+    "citation_pattern": "مختصر",
+    "notes": ""
+  },
+  {
+    "id": 107,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 1,
+    "volume_title": "جلد اول: کتابهای عربی و ترکی",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "دانشگاه تهران",
+    "year": "۱۳۶۱",
+    "pages": "۶۲۶",
+    "citation_pattern": "ف: 1",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 108,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: کتابهای فارسی از آداب جنگ تا ذخیره خوارزمشاهی",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "دانشگاه تهران",
+    "year": "۱۳۵۴",
+    "pages": "۳۹۹",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 109,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 3,
+    "volume_title": "جلد سوم (بخش اول): کتابهای فارسی",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۱",
+    "pages": "۲۵۶",
+    "citation_pattern": "ف: 3",
+    "notes": "صفحات ۴۰۰-۶۵۶"
+  },
+  {
+    "id": 110,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم: کتب فارسی از کلیات شوقی تا یوسف و زلیخا",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۴",
+    "pages": "۲۱۱",
+    "citation_pattern": "ف: 4",
+    "notes": "صفحات ۶۵۷-۸۶۸"
+  },
+  {
+    "id": 111,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم: مجموعه‌ها و جنگ‌ها",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۳",
+    "pages": "۴۹۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 112,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 6,
+    "volume_title": "جلد ششم: مجموعه‌ها و جنگ‌ها",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۶",
+    "pages": "۴۹۶",
+    "citation_pattern": "ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 113,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 7,
+    "volume_title": "جلد هفتم: مجموعه‌ها و جنگ‌ها",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۹",
+    "pages": "۴۸۷",
+    "citation_pattern": "ف: 7",
+    "notes": ""
+  },
+  {
+    "id": 114,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم: مجموعه‌ها و جنگ‌ها",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۶۹",
+    "pages": "۴۹۳",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 115,
+    "city": "تهران",
+    "library_fankha": "کتابخانه ملی ملک",
+    "library_db_id": 15,
+    "library_db_name": "ملک",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه ملی ملک",
+    "volume_number": 9,
+    "volume_title": "جلد نهم: مجموعه‌ها و جنگ‌ها",
+    "manuscript_range": "",
+    "catalogers": [
+      "ایرج افشار",
+      "محمدتقی دانش‌پژوه",
+      "محمدباقر حجتی",
+      "احمد منزوی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه ملی ملک",
+    "year": "۱۳۷۱",
+    "pages": "۴۳۴",
+    "citation_pattern": "ف: 9",
+    "notes": ""
+  },
+  {
+    "id": 116,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 1,
+    "volume_title": "جلد 1",
+    "manuscript_range": "1-400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 117,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 2,
+    "volume_title": "جلد 2",
+    "manuscript_range": "401-800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 118,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 3,
+    "volume_title": "جلد 3",
+    "manuscript_range": "801-1200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 119,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 4,
+    "volume_title": "جلد 4",
+    "manuscript_range": "1201-1600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 120,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 5,
+    "volume_title": "جلد 5",
+    "manuscript_range": "1601-2000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 121,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 6,
+    "volume_title": "جلد 6",
+    "manuscript_range": "2001-2400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 122,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 7,
+    "volume_title": "جلد 7",
+    "manuscript_range": "2401-2800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 7",
+    "notes": ""
+  },
+  {
+    "id": 123,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 8,
+    "volume_title": "جلد 8",
+    "manuscript_range": "2801-3200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 124,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 9,
+    "volume_title": "جلد 9",
+    "manuscript_range": "3201-3600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 9",
+    "notes": ""
+  },
+  {
+    "id": 125,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 10,
+    "volume_title": "جلد 10",
+    "manuscript_range": "3601-4000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 10",
+    "notes": ""
+  },
+  {
+    "id": 126,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 11,
+    "volume_title": "جلد 11",
+    "manuscript_range": "4001-4400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 11",
+    "notes": ""
+  },
+  {
+    "id": 127,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 12,
+    "volume_title": "جلد 12",
+    "manuscript_range": "4401-4800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 12",
+    "notes": ""
+  },
+  {
+    "id": 128,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 13,
+    "volume_title": "جلد 13",
+    "manuscript_range": "4801-5200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 13",
+    "notes": ""
+  },
+  {
+    "id": 129,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 14,
+    "volume_title": "جلد 14",
+    "manuscript_range": "5201-5600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 14",
+    "notes": ""
+  },
+  {
+    "id": 130,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 15,
+    "volume_title": "جلد 15",
+    "manuscript_range": "5601-6000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 15",
+    "notes": ""
+  },
+  {
+    "id": 131,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 16,
+    "volume_title": "جلد 16",
+    "manuscript_range": "6001-6400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 16",
+    "notes": ""
+  },
+  {
+    "id": 132,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 17,
+    "volume_title": "جلد 17",
+    "manuscript_range": "6401-6800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 17",
+    "notes": ""
+  },
+  {
+    "id": 133,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 18,
+    "volume_title": "جلد 18",
+    "manuscript_range": "6801-7200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 18",
+    "notes": ""
+  },
+  {
+    "id": 134,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 19,
+    "volume_title": "جلد 19",
+    "manuscript_range": "7201-7600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 19",
+    "notes": ""
+  },
+  {
+    "id": 135,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 20,
+    "volume_title": "جلد 20",
+    "manuscript_range": "7601-8000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 20",
+    "notes": ""
+  },
+  {
+    "id": 136,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 21,
+    "volume_title": "جلد 21",
+    "manuscript_range": "8001-8400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 21",
+    "notes": ""
+  },
+  {
+    "id": 137,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 22,
+    "volume_title": "جلد 22",
+    "manuscript_range": "8401-8800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 22",
+    "notes": ""
+  },
+  {
+    "id": 138,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 23,
+    "volume_title": "جلد 23",
+    "manuscript_range": "8801-9200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 23",
+    "notes": ""
+  },
+  {
+    "id": 139,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 24,
+    "volume_title": "جلد 24",
+    "manuscript_range": "9201-9600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 24",
+    "notes": ""
+  },
+  {
+    "id": 140,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 25,
+    "volume_title": "جلد 25",
+    "manuscript_range": "9601-10000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 25",
+    "notes": ""
+  },
+  {
+    "id": 141,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 26,
+    "volume_title": "جلد 26",
+    "manuscript_range": "۱۰۰۰۱-۱۰۵۰۰",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 26",
+    "notes": ""
+  },
+  {
+    "id": 142,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 27,
+    "volume_title": "جلد 27",
+    "manuscript_range": "۱۰۵۰۱-۱۱۰۰۰",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (نظارت)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۵۴-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "ف: 27",
+    "notes": ""
+  },
+  {
+    "id": 143,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 28,
+    "volume_title": "جلد بیست و هشتم",
+    "manuscript_range": "۱۱۰۰۰-۱۱۴۰۰",
+    "catalogers": [
+      "سید محمود مرعشی",
+      "گروه فهرست‌نگاران"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۷۶",
+    "pages": "۴۲۴",
+    "citation_pattern": "ف: 28",
+    "notes": ""
+  },
+  {
+    "id": 144,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 29,
+    "volume_title": "جلد بیست و نهم",
+    "manuscript_range": "۱۱۴۰۱-۱۱۸۰۰",
+    "catalogers": [
+      "سید محمود مرعشی",
+      "گروه فهرست‌نگاران"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۷۹",
+    "pages": "۷۲۲",
+    "citation_pattern": "ف: 29",
+    "notes": ""
+  },
+  {
+    "id": 145,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 30,
+    "volume_title": "جلد سی‌ام",
+    "manuscript_range": "۱۱۸۰۱-۱۲۲۰۰",
+    "catalogers": [
+      "سید محمود مرعشی",
+      "گروه فهرست‌نگاران"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۰",
+    "pages": "۶۷۸",
+    "citation_pattern": "ف: 30",
+    "notes": ""
+  },
+  {
+    "id": 146,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 31,
+    "volume_title": "جلد سی و یکم",
+    "manuscript_range": "۱۲۲۰۱-۱۲۶۰۰",
+    "catalogers": [
+      "سید محمود مرعشی",
+      "گروه فهرست‌نگاران"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۲",
+    "pages": "۸۱۲",
+    "citation_pattern": "ف: 31",
+    "notes": ""
+  },
+  {
+    "id": 147,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 32,
+    "volume_title": "جلد سی و دوم",
+    "manuscript_range": "۱۲۶۰۱-۱۳۰۰۰",
+    "catalogers": [
+      "سید محمود مرعشی",
+      "گروه فهرست‌نگاران"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۳",
+    "pages": "۱۰۵۶",
+    "citation_pattern": "ف: 32",
+    "notes": ""
+  },
+  {
+    "id": 148,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 33,
+    "volume_title": "جلد سی و سوم",
+    "manuscript_range": "۱۳۰۰۱-۱۳۴۰۰",
+    "catalogers": [
+      "میر محمود موسوی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۰",
+    "pages": "۷۶۱",
+    "citation_pattern": "ف: 33",
+    "notes": ""
+  },
+  {
+    "id": 149,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 34,
+    "volume_title": "جلد سی و چهارم",
+    "manuscript_range": "۱۳۴۰۱-۱۳۸۰۰",
+    "catalogers": [
+      "محمدحسین امینی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۵",
+    "pages": "۹۱۵",
+    "citation_pattern": "ف: 34",
+    "notes": ""
+  },
+  {
+    "id": 150,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 35,
+    "volume_title": "جلد سی و پنجم",
+    "manuscript_range": "۱۳۸۰۱-۱۴۲۰۰",
+    "catalogers": [
+      "محمدعلی صالحی",
+      "حسین متقی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۹",
+    "pages": "۹۵۵",
+    "citation_pattern": "ف: 35",
+    "notes": ""
+  },
+  {
+    "id": 151,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 36,
+    "volume_title": "جلد سی و ششم",
+    "manuscript_range": "۱۴۲۰۱-۱۴۶۰۰",
+    "catalogers": [
+      "سید محمد اصفیانی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۹",
+    "pages": "۹۱۵",
+    "citation_pattern": "ف: 36",
+    "notes": ""
+  },
+  {
+    "id": 152,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 37,
+    "volume_title": "جلد سی و هفتم",
+    "manuscript_range": "۱۴۶۰۱-۱۵۰۰۰",
+    "catalogers": [
+      "میر محمود موسوی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۸",
+    "pages": "۹۳۴",
+    "citation_pattern": "ف: 37",
+    "notes": ""
+  },
+  {
+    "id": 153,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه عمومی آیت‌الله العظمی مرعشی نجفی",
+    "volume_number": 38,
+    "volume_title": "جلد سی و هشتم",
+    "manuscript_range": "۱۵۰۰۱-۱۵۳۰۰",
+    "catalogers": [
+      "محمدحسین امینی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۸۸",
+    "pages": "۹۵۴",
+    "citation_pattern": "ف: 38",
+    "notes": ""
+  },
+  {
+    "id": 154,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های عکسی کتابخانه مرعشی",
+    "volume_number": 1,
+    "volume_title": "عکسی جلد 1",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدعلی حائری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۶۹-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "عکسی ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 155,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های عکسی کتابخانه مرعشی",
+    "volume_number": 2,
+    "volume_title": "عکسی جلد 2",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدعلی حائری"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۶۹-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "عکسی ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 156,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های عکسی کتابخانه مرعشی",
+    "volume_number": 3,
+    "volume_title": "عکسی جلد 3",
+    "manuscript_range": "",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۶۹-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "عکسی ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 157,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های عکسی کتابخانه مرعشی",
+    "volume_number": 4,
+    "volume_title": "عکسی جلد 4",
+    "manuscript_range": "",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۶۹-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "عکسی ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 158,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله مرعشی",
+    "library_db_id": 2,
+    "library_db_name": "مرعشی",
+    "catalog_series": "فهرست نسخه‌های عکسی کتابخانه مرعشی",
+    "volume_number": 5,
+    "volume_title": "عکسی جلد 5",
+    "manuscript_range": "",
+    "catalogers": [
+      "ابوالفضل حافظیان بابلی"
+    ],
+    "supervisors": [
+      "سید محمود مرعشی (اشراف)"
+    ],
+    "publisher": "کتابخانه مرعشی",
+    "year": "۱۳۶۹-۱۳۷۵",
+    "pages": "",
+    "citation_pattern": "عکسی ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 159,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های خطی مرکز احیاء میراث اسلامی",
+    "volume_number": 1,
+    "volume_title": "جلد 1",
+    "manuscript_range": "1-400",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۲",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 160,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های خطی مرکز احیاء میراث اسلامی",
+    "volume_number": 2,
+    "volume_title": "جلد 2",
+    "manuscript_range": "401-800",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۲",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 161,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های خطی مرکز احیاء میراث اسلامی",
+    "volume_number": 3,
+    "volume_title": "جلد 3",
+    "manuscript_range": "801-1200",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۲",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 162,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های خطی مرکز احیاء میراث اسلامی",
+    "volume_number": 4,
+    "volume_title": "جلد 4",
+    "manuscript_range": "1201-1600",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۲",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 163,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های خطی مرکز احیاء میراث اسلامی",
+    "volume_number": 5,
+    "volume_title": "جلد 5",
+    "manuscript_range": "1601-2000",
+    "catalogers": [
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۲",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 164,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی (محدث ارموی)",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست محدث ارموی - مرکز احیاء التراث العربي",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "۱-۵۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۳۷",
+    "citation_pattern": "محدث ارموی مخ: 1",
+    "notes": ""
+  },
+  {
+    "id": 165,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی (محدث ارموی)",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست محدث ارموی - مرکز احیاء التراث العربي",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "۵۰۱-۱۰۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۰۰",
+    "citation_pattern": "محدث ارموی مخ: 2",
+    "notes": ""
+  },
+  {
+    "id": 166,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی (محدث ارموی)",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست محدث ارموی - مرکز احیاء التراث العربي",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "۱۰۰۱-۱۵۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۰۰",
+    "citation_pattern": "محدث ارموی مخ: 3",
+    "notes": ""
+  },
+  {
+    "id": 167,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 1,
+    "volume_title": "عکسی جلد 1",
+    "manuscript_range": "1-400",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 168,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 2,
+    "volume_title": "عکسی جلد 2",
+    "manuscript_range": "401-800",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 169,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 3,
+    "volume_title": "عکسی جلد 3",
+    "manuscript_range": "801-1200",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 170,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 4,
+    "volume_title": "عکسی جلد 4",
+    "manuscript_range": "1201-1600",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 171,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 5,
+    "volume_title": "عکسی جلد 5",
+    "manuscript_range": "1601-2000",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 172,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 6,
+    "volume_title": "عکسی جلد 6",
+    "manuscript_range": "2001-2400",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 173,
+    "city": "قم",
+    "library_fankha": "مرکز احیاء میراث اسلامی",
+    "library_db_id": 10,
+    "library_db_name": "مرکز احیاء",
+    "catalog_series": "فهرست نسخه‌های عکسی مرکز احیاء میراث اسلامی",
+    "volume_number": 7,
+    "volume_title": "عکسی جلد 7",
+    "manuscript_range": "2401-2800",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری",
+      "سید صادق حسینی اشکوری"
+    ],
+    "supervisors": [
+      "سید احمد حسینی اشکوری (نظارت)"
+    ],
+    "publisher": "مرکز احیاء میراث اسلامی",
+    "year": "۱۳۷۷-۱۳۸۷",
+    "pages": "۴۹۰",
+    "citation_pattern": "عکسی ف: 7",
+    "notes": ""
+  },
+  {
+    "id": 174,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 1,
+    "volume_title": "جلد اول: آ - ج",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۷۳",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 175,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: ح - خ",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۲۵",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 176,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 3,
+    "volume_title": "جلد سوم: د - ذ",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۶۸۱",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 177,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم: ر - س",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۸۴",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 178,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم: ش - ف",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۶۰۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 179,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 6,
+    "volume_title": "جلد ششم: ق - ل",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۶۳۱",
+    "citation_pattern": "ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 180,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 7,
+    "volume_title": "جلد هفتم: م - م",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۶۷۸",
+    "citation_pattern": "ف: 7",
+    "notes": ""
+  },
+  {
+    "id": 181,
+    "city": "قم",
+    "library_fankha": "کتابخانه عمومی آیت‌الله گلپایگانی",
+    "library_db_id": 5,
+    "library_db_name": "گلپایگانی",
+    "catalog_series": "فهرست نسخ خطی کتابخانه عمومی آیت‌الله گلپایگانی",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم: ن - ی",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی",
+      "ابوالفضل حافظیان بابلی",
+      "سید احمد حسینی اشکوری"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۶۵۰",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 182,
+    "city": "قم",
+    "library_fankha": "کتابخانه مسجد اعظم قم",
+    "library_db_id": 21,
+    "library_db_name": "مسجد اعظم",
+    "catalog_series": "فهرست نسخ خطی کتابخانه مسجد اعظم قم",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "۱-۵۲۱",
+    "catalogers": [
+      "محمود طیار مراغی",
+      "حسن‌زاده"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۵۲۱",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 183,
+    "city": "قم",
+    "library_fankha": "کتابخانه مسجد اعظم قم",
+    "library_db_id": 21,
+    "library_db_name": "مسجد اعظم",
+    "catalog_series": "فهرست نسخ خطی کتابخانه مسجد اعظم قم",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "۵۲۳-۹۶۶",
+    "catalogers": [
+      "محمود طیار مراغی",
+      "حسن‌زاده"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۴۴۴",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 184,
+    "city": "قم",
+    "library_fankha": "کتابخانه مسجد اعظم قم",
+    "library_db_id": 21,
+    "library_db_name": "مسجد اعظم",
+    "catalog_series": "فهرست نسخ خطی کتابخانه مسجد اعظم قم",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "۹۶۷-۱۴۱۷",
+    "catalogers": [
+      "محمود طیار مراغی",
+      "حسن‌زاده"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۴۵۱",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 185,
+    "city": "قم",
+    "library_fankha": "کتابخانه مسجد اعظم قم",
+    "library_db_id": 21,
+    "library_db_name": "مسجد اعظم",
+    "catalog_series": "فهرست نسخ خطی کتابخانه مسجد اعظم قم",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم",
+    "manuscript_range": "۱۴۱۸-۱۸۷۰",
+    "catalogers": [
+      "محمود طیار مراغی",
+      "حسن‌زاده"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۴۵۳",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 186,
+    "city": "قم",
+    "library_fankha": "کتابخانه مسجد اعظم قم",
+    "library_db_id": 21,
+    "library_db_name": "مسجد اعظم",
+    "catalog_series": "فهرست نسخ خطی کتابخانه مسجد اعظم قم",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم",
+    "manuscript_range": "۱۸۷۱-۲۳۰۰",
+    "catalogers": [
+      "محمود طیار مراغی",
+      "حسن‌زاده"
+    ],
+    "supervisors": [
+      "مصطفی درایتی (ویرایش)"
+    ],
+    "publisher": "مؤسسه الجواد",
+    "year": "مخطوط",
+    "pages": "۴۳۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 187,
+    "city": "قم",
+    "library_fankha": "مدرسه مبارکه فیضیه",
+    "library_db_id": 8,
+    "library_db_name": "فیضیه",
+    "catalog_series": "فهرست کتابخانه مبارکه مدرسه فیضیه قم",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "آقا مجتبی عراقی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه علمیه قم",
+    "year": "۱۳۵۰",
+    "pages": "۴۰۰",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 188,
+    "city": "قم",
+    "library_fankha": "مدرسه مبارکه فیضیه",
+    "library_db_id": 8,
+    "library_db_name": "فیضیه",
+    "catalog_series": "فهرست کتابخانه مبارکه مدرسه فیضیه قم",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "رضا استادی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مهر قم",
+    "year": "۱۳۵۵",
+    "pages": "۴۲۶",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 189,
+    "city": "قم",
+    "library_fankha": "مدرسه مبارکه فیضیه",
+    "library_db_id": 8,
+    "library_db_name": "فیضیه",
+    "catalog_series": "فهرست کتابخانه مبارکه مدرسه فیضیه قم",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "رضا استادی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مهر قم",
+    "year": "۱۳۵۸",
+    "pages": "۴۱۱",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 190,
+    "city": "قم",
+    "library_fankha": "مدرسه حجتیه",
+    "library_db_id": 115,
+    "library_db_name": "حجتیه",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه مدرسه حجتیه قم",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "رضا استادی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه مهر قم",
+    "year": "۱۳۵۴",
+    "pages": "۲۵۰",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 191,
+    "city": "قم",
+    "library_fankha": "آستانه مقدسه حضرت معصومه",
+    "library_db_id": 52,
+    "library_db_name": "معصومیه",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه آستانه مقدسه حضرت معصومه",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید حسن نقیبی"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات زائر",
+    "year": "۱۳۵۷",
+    "pages": "۴۲۲",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 192,
+    "city": "قم",
+    "library_fankha": "آستانه مقدسه حضرت معصومه",
+    "library_db_id": 52,
+    "library_db_name": "معصومیه",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه آستانه مقدسه حضرت معصومه",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "علی صدرائی خوئی"
+    ],
+    "supervisors": [],
+    "publisher": "انتشارات زائر",
+    "year": "۱۳۵۷",
+    "pages": "۴۲۴",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 193,
+    "city": "قم",
+    "library_fankha": "آستانه مقدسه حضرت معصومه",
+    "library_db_id": 52,
+    "library_db_name": "معصومیه",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه آستانه مقدسه حضرت معصومه",
+    "volume_number": 3,
+    "volume_title": "جلد سوم (قدیم)",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدتقی دانش‌پژوه"
+    ],
+    "supervisors": [],
+    "publisher": "آستانه مقدسه قم",
+    "year": "بی‌تا",
+    "pages": "۴۳۴",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 194,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 1,
+    "volume_title": "جلد اول: مصاحف شریفه و تفاسیر",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید علی اردلان جوان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۵۶",
+    "pages": "۷۴۷",
+    "citation_pattern": "ف: 1",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 195,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: کتب خطی",
+    "manuscript_range": "",
+    "catalogers": [
+      "آستان قدس رضوی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۰۵",
+    "pages": "۴۰۰",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 196,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 3,
+    "volume_title": "جلد سوم: کتب خطی",
+    "manuscript_range": "",
+    "catalogers": [
+      "آستان قدس رضوی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۰۵",
+    "pages": "۴۰۰",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 197,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم: حکمت، کلام، فلسفه، منطق، تفسیر",
+    "manuscript_range": "",
+    "catalogers": [
+      "آستان قدس رضوی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "بی‌تا",
+    "pages": "۵۰۵",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 198,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم: فقه و اخبار",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدرضا رضاپور",
+      "مهدی ولائی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۹",
+    "pages": "۷۵۶",
+    "citation_pattern": "ف: 5",
+    "notes": "چاپ دوم"
+  },
+  {
+    "id": 199,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 6,
+    "volume_title": "جلد ششم: اصول فقه، ادعیه، اخلاق، رجال، انساب",
+    "manuscript_range": "",
+    "catalogers": [
+      "آستان قدس رضوی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "بی‌تا",
+    "pages": "۶۸۷",
+    "citation_pattern": "ف: 6",
+    "notes": ""
+  },
+  {
+    "id": 200,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 7,
+    "volume_title": "جلد هفتم: کتب فارسی و عربی",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد گلچین معانی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۴۶",
+    "pages": "۱۰۱۵",
+    "citation_pattern": "ف: 7",
+    "notes": "در دو مجلد"
+  },
+  {
+    "id": 201,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 8,
+    "volume_title": "جلد هشتم: کتب خطی",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد گلچین معانی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۵۰",
+    "pages": "۶۰۰",
+    "citation_pattern": "ف: 8",
+    "notes": ""
+  },
+  {
+    "id": 202,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 9,
+    "volume_title": "جلد نهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "نجیب مایل هروی",
+      "سید علی اردلان جوان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۶۱",
+    "pages": "۴۲۰",
+    "citation_pattern": "ف: 9",
+    "notes": ""
+  },
+  {
+    "id": 203,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 10,
+    "volume_title": "جلد دهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "غلامعلی عرفانیان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۶۲",
+    "pages": "۳۱۵",
+    "citation_pattern": "ف: 10",
+    "notes": ""
+  },
+  {
+    "id": 204,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 11,
+    "volume_title": "جلد یازدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "مهدی ولائی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۶۴",
+    "pages": "۷۳۲",
+    "citation_pattern": "ف: 11",
+    "notes": ""
+  },
+  {
+    "id": 205,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 12,
+    "volume_title": "جلد دوازدهم",
+    "manuscript_range": "",
+    "catalogers": [
+      "غلامعلی عرفانیان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۰",
+    "pages": "۵۷۶",
+    "citation_pattern": "ف: 12",
+    "notes": ""
+  },
+  {
+    "id": 206,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 13,
+    "volume_title": "جلد سیزدهم: لغت",
+    "manuscript_range": "",
+    "catalogers": [
+      "احمد گلچین معانی",
+      "غلامعلی عرفانیان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۲",
+    "pages": "۲۴۱",
+    "citation_pattern": "ف: 13",
+    "notes": ""
+  },
+  {
+    "id": 207,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 14,
+    "volume_title": "جلد چهاردهم: اخبار",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۶",
+    "pages": "۶۶۹",
+    "citation_pattern": "ف: 14",
+    "notes": ""
+  },
+  {
+    "id": 208,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 15,
+    "volume_title": "جلد پانزدهم: ادعیه",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمد وفادار مرادی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۶",
+    "pages": "۵۹۱",
+    "citation_pattern": "ف: 15",
+    "notes": ""
+  },
+  {
+    "id": 209,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 16,
+    "volume_title": "جلد شانزدهم: اصول فقه",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمد وفادار مرادی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۰",
+    "pages": "۵۶۹",
+    "citation_pattern": "ف: 16",
+    "notes": ""
+  },
+  {
+    "id": 210,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 17,
+    "volume_title": "جلد هفدهم: ادبیات",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمدرضا فاضل هاشمی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۰",
+    "pages": "۶۳۲",
+    "citation_pattern": "ف: 17",
+    "notes": ""
+  },
+  {
+    "id": 211,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 18,
+    "volume_title": "جلد هجدهم: ریاضیات",
+    "manuscript_range": "",
+    "catalogers": [
+      "مهدی ولائی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۰",
+    "pages": "۱۹۴",
+    "citation_pattern": "ف: 18",
+    "notes": ""
+  },
+  {
+    "id": 212,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 19,
+    "volume_title": "جلد نوزدهم: طب",
+    "manuscript_range": "",
+    "catalogers": [
+      "غلامعلی عرفانیان"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۰",
+    "pages": "۷۴۷",
+    "citation_pattern": "ف: 19",
+    "notes": ""
+  },
+  {
+    "id": 213,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 20,
+    "volume_title": "جلد بیستم: کتب فقهی چاپ نشده",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۹",
+    "pages": "۶۲۳",
+    "citation_pattern": "ف: 20",
+    "notes": ""
+  },
+  {
+    "id": 214,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 21,
+    "volume_title": "جلد بیست و یکم: فقه",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۱",
+    "pages": "۱۷۱۷",
+    "citation_pattern": "ف: 21",
+    "notes": "در دو جلد"
+  },
+  {
+    "id": 215,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 22,
+    "volume_title": "جلد بیست و دوم: تفسیر",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۴",
+    "pages": "۴۹۶",
+    "citation_pattern": "ف: 22",
+    "notes": ""
+  },
+  {
+    "id": 216,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 23,
+    "volume_title": "جلد بیست و سوم: تجوید و قرائت",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمد وفادار مرادی"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۴",
+    "pages": "۲۳۷",
+    "citation_pattern": "ف: 23",
+    "notes": ""
+  },
+  {
+    "id": 217,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 24,
+    "volume_title": "جلد بیست و چهارم: منطق",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۳",
+    "pages": "۲۸۷",
+    "citation_pattern": "ف: 24",
+    "notes": ""
+  },
+  {
+    "id": 218,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 25,
+    "volume_title": "جلد بیست و پنجم: کلام و معانی و بیان",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۳",
+    "pages": "۲۳۷",
+    "citation_pattern": "ف: 25",
+    "notes": ""
+  },
+  {
+    "id": 219,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست کتب خطی کتابخانه مرکزی آستان قدس رضوی",
+    "volume_number": 26,
+    "volume_title": "جلد بیست و ششم: اخبار",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۶",
+    "pages": "۷۴۳",
+    "citation_pattern": "ف: 26",
+    "notes": ""
+  },
+  {
+    "id": 220,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست الفبائی کتب خطی آستان قدس رضوی",
+    "volume_number": "الفبائی",
+    "volume_title": "فهرست الفبائی استدراک",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمد وفادار مرادی",
+      "محمد آصف فکرت"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۶۹",
+    "pages": "۹۴۸",
+    "citation_pattern": "الفبائی ف: -",
+    "notes": "تنها نسخه‌هایی که در ۲۶ جلد نیامده است"
+  },
+  {
+    "id": 221,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست نسخه‌های خطی اهدایی رهبر انقلاب",
+    "volume_number": 1,
+    "volume_title": "جلد اول: علوم قرآنی و تفسیر",
+    "manuscript_range": "۱-۱۰۰۰",
+    "catalogers": [
+      "قاسمیان",
+      "نادر علیزاده"
+    ],
+    "supervisors": [
+      "رضا استادی (مقدمه)"
+    ],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۳",
+    "pages": "۴۷۲",
+    "citation_pattern": "اهدائی رهبر: 1",
+    "notes": ""
+  },
+  {
+    "id": 222,
+    "city": "مشهد",
+    "library_fankha": "آستان قدس رضوی",
+    "library_db_id": 1,
+    "library_db_name": "رضوی",
+    "catalog_series": "فهرست نسخه‌های خطی اهدایی رهبر انقلاب",
+    "volume_number": 2,
+    "volume_title": "جلد دوم: فقه و اصول",
+    "manuscript_range": "۱۰۰۱-۲۰۰۰",
+    "catalogers": [
+      "براتعلی غلامی مقدم",
+      "نادر علیزاده",
+      "علی علیزاده"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۷۷",
+    "pages": "۳۵۹",
+    "citation_pattern": "اهدائی رهبر: 2",
+    "notes": ""
+  },
+  {
+    "id": 223,
+    "city": "مشهد",
+    "library_fankha": "کتابخانه جامع گوهرشاد",
+    "library_db_id": 25,
+    "library_db_name": "گوهرشاد",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه جامع گوهرشاد مشهد",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه جامع گوهرشاد",
+    "year": "۱۳۶۳",
+    "pages": "۴۹۶",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 224,
+    "city": "مشهد",
+    "library_fankha": "کتابخانه جامع گوهرشاد",
+    "library_db_id": 25,
+    "library_db_name": "گوهرشاد",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه جامع گوهرشاد مشهد",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه جامع گوهرشاد",
+    "year": "۱۳۶۵",
+    "pages": "۵۷۴",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 225,
+    "city": "مشهد",
+    "library_fankha": "کتابخانه جامع گوهرشاد",
+    "library_db_id": 25,
+    "library_db_name": "گوهرشاد",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه جامع گوهرشاد مشهد",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه جامع گوهرشاد",
+    "year": "۱۳۶۷",
+    "pages": "۷۶۴",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 226,
+    "city": "مشهد",
+    "library_fankha": "کتابخانه جامع گوهرشاد",
+    "library_db_id": 25,
+    "library_db_name": "گوهرشاد",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه جامع گوهرشاد مشهد",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه جامع گوهرشاد",
+    "year": "۱۳۷۱",
+    "pages": "۴۲۶",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 227,
+    "city": "مشهد",
+    "library_fankha": "کتابخانه جامع گوهرشاد",
+    "library_db_id": 25,
+    "library_db_name": "گوهرشاد",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه جامع گوهرشاد مشهد",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم",
+    "manuscript_range": "",
+    "catalogers": [
+      "براتعلی غلامی مقدم"
+    ],
+    "supervisors": [],
+    "publisher": "آستان قدس رضوی",
+    "year": "۱۳۸۷",
+    "pages": "۹۲۷",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 228,
+    "city": "مشهد",
+    "library_fankha": "دانشکده الهیات مشهد",
+    "library_db_id": 38,
+    "library_db_name": "الهیات",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه دانشکده الهیات مشهد",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "دانشگاه فردوسی مشهد",
+    "year": "۱۳۵۳",
+    "pages": "۶۷۶",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 229,
+    "city": "مشهد",
+    "library_fankha": "دانشکده الهیات مشهد",
+    "library_db_id": 38,
+    "library_db_name": "الهیات",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه دانشکده الهیات مشهد",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز نشر دانشگاهی",
+    "year": "۱۳۶۱",
+    "pages": "۷۲۰",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 230,
+    "city": "مشهد",
+    "library_fankha": "دانشکده الهیات مشهد",
+    "library_db_id": 38,
+    "library_db_name": "الهیات",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه دانشکده الهیات مشهد",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "مرکز نشر دانشگاهی",
+    "year": "۱۳۶۱",
+    "pages": "۴۷۰",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 231,
+    "city": "مشهد",
+    "library_fankha": "دانشکده ادبیات مشهد",
+    "library_db_id": 113,
+    "library_db_name": "ادبیات",
+    "catalog_series": "فهرست نسخه‌های خطی دانشکده ادبیات دانشگاه فردوسی",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "محمود فاضل"
+    ],
+    "supervisors": [],
+    "publisher": "دانشگاه فردوسی مشهد",
+    "year": "۱۳۵۴",
+    "pages": "۲۹۴",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 232,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 1,
+    "volume_title": "جلد 1",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 1",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 233,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 2,
+    "volume_title": "جلد 2",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 2",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 234,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 3,
+    "volume_title": "جلد 3",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 3",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 235,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 4,
+    "volume_title": "جلد 4",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 4",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 236,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 5,
+    "volume_title": "جلد 5",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 5",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 237,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 6,
+    "volume_title": "جلد 6",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 6",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 238,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 7,
+    "volume_title": "جلد 7",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 7",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 239,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 8,
+    "volume_title": "جلد 8",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 8",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 240,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 9,
+    "volume_title": "جلد 9",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 9",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 241,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 10,
+    "volume_title": "جلد 10",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 10",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 242,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 11,
+    "volume_title": "جلد 11",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 11",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 243,
+    "city": "اصفهان",
+    "library_fankha": "کتابخانه‌های اصفهان",
+    "library_db_id": null,
+    "library_db_name": "کتابخانه‌های اصفهان",
+    "catalog_series": "فهرست کتب خطی کتابخانه‌های اصفهان",
+    "volume_number": 12,
+    "volume_title": "جلد 12",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید محمدعلی روضاتی"
+    ],
+    "supervisors": [],
+    "publisher": "نشر نفایس مخطوطات اصفهان",
+    "year": "۱۳۳۷-۱۳۴۱",
+    "pages": "۳۹۲",
+    "citation_pattern": "ف: 12",
+    "notes": "۱۲ جزوه در نشر نفایس مخطوطات"
+  },
+  {
+    "id": 244,
+    "city": "اصفهان",
+    "library_fankha": "مدرسه صدر بازار اصفهان",
+    "library_db_id": 107,
+    "library_db_name": "مدرسه صدر بازار",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه مدرسه صدر بازار",
+    "volume_number": 1,
+    "volume_title": "دفتر اول",
+    "manuscript_range": "۱-۳۵۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مجمع ذخائر اسلامی",
+    "year": "۱۳۸۵",
+    "pages": "۲۴۴",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 245,
+    "city": "اصفهان",
+    "library_fankha": "مدرسه صدر بازار اصفهان",
+    "library_db_id": 107,
+    "library_db_name": "مدرسه صدر بازار",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه مدرسه صدر بازار",
+    "volume_number": 2,
+    "volume_title": "دفتر دوم",
+    "manuscript_range": "۳۵۱-۷۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مجمع ذخائر اسلامی",
+    "year": "۱۳۸۵",
+    "pages": "۵۱۱",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 246,
+    "city": "اصفهان",
+    "library_fankha": "مدرسه صدر بازار اصفهان",
+    "library_db_id": 107,
+    "library_db_name": "مدرسه صدر بازار",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه مدرسه صدر بازار",
+    "volume_number": 3,
+    "volume_title": "دفتر سوم",
+    "manuscript_range": "۷۰۱-۹۷۳",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مجمع ذخائر اسلامی",
+    "year": "۱۳۸۵",
+    "pages": "۸۰۸",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 247,
+    "city": "یزد",
+    "library_fankha": "کتابخانه وزیری یزد",
+    "library_db_id": 32,
+    "library_db_name": "وزیری",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه وزیری یزد",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "۱-۵۰۰",
+    "catalogers": [
+      "محمد شیروانی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه تابان تهران",
+    "year": "۱۳۵۰",
+    "pages": "۴۳۶",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 248,
+    "city": "یزد",
+    "library_fankha": "کتابخانه وزیری یزد",
+    "library_db_id": 32,
+    "library_db_name": "وزیری",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه وزیری یزد",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "۵۰۱-۱۰۰۰",
+    "catalogers": [
+      "محمد شیروانی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه تابان تهران",
+    "year": "بی‌تا",
+    "pages": "۳۷۹",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 249,
+    "city": "یزد",
+    "library_fankha": "کتابخانه وزیری یزد",
+    "library_db_id": 32,
+    "library_db_name": "وزیری",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه وزیری یزد",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "۱۰۰۱-۱۵۰۰",
+    "catalogers": [
+      "محمد شیروانی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه تابان تهران",
+    "year": "۱۳۵۳",
+    "pages": "۳۰۶",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 250,
+    "city": "یزد",
+    "library_fankha": "کتابخانه وزیری یزد",
+    "library_db_id": 32,
+    "library_db_name": "وزیری",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه وزیری یزد",
+    "volume_number": 4,
+    "volume_title": "جلد چهارم",
+    "manuscript_range": "۱۵۰۱-۲۰۰۰",
+    "catalogers": [
+      "محمد شیروانی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه تابان تهران",
+    "year": "۱۳۵۵",
+    "pages": "۳۷۸",
+    "citation_pattern": "ف: 4",
+    "notes": ""
+  },
+  {
+    "id": 251,
+    "city": "یزد",
+    "library_fankha": "کتابخانه وزیری یزد",
+    "library_db_id": 32,
+    "library_db_name": "وزیری",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه وزیری یزد",
+    "volume_number": 5,
+    "volume_title": "جلد پنجم",
+    "manuscript_range": "۲۰۰۱-۳۵۰۰",
+    "catalogers": [
+      "محمد شیروانی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه تابان تهران",
+    "year": "۱۳۵۸",
+    "pages": "۵۱۰",
+    "citation_pattern": "ف: 5",
+    "notes": ""
+  },
+  {
+    "id": 252,
+    "city": "یزد",
+    "library_fankha": "کتابخانه سریزدی (مسجد حظیره)",
+    "library_db_id": 57,
+    "library_db_name": "سریزدی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه سریزدی",
+    "volume_number": 1,
+    "volume_title": "دفتر اول",
+    "manuscript_range": "۱-۴۰۰",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مجمع ذخائر اسلامی",
+    "year": "۱۳۸۴",
+    "pages": "۲۳۵",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 253,
+    "city": "یزد",
+    "library_fankha": "کتابخانه سریزدی (مسجد حظیره)",
+    "library_db_id": 57,
+    "library_db_name": "سریزدی",
+    "catalog_series": "فهرست نسخه‌های خطی کتابخانه سریزدی",
+    "volume_number": 2,
+    "volume_title": "دفتر دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "سید جعفر حسینی اشکوری"
+    ],
+    "supervisors": [],
+    "publisher": "مجمع ذخائر اسلامی",
+    "year": "۱۳۸۴",
+    "pages": "۱۴۰",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 254,
+    "city": "تبریز",
+    "library_fankha": "کتابخانه ملی تبریز",
+    "library_db_id": 859,
+    "library_db_name": "ملی تبریز",
+    "catalog_series": "فهرست کتابخانه ملی تبریز (اهدایی محمد نخجوانی)",
+    "volume_number": 1,
+    "volume_title": "جلد اول",
+    "manuscript_range": "",
+    "catalogers": [
+      "میرودود سید یونسی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه محمدیه تبریز",
+    "year": "۱۳۴۸",
+    "pages": "۴۷۵",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 255,
+    "city": "تبریز",
+    "library_fankha": "کتابخانه ملی تبریز",
+    "library_db_id": 859,
+    "library_db_name": "ملی تبریز",
+    "catalog_series": "فهرست کتابخانه ملی تبریز (اهدایی محمد نخجوانی)",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "میرودود سید یونسی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه شفق تبریز",
+    "year": "۱۳۵۱",
+    "pages": "۴۵۳",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 256,
+    "city": "تبریز",
+    "library_fankha": "کتابخانه ملی تبریز",
+    "library_db_id": 859,
+    "library_db_name": "ملی تبریز",
+    "catalog_series": "فهرست کتابخانه ملی تبریز (اهدایی محمد نخجوانی)",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "میرودود سید یونسی"
+    ],
+    "supervisors": [],
+    "publisher": "چاپخانه شفق تبریز",
+    "year": "۱۳۵۴",
+    "pages": "۵۹۵",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  },
+  {
+    "id": 257,
+    "city": "شیراز",
+    "library_fankha": "کتابخانه آستانه حضرت شاهچراغ",
+    "library_db_id": 97,
+    "library_db_name": "شاهچراغ",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه حضرت شاهچراغ",
+    "volume_number": 1,
+    "volume_title": "جلد اول: قرآنها و تفسیرها",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی بهروزی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه آستانه شیراز",
+    "year": "۱۳۶۰",
+    "pages": "۳۳۷",
+    "citation_pattern": "ف: 1",
+    "notes": ""
+  },
+  {
+    "id": 258,
+    "city": "شیراز",
+    "library_fankha": "کتابخانه آستانه حضرت شاهچراغ",
+    "library_db_id": 97,
+    "library_db_name": "شاهچراغ",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه حضرت شاهچراغ",
+    "volume_number": 2,
+    "volume_title": "جلد دوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی بهروزی"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه آستانه شیراز",
+    "year": "۱۳۶۰",
+    "pages": "۴۶۸",
+    "citation_pattern": "ف: 2",
+    "notes": ""
+  },
+  {
+    "id": 259,
+    "city": "شیراز",
+    "library_fankha": "کتابخانه آستانه حضرت شاهچراغ",
+    "library_db_id": 97,
+    "library_db_name": "شاهچراغ",
+    "catalog_series": "فهرست کتابهای خطی کتابخانه حضرت شاهچراغ",
+    "volume_number": 3,
+    "volume_title": "جلد سوم",
+    "manuscript_range": "",
+    "catalogers": [
+      "علینقی بهروزی",
+      "محمدصادق فقیری"
+    ],
+    "supervisors": [],
+    "publisher": "کتابخانه آستانه شیراز",
+    "year": "۱۳۸۲",
+    "pages": "۱۶۴",
+    "citation_pattern": "ف: 3",
+    "notes": ""
+  }
+]
