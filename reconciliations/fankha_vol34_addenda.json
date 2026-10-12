@@ -1,0 +1,810 @@
+{
+    "catalog": "fankha",
+    "volume": 34,
+    "pages": [
+        970,
+        985
+    ],
+    "description": "تعیین تکلیف مدخل‌های بخش استدراک جلد ۳۴ فنخا (ص ۹۷۰–۹۸۵) نسبت به جلدهای ۱ تا ۳۳.",
+    "decided_on": "2026-10-12",
+    "rules": [
+        "ارجاع صریح متن استدراک («مربوط به جلد … ص …») بر هر قاعده‌ی دیگر مقدم است.",
+        "مدخل بی‌پدیدآور در مدخل «غیر همانند» هم‌عنوان ادغام می‌شود.",
+        "مدخل پدیددار در اثر همان پدیدآور ادغام می‌شود؛ اگر چنین اثری نبود، مستقل می‌ماند.",
+        "نسخه‌ای که در مدخل «غیر همانند» ادغام می‌شود پرچم is_distinct_work می‌گیرد.",
+        "نسخه‌ای که از پیش در اثر مقصد ثبت شده منتقل نمی‌شود؛ فقط ارجاع استدراک به نسخه‌ی موجود افزوده می‌شود."
+    ],
+    "merges": [
+        {
+            "source": {
+                "work_id": 71492,
+                "title": "آداب المشق",
+                "author": "اصفهانی، بابا شاه",
+                "volume": 34,
+                "page": 970
+            },
+            "target": {
+                "work_id": 385,
+                "title": "آداب المشق",
+                "author": "اصفهانی، بابا شاه",
+                "volume": 1,
+                "page": 167
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71493,
+                "title": "آداب المشق",
+                "author": "میرعماد",
+                "volume": 34,
+                "page": 970
+            },
+            "target": {
+                "work_id": 387,
+                "title": "آداب المشق",
+                "author": "میرعماد",
+                "volume": 1,
+                "page": 167
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71501,
+                "title": "آیات الاحکام",
+                "author": "قطب راوندی، سعید بن هبة الله",
+                "volume": 34,
+                "page": 971
+            },
+            "target": {
+                "work_id": 669,
+                "title": "آیات الاحکام",
+                "author": "قطب راوندی، سعید بن هبة الله",
+                "volume": 1,
+                "page": 250
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71502,
+                "title": "اثولوجیا",
+                "author": "فلوطین",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 1278,
+                "title": "اثولوجیا",
+                "author": "فلوطین",
+                "volume": 1,
+                "page": 557
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71503,
+                "title": "اجوبة مسائل السيد محمد بن عبدالنبی بن علی القاری",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 2227,
+                "title": "اجوبة مسائل السيد محمد بن عبدالنبی بن علی القاری",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 1,
+                "page": 841
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71504,
+                "title": "اجوبة مسائل الشاه فضل الله",
+                "author": "شیخ بهائی، محمد بن حسین",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 2235,
+                "title": "اجوبة مسائل الشاه فضل الله",
+                "author": "شیخ بهائی، محمد بن حسین",
+                "volume": 1,
+                "page": 846
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71505,
+                "title": "اجوبة المسائل العويصة",
+                "author": "صدرالدین شیرازی، محمد بن ابراهیم",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 2293,
+                "title": "اجوبة المسائل العویصة",
+                "author": "صدرالدین شیرازی، محمد بن ابراهیم",
+                "volume": 1,
+                "page": 873
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71506,
+                "title": "اجوبة مسائل محمد بن عبدالعلی قطیفی (1)",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 2343,
+                "title": "اجوبة مسائل محمد بن عبدالعلی قطیفی (1)",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 1,
+                "page": 892
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71508,
+                "title": "الادلة العقلیة",
+                "author": "تهرانی نجفی، هادی بن محمد امین",
+                "volume": 34,
+                "page": 973
+            },
+            "target": {
+                "work_id": 3955,
+                "title": "الادلة العقلية",
+                "author": "تهرانی نجفی، هادی بن محمد امین",
+                "volume": 2,
+                "page": 821
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71509,
+                "title": "ارشاد المبتدئین",
+                "author": "سمرقندی، محمود",
+                "volume": 34,
+                "page": 973
+            },
+            "target": {
+                "work_id": 4509,
+                "title": "ارشاد المبتدئین",
+                "author": "سمرقندی، محمود",
+                "volume": 3,
+                "page": 121
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71510,
+                "title": "الاستصحاب",
+                "author": "تهرانی نجفی، هادی بن محمد امین",
+                "volume": 34,
+                "page": 973
+            },
+            "target": {
+                "work_id": 5064,
+                "title": "الاستصحاب",
+                "author": "تهرانی نجفی، هادی بن محمد امین",
+                "volume": 3,
+                "page": 333
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71511,
+                "title": "الاستصحاب",
+                "author": "تربتی، محمد تقی بن علی نقی",
+                "volume": 34,
+                "page": 973
+            },
+            "target": {
+                "work_id": 5066,
+                "title": "الاستصحاب",
+                "author": "تربتی، محمد تقی بن علی نقی",
+                "volume": 3,
+                "page": 335
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71513,
+                "title": "الاصول العشرة",
+                "author": "نجم الدین کبری، احمد بن عمر",
+                "volume": 34,
+                "page": 974
+            },
+            "target": {
+                "work_id": 6500,
+                "title": "الاصول العشرة",
+                "author": "نجم الدین کبری، احمد بن عمر",
+                "volume": 4,
+                "page": 223
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71514,
+                "title": "اغراض مقالات اصول اقلیدس",
+                "author": null,
+                "volume": 34,
+                "page": 974
+            },
+            "target": {
+                "work_id": 7293,
+                "title": "اغراض مقالات اصول اقلیدس",
+                "author": null,
+                "volume": 4,
+                "page": 559
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71522,
+                "title": "انالوطیقا الاولی",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 34,
+                "page": 976
+            },
+            "target": {
+                "work_id": 8226,
+                "title": "انالوطیقا الاولی",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 4,
+                "page": 941
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71523,
+                "title": "انالوطیقا الاولی (مختصر)",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 34,
+                "page": 977
+            },
+            "target": {
+                "work_id": 8227,
+                "title": "انالوطیقا الاولى (مختصر)",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 4,
+                "page": 942
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71524,
+                "title": "انالوطیقا الثانی",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 34,
+                "page": 977
+            },
+            "target": {
+                "work_id": 8228,
+                "title": "انالوطیقا الثانی",
+                "author": "فارابی، محمد بن محمد",
+                "volume": 4,
+                "page": 943
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71525,
+                "title": "انعکاس الشعاعات و انعطافها",
+                "author": "نصیرالدین طوسی، محمد بن محمد",
+                "volume": 34,
+                "page": 977
+            },
+            "target": {
+                "work_id": 8539,
+                "title": "انعکاس الشعاعات و انعطافها",
+                "author": "نصیرالدین طوسی، محمد بن محمد",
+                "volume": 5,
+                "page": 67
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71526,
+                "title": "البرهان فی التکلیف و البیان",
+                "author": "اخباری، محمد بن عبدالنبی",
+                "volume": 34,
+                "page": 977
+            },
+            "target": {
+                "work_id": 10056,
+                "title": "البرهان فی التکلیف و البیان",
+                "author": "اخباری، محمد بن عبدالنبی",
+                "volume": 5,
+                "page": 942
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71528,
+                "title": "ترجمة الجريدة فی شرح القصيدة",
+                "author": "قزوینی، قاسم بن ابراهیم",
+                "volume": 34,
+                "page": 978
+            },
+            "target": {
+                "work_id": 14670,
+                "title": "ترجمة الجریدة فی شرح القصيدة",
+                "author": "قزوینی، قاسم بن ابراهیم",
+                "volume": 8,
+                "page": 50
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71530,
+                "title": "جوامع الحکايات",
+                "author": "عوفی، محمد بن محمد",
+                "volume": 34,
+                "page": 979
+            },
+            "target": {
+                "work_id": 20540,
+                "title": "جوامع الحکایات",
+                "author": "عوفی، محمد بن محمد",
+                "volume": 10,
+                "page": 954
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71531,
+                "title": "حاشية التعليقات",
+                "author": null,
+                "volume": 34,
+                "page": 979
+            },
+            "target": {
+                "work_id": 21401,
+                "title": "حاشية التعليقات",
+                "author": null,
+                "volume": 11,
+                "page": 490
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71534,
+                "title": "حاشیة الروضة البهیة فی شرح اللمعة الدمشقیة",
+                "author": null,
+                "volume": 34,
+                "page": 979
+            },
+            "target": {
+                "work_id": 21870,
+                "title": "حاشية الروضة البهية فی شرح اللمعة الدمشقية",
+                "author": null,
+                "volume": 11,
+                "page": 816
+            },
+            "distinct_work": true
+        },
+        {
+            "source": {
+                "work_id": 71535,
+                "title": "حاشیة فرائد الاصول",
+                "author": null,
+                "volume": 34,
+                "page": 979
+            },
+            "target": {
+                "work_id": 22473,
+                "title": "حاشیة فرائد الاصول",
+                "author": null,
+                "volume": 12,
+                "page": 170
+            },
+            "distinct_work": true
+        },
+        {
+            "source": {
+                "work_id": 71537,
+                "title": "حاشية اللمعة الدمشقية",
+                "author": null,
+                "volume": 34,
+                "page": 980
+            },
+            "target": {
+                "work_id": 22682,
+                "title": "حاشیة اللمعة الدمشقیة",
+                "author": null,
+                "volume": 12,
+                "page": 297
+            },
+            "distinct_work": true
+        },
+        {
+            "source": {
+                "work_id": 71541,
+                "title": "رسائل اخوان الصفا (ترجمه)",
+                "author": null,
+                "volume": 34,
+                "page": 980
+            },
+            "target": {
+                "work_id": 32283,
+                "title": "رسائل اخوان الصفا (ترجمه)",
+                "author": null,
+                "volume": 16,
+                "page": 420
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71542,
+                "title": "السبب فی التكليف مع العلم بالخلاف",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 34,
+                "page": 981
+            },
+            "target": {
+                "work_id": 35176,
+                "title": "السبب فی التكليف مع العلم بالخلاف",
+                "author": "احسائی، احمد بن زین الدین",
+                "volume": 17,
+                "page": 907
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71543,
+                "title": "سرور الشيعة",
+                "author": "مجلسی، محمد تقی بن محمد باقر",
+                "volume": 34,
+                "page": 981
+            },
+            "target": {
+                "work_id": 35799,
+                "title": "سرور الشیعة",
+                "author": "مجلسی، محمد تقی بن محمد باقر",
+                "volume": 18,
+                "page": 107
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71544,
+                "title": "شرح قصيدة عبدونية",
+                "author": "ابن بدرون، عبدالملک بن عبدالله",
+                "volume": 34,
+                "page": 981
+            },
+            "target": {
+                "work_id": 40847,
+                "title": "شرح قصیدة عبدونیة",
+                "author": "ابن بدرون، عبدالملک بن عبدالله",
+                "volume": 20,
+                "page": 397
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71547,
+                "title": "کیمیای باسلیقا",
+                "author": "کرولیوس",
+                "volume": 34,
+                "page": 983
+            },
+            "target": {
+                "work_id": 54870,
+                "title": "كیمیای باسلیقا",
+                "author": "کرولیوس",
+                "volume": 26,
+                "page": 1002
+            },
+            "distinct_work": false
+        },
+        {
+            "source": {
+                "work_id": 71548,
+                "title": "کیمیای باسلیقا",
+                "author": "کرولیوس",
+                "volume": 34,
+                "page": 983
+            },
+            "target": {
+                "work_id": 54871,
+                "title": "کیمیای باسلیقا",
+                "author": "کرولیوس",
+                "volume": 26,
+                "page": 1002
+            },
+            "distinct_work": false
+        }
+    ],
+    "errata": [
+        {
+            "source": {
+                "work_id": 71507,
+                "title": "الاحمدية",
+                "author": "حسینی بخاری، محمد بن برهان",
+                "volume": 34,
+                "page": 972
+            },
+            "target": {
+                "work_id": 3082,
+                "title": "الاحمدية",
+                "author": "بخارائی اوچی، جلال الدین حسین بن کبیرالدین احمد",
+                "volume": 2,
+                "page": 278
+            },
+            "field": "author",
+            "old_value": "بخارائی اوچی، جلال الدین حسین بن کبیرالدین احمد",
+            "new_value": "حسینی بخاری، محمد بن برهان"
+        },
+        {
+            "source": {
+                "work_id": 71512,
+                "title": "الاشقرية",
+                "author": "حسینی بخاری، محمد بن برهان",
+                "volume": 34,
+                "page": 973
+            },
+            "target": {
+                "work_id": 6009,
+                "title": "الاشقریة",
+                "author": "بخارائی اوچی، جلال الدین حسین بن کبیرالدین احمد",
+                "volume": 3,
+                "page": 1022
+            },
+            "field": "author",
+            "old_value": "بخارائی اوچی، جلال الدین حسین بن کبیرالدین احمد",
+            "new_value": "حسینی بخاری، محمد بن برهان"
+        }
+    ],
+    "independent": [
+        {
+            "work_id": 71488,
+            "title": "آداب رؤیت هلال",
+            "author": null,
+            "volume": 34,
+            "page": 970
+        },
+        {
+            "work_id": 71489,
+            "title": "آداب طباخی",
+            "author": null,
+            "volume": 34,
+            "page": 970
+        },
+        {
+            "work_id": 71490,
+            "title": "آداب طباخی (رساله در)",
+            "author": null,
+            "volume": 34,
+            "page": 970
+        },
+        {
+            "work_id": 71491,
+            "title": "آداب قلم تراشیدن",
+            "author": null,
+            "volume": 34,
+            "page": 970
+        },
+        {
+            "work_id": 71494,
+            "title": "آداب نماز شب",
+            "author": "طباطبائی، محمد علی بن محمد رفیع",
+            "volume": 34,
+            "page": 970
+        },
+        {
+            "work_id": 71495,
+            "title": "آداب وزارت و حکومت",
+            "author": null,
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71496,
+            "title": "آداب وضو (رساله در)",
+            "author": null,
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71497,
+            "title": "آفاق النفس",
+            "author": "گیلانی، سلیمان بن محمد",
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71498,
+            "title": "آفاق و انفس",
+            "author": null,
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71499,
+            "title": "آلة صيدية و حالة فيدية",
+            "author": "بصری، احمد بن عبدالرضا",
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71500,
+            "title": "آیات (منتخب)",
+            "author": "جابر بن حیان",
+            "volume": 34,
+            "page": 971
+        },
+        {
+            "work_id": 71515,
+            "title": "الزامیه (رساله)",
+            "author": "شاه شجاع، جلال الدین ابوالفوارس",
+            "volume": 34,
+            "page": 974
+        },
+        {
+            "work_id": 71516,
+            "title": "الفاظ البحار معنوی",
+            "author": "حسینی، علی بن فضل الله",
+            "volume": 34,
+            "page": 974
+        },
+        {
+            "work_id": 71517,
+            "title": "الفاظ الکفر",
+            "author": "رشید، محمد بن اسماعیل",
+            "volume": 34,
+            "page": 974
+        },
+        {
+            "work_id": 71519,
+            "title": "الفاظی که مقتضی صدر کلامند (رباعی درباره)",
+            "author": null,
+            "volume": 34,
+            "page": 975
+        },
+        {
+            "work_id": 71520,
+            "title": "الهامیه",
+            "author": "طغرای مشهدی",
+            "volume": 34,
+            "page": 976
+        },
+        {
+            "work_id": 71521,
+            "title": "الهی (رسالة)",
+            "author": null,
+            "volume": 34,
+            "page": 976
+        },
+        {
+            "work_id": 71527,
+            "title": "تحقیق معنی الحرف",
+            "author": "جرجانی، علی بن محمد",
+            "volume": 34,
+            "page": 977
+        },
+        {
+            "work_id": 71529,
+            "title": "ثبوت الولاية للاب و الجد للاب على البكر البالغة",
+            "author": "فیض کاشانی، محمد بن شاه مرتضی",
+            "volume": 34,
+            "page": 978
+        },
+        {
+            "work_id": 71532,
+            "title": "حاشية تنازع الزوجين فی قدر المهر",
+            "author": "میرداماد، محمد باقر بن محمد",
+            "volume": 34,
+            "page": 979
+        },
+        {
+            "work_id": 71533,
+            "title": "حاشیة الروضة البهیة فی شرح اللمعة الدمشقیة",
+            "author": "خراسانی، محمد جعفر بن محمد طاهر",
+            "volume": 34,
+            "page": 979
+        },
+        {
+            "work_id": 71536,
+            "title": "حاشیة كفاية الاحكام",
+            "author": "حسینی خراسانی، ذبیح الله بن هدایت الله",
+            "volume": 34,
+            "page": 980
+        },
+        {
+            "work_id": 71538,
+            "title": "حدوث و قدم القرآن",
+            "author": "جرجانی، علی بن محمد",
+            "volume": 34,
+            "page": 980
+        },
+        {
+            "work_id": 71539,
+            "title": "خلاصة الحسنية",
+            "author": "آرانی کاشانی، محمد علی بن محمد حسن",
+            "volume": 34,
+            "page": 980
+        },
+        {
+            "work_id": 71540,
+            "title": "دیوان حیائی",
+            "author": "حیایی (؟). القصاید فی رثاء الحسین (ع).",
+            "volume": 34,
+            "page": 980
+        },
+        {
+            "work_id": 71545,
+            "title": "طب و جراحی",
+            "author": "جرجانی، اسماعیل بن حسن",
+            "volume": 34,
+            "page": 982
+        },
+        {
+            "work_id": 71546,
+            "title": "کیمیاء باسلیقا",
+            "author": "کرولیوس",
+            "volume": 34,
+            "page": 982
+        },
+        {
+            "work_id": 71549,
+            "title": "المحیطیة",
+            "author": "کاشی، جمشید بن مسعود",
+            "volume": 34,
+            "page": 983
+        },
+        {
+            "work_id": 71550,
+            "title": "نزهة الانظار فی مشایخ الاجازة الى ائمة الاطهار",
+            "author": "موسوی جزایری، محمد کاظم بن احمد",
+            "volume": 34,
+            "page": 984
+        }
+    ],
+    "pending": [
+        {
+            "source": {
+                "work_id": 71518,
+                "title": "الفاظ مستعرب",
+                "author": null,
+                "volume": 34,
+                "page": 975
+            },
+            "candidate": {
+                "work_id": 7761,
+                "title": "الفاظ مستعرب",
+                "author": null,
+                "volume": 4,
+                "page": 719
+            },
+            "reason": "به احتمال زیاد با اثر جلد ۴ یکی است (عنوان دوم یکسان «معارف اللغة»)؛ در انتظار تأیید نسخه‌شناس."
+        }
+    ]
+}
