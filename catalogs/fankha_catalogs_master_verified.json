@@ -4137,14 +4137,14 @@
     "volume_title": "جلد دوم: کتب خطی",
     "manuscript_range": "",
     "catalogers": [
-      "آستان قدس رضوی"
+      "اوکتایی"
     ],
     "supervisors": [],
     "publisher": "آستان قدس رضوی",
     "year": "۱۳۰۵",
     "pages": "۴۰۰",
     "citation_pattern": "ف: 2",
-    "notes": ""
+    "notes": "فنخا فهرست‌نگار را نام نبرده است؛ «اوکتایی» از رکورد MTIF مجموعه (mtif.org/book/147)"
   },
   {
     "id": 196,
@@ -4157,14 +4157,14 @@
     "volume_title": "جلد سوم: کتب خطی",
     "manuscript_range": "",
     "catalogers": [
-      "آستان قدس رضوی"
+      "اوکتایی"
     ],
     "supervisors": [],
     "publisher": "آستان قدس رضوی",
     "year": "۱۳۰۵",
     "pages": "۴۰۰",
     "citation_pattern": "ف: 3",
-    "notes": ""
+    "notes": "فنخا فهرست‌نگار را نام نبرده است؛ «اوکتایی» از رکورد MTIF مجموعه (mtif.org/book/147)"
   },
   {
     "id": 197,
@@ -4177,14 +4177,14 @@
     "volume_title": "جلد چهارم: حکمت، کلام، فلسفه، منطق، تفسیر",
     "manuscript_range": "",
     "catalogers": [
-      "آستان قدس رضوی"
+      "اوکتایی"
     ],
     "supervisors": [],
     "publisher": "آستان قدس رضوی",
     "year": "بی‌تا",
     "pages": "۵۰۵",
     "citation_pattern": "ف: 4",
-    "notes": ""
+    "notes": "فنخا فهرست‌نگار را نام نبرده است؛ «اوکتایی» از رکورد MTIF مجموعه (mtif.org/book/147)"
   },
   {
     "id": 198,
@@ -4217,15 +4217,13 @@
     "volume_number": 6,
     "volume_title": "جلد ششم: اصول فقه، ادعیه، اخلاق، رجال، انساب",
     "manuscript_range": "",
-    "catalogers": [
-      "آستان قدس رضوی"
-    ],
+    "catalogers": [],
     "supervisors": [],
     "publisher": "آستان قدس رضوی",
     "year": "بی‌تا",
     "pages": "۶۸۷",
     "citation_pattern": "ف: 6",
-    "notes": ""
+    "notes": "فهرست‌نگار نامعلوم: فنخا نامی نیاورده و MTIF «مهدی ولائی» نوشته که با «بی‌تا» بودن جلد نمی‌خواند"
   },
   {
     "id": 200,
