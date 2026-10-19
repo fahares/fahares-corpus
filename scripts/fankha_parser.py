@@ -493,6 +493,36 @@ def is_bib_citation(text: str) -> bool:
     has_page_word = bool(re.search(r'(?:ص|ج|جلد|صفحه|شماره)\s*\d+', s))
     return has_vol_page or has_catalog_keyword or has_semicolon or has_page_word
 
+def split_bib_citations(content: str) -> List[str]:
+    """Split a bibliography block on «؛» into citations. A piece that begins with a number continues
+    the citation before it («الذریعة 865/9؛ 221/2») and a «؛» inside «...» is part of a title, so
+    neither starts a new citation."""
+    citations: List[str] = []
+    depth = 0
+    piece = ''
+    pieces: List[str] = []
+    for ch in content:
+        if ch == '«':
+            depth += 1
+        elif ch == '»' and depth:
+            depth -= 1
+        if ch == '؛' and not depth:
+            pieces.append(piece)
+            piece = ''
+        else:
+            piece += ch
+    pieces.append(piece)
+    if depth:  # an unclosed «: don't let it swallow the rest of the block
+        pieces = content.split('؛')
+    for c in (p.strip() for p in pieces):
+        if not c:
+            continue
+        if citations and re.match(r'[0-9۰-۹]', c):
+            citations[-1] += '؛ ' + c
+        else:
+            citations.append(c)
+    return citations
+
 def parse_header_line(clean_header: str) -> Tuple[List[str], Optional[str], Optional[str]]:
     parts = [p.strip() for p in clean_header.split('/') if p.strip()]
     if not parts:
@@ -1011,14 +1041,19 @@ class FankhaParser:
             if comm_items:
                 work.commentaries_and_glosses = comm_items
 
-        # Bibliography citations [ ... ] - split each by semicolon (؛)
+        # Bibliography citations [ ... ] - split each by semicolon (؛). A bracket inside a sentence, with text
+        # before and after it on its line («در الذریعه [17/16] معرفی شده است»), is an inline reference and
+        # stays in the description.
         bib_items = []
         bib_spans = []
         for m in re.finditer(r'\[([^\]]+)\]', rem_text):
             content = m.group(1).strip()
+            line_before = PAGE_TAG_PATTERN.sub('', rem_text[:m.start()].rsplit('\n', 1)[-1])
+            line_after = PAGE_TAG_PATTERN.sub('', rem_text[m.end():].split('\n', 1)[0])
+            if re.search(r'[^\W_]', line_before) and re.search(r'[^\W_]', line_after):
+                continue
             if is_bib_citation(content):
-                citations = [c.strip() for c in content.split('؛') if c.strip()]
-                bib_items.extend(citations)
+                bib_items.extend(split_bib_citations(content))
                 bib_spans.append(m.group(0))
 
         if bib_items:
@@ -1639,7 +1674,8 @@ class FankhaParser:
 
         # Residual notes calculation
         res_clean = rem_text
-        for span in sorted(list(set(extracted_spans)), key=len, reverse=True):
+        # dict.fromkeys keeps spans of equal length in the order found, so the output doesn't depend on the hash seed
+        for span in sorted(dict.fromkeys(extracted_spans), key=len, reverse=True):
             if span:
                 res_clean = res_clean.replace(span, ' ')
 
