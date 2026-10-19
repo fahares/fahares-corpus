@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-RELEASE_TAG="v1.1.3"
+RELEASE_TAG="v1.1.4"
 REPO="fahares/fahares-corpus"
 ARCHIVE_NAME="fankha_json_${RELEASE_TAG}.tar.gz"
 DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ARCHIVE_NAME}"
