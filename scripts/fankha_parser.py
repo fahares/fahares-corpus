@@ -342,7 +342,7 @@ def parse_subjects(subj_str: Optional[str]) -> List[str]:
     return final_res
 
 KNOWN_SCRIPTS_LIST = [
-    'شکسته نستعلیق', 'نستعلیق', 'شکسته', 'تعلیق', 'رقعه', 'کوفی', 'ثلث',
+    'شکسته نستعلیق', 'شکسته تعلیق', 'نستعلیق', 'شکسته', 'تعلیق', 'رقعه', 'کوفی', 'ثلث',
     'ریحان', 'محقق', 'طومار', 'مغربی', 'لاتین', 'تایپی', 'نسخ'
 ]
 
@@ -394,6 +394,8 @@ SCRIPT_UNIFY = {
     'چلیپایی': (None, 'چلیپا'),
     'حمایلی': (None, 'حمایلی'),
     'سیاه مشق': (None, 'سیاه مشق'),
+    # «شکسته» alone is شکسته نستعلیق in the catalogues (fahares backlog item 53)
+    'شکسته': ('شکسته نستعلیق', None),
 }
 
 
@@ -474,7 +476,10 @@ def split_script_notes(script_str: Optional[str]) -> Dict[str, Any]:
         s = s[:scribe_m.start()]
     s = strip_notes(s)
 
-    known = _known_scripts_in(s)
+    # «نستعلیق شکسته» is شکسته نستعلیق with the words the other way round, and «شکسته، نستعلیق» is how
+    # some catalogues (گلپایگانی، ملک، الهیات) write it
+    t = re.sub(r'نستعلیق\s+شکسته(?!\s*(?:نستعلیق|تعلیق))', 'شکسته نستعلیق', s)
+    known = _known_scripts_in(re.sub(r'شکسته\s*،\s*نستعلیق', 'شکسته نستعلیق', t))
     if known:
         res['scripts'] = known
         return res
