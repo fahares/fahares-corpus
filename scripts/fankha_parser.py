@@ -357,6 +357,59 @@ SCRIPT_SPELLINGS = {
     'تحریری بدخط وناخوانا': 'تحریری بدخط و ناخوانا',
 }
 
+# Names that are not a script of their own: (script or None, quality for script_styles or None).
+# Hebrew, Pahlavi and Latin stay: «خط: عبری» names the alphabet. Same table as ScriptNameCleaner::UNIFY.
+SCRIPT_UNIFY = {
+    'تحریری متوسط': ('تحریری', 'متوسط'),
+    'تحریری نازیبا': ('تحریری', 'نازیبا'),
+    'تحریری ناخوانا': ('تحریری', 'ناخوانا'),
+    'تحریری خوش': ('تحریری', 'خوش'),
+    'تحریری بدخط و ناخوانا': ('تحریری', 'بدخط و ناخوانا'),
+    'تحریری بدخط': ('تحریری', 'بدخط'),
+    'تحریری خفی': ('تحریری', 'خفی'),
+    'تحریری کهن': ('تحریری', 'کهن'),
+    'تحریری زیبا': ('تحریری', 'زیبا'),
+    'تحریری درشت': ('تحریری', 'درشت'),
+    'تحریری پخته': ('تحریری', 'پخته'),
+    'تحریری ترکی': ('تحریری', None),
+    'تحریری معمول هندوستان': ('تحریری', None),
+    'خط زیبا': (None, 'زیبا'),
+    'خط عالی': (None, 'عالی'),
+    'خط خوانا': (None, 'خوانا'),
+    'خط خوش': (None, 'خوش'),
+    'خط ناخوانا': (None, 'ناخوانا'),
+    'متوسط': (None, 'متوسط'),
+    'معتاد': (None, 'معتاد'),
+    'خط رقاع': ('رقاع', None),
+    'رقاع ممتاز': ('رقاع', 'ممتاز'),
+    'خط دیوانی': ('دیوانی', None),
+    'رقعه': ('رقعی', None),
+    'رقعی بدون نقطه': ('رقعی', 'بدون نقطه'),
+    'گوناگون': ('مختلف', None),
+    'با قلم‌های متفاوت': ('مختلف', None),
+    'فرنگی': ('لاتین', None),
+    'چاپی': (None, None),
+    'چاپ سنگی': (None, None),
+    'تایپی': (None, None),
+    'چلیپایی': (None, 'چلیپا'),
+    'حمایلی': (None, 'حمایلی'),
+    'سیاه مشق': (None, 'سیاه مشق'),
+}
+
+
+def unify_scripts(labels: List[str]) -> Tuple[List[str], List[str]]:
+    """Maps script names onto the script list: a quality goes to the styles, variants merge, and print,
+    typescript or a layout leaves the list (fahares backlog item 50)."""
+    scripts, styles = [], []
+    for label in labels:
+        script, style = SCRIPT_UNIFY.get(label, (label, None))
+        if script is not None and script not in scripts:
+            scripts.append(script)
+        if style is not None and style not in styles:
+            styles.append(style)
+    return scripts, styles
+
+
 # Words that mark a «خط:» value as a script or a hand rather than a scribe's name
 SCRIPT_WORDS = {
     'تحریری', 'مختلف', 'گوناگون', 'سیاق', 'رقعی', 'رقاع', 'چاپی', 'چاپ', 'عبری', 'معتاد', 'پهلوی',
@@ -453,7 +506,11 @@ def parse_scripts_and_styles(script_str: Optional[str]) -> Tuple[List[str], List
             styles.append(st)
             s = re.sub(r'(?:^|[،\sو/\-])' + re.escape(st) + r'(?:[،\sو/\-]|$)', ' ', s)
 
-    return split_script_notes(script_str)['scripts'], styles
+    scripts, unified_styles = unify_scripts(split_script_notes(script_str)['scripts'])
+    for st in unified_styles:
+        if st not in styles:
+            styles.append(st)
+    return scripts, styles
 
 def parse_scripts(script_str: Optional[str]) -> List[str]:
     scripts, _ = parse_scripts_and_styles(script_str)
