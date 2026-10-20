@@ -352,16 +352,100 @@ KNOWN_SCRIPT_STYLES = [
     'ریز', 'ریزه', 'کهن', 'قدیم', 'شیرین', 'خشن'
 ]
 
+# Variant spellings of a whole script name
+SCRIPT_SPELLINGS = {
+    'تحریری بدخط وناخوانا': 'تحریری بدخط و ناخوانا',
+}
+
+# Words that mark a «خط:» value as a script or a hand rather than a scribe's name
+SCRIPT_WORDS = {
+    'تحریری', 'مختلف', 'گوناگون', 'سیاق', 'رقعی', 'رقاع', 'چاپی', 'چاپ', 'عبری', 'معتاد', 'پهلوی',
+    'حمایلی', 'چلیپایی', 'چلیپا', 'مشق', 'دیوانی', 'فرنگی', 'ترکی', 'خط', 'قلم', 'قلم‌های',
+    'زیبا', 'نازیبا', 'خوش', 'خوانا', 'ناخوانا', 'بدخط', 'ممتاز', 'پخته', 'جلی', 'خفی', 'درشت', 'متوسط',
+    'عالی', 'ریز', 'کهن', 'معمول',
+} | set(KNOWN_SCRIPTS_LIST)
+
+
+def _normalize_script_value(s: str) -> str:
+    s = re.sub(r'<!--\s*page:\s*\d+\s*-->', ' ', s)
+    # Arabic letters, and a misspelling that hides «نستعلیق» from the known-script match
+    s = s.replace('ي', 'ی').replace('ى', 'ی').replace('ك', 'ک').replace('نستعیق', 'نستعلیق')
+    return re.sub(r'\s+', ' ', s).strip()
+
+
+def _trim_script_part(s: str) -> str:
+    return re.sub(r'^[\s،,:;؛.\-]+|[\s،,:;؛.\-]+$', '', re.sub(r'\s+', ' ', s))
+
+
+def _known_scripts_in(s: str) -> List[str]:
+    found = []
+    for sc in KNOWN_SCRIPTS_LIST:
+        if sc in s:
+            found.append(sc)
+            s = s.replace(sc, ' ')
+    return found
+
+
+def split_script_notes(script_str: Optional[str]) -> Dict[str, Any]:
+    """Splits a «خط:» value into script names and the notes written with them: «بی‌کا»، «بی‌تا»،
+    «کاتب = مؤلف», a scribe after «کا:», or a bare scribe name. A value with a known script yields only
+    the known scripts; any other value yields its parts without the notes. The site's ScriptNameCleaner
+    runs the same rules (backlog item 50)."""
+    res: Dict[str, Any] = {'scripts': [], 'bika': False, 'bita': False, 'autograph': False, 'scribe': None}
+    if not script_str:
+        return res
+    s = _normalize_script_value(script_str)
+
+    def strip_notes(t: str) -> str:
+        bika = r'(?<![^\W\d_])بی[‌ ]?کا(?:تی\s*\d+\s*ق|(?![^\W\d_]))'
+        if re.search(bika, t):
+            res['bika'] = True
+            t = re.sub(bika, '،', t)
+        bita = r'(?<![^\W\d_])بی[‌ ]?تا(?![^\W\d_])'
+        if re.search(bita, t):
+            res['bita'] = True
+            t = re.sub(bita, '،', t)
+
+        def autograph(m):
+            if m.group(1) == 'مؤلف' and not m.group(2):
+                res['autograph'] = True
+            return '،'
+        t = re.sub(r'(?:کاتب\s*)?=\s*(مؤلف|مترجم)(?:\s+مؤلف)?(\s*\((?:گویا|احتمالاً|احتمالا|ظاهراً)\))?(?:\s*:\s*تا\s*\d+\s*ق)?', autograph, t)
+        for note in ('ظاهراً به خط مترجم', 'حواشی تحریری', 'هامش'):
+            t = re.sub(r'(?:^|،)\s*' + re.escape(note) + r'\s*(?=،|$)', '،', t)
+        return t
+
+    scribe_m = re.search(r'(?:^|،)\s*کا:\s*(.+)$', s)
+    if scribe_m:
+        res['scribe'] = _trim_script_part(strip_notes(scribe_m.group(1))) or None
+        s = s[:scribe_m.start()]
+    s = strip_notes(s)
+
+    known = _known_scripts_in(s)
+    if known:
+        res['scripts'] = known
+        return res
+
+    segments = [p for p in (_trim_script_part(x) for x in s.split('،')) if p]
+    # A value without any script word is the scribe's name, written after «خط:» in the catalogue
+    if segments and not any(set(seg.split()) & SCRIPT_WORDS for seg in segments):
+        if res['scribe'] is None:
+            res['scribe'] = '، '.join(segments)
+        return res
+
+    for seg in segments:
+        name = SCRIPT_SPELLINGS.get(seg, seg)
+        if name not in res['scripts']:
+            res['scripts'].append(name)
+    return res
+
+
 def parse_scripts_and_styles(script_str: Optional[str]) -> Tuple[List[str], List[str]]:
     if not script_str:
         return [], []
-    s = script_str
-
-    scripts = []
+    s = _normalize_script_value(script_str)
     for sc in KNOWN_SCRIPTS_LIST:
-        if sc in s:
-            scripts.append(sc)
-            s = s.replace(sc, ' ')
+        s = s.replace(sc, ' ')
 
     styles = []
     for st in KNOWN_SCRIPT_STYLES:
@@ -369,7 +453,7 @@ def parse_scripts_and_styles(script_str: Optional[str]) -> Tuple[List[str], List
             styles.append(st)
             s = re.sub(r'(?:^|[،\sو/\-])' + re.escape(st) + r'(?:[،\sو/\-]|$)', ' ', s)
 
-    return (scripts if scripts else [script_str.strip()]), styles
+    return split_script_notes(script_str)['scripts'], styles
 
 def parse_scripts(script_str: Optional[str]) -> List[str]:
     scripts, _ = parse_scripts_and_styles(script_str)
@@ -1378,6 +1462,19 @@ class FankhaParser:
         if re.search(r'(?:^|[؛،\s])(?:بی‌تا|بی تا)(?:[؛،\s]|$)', rem_text):
             ms.is_bita = True
             extracted_spans.extend(['بی‌تا', 'بی تا'])
+
+        # Notes the catalogue wrote inside «خط:», also with Arabic «ى/ك» that the checks above miss
+        if ms.script:
+            notes = split_script_notes(ms.script)
+            if notes['bika'] and not ms.scribe_name:
+                ms.is_bika = True
+            if notes['bita']:
+                ms.is_bita = True
+            if notes['autograph'] and not has_autograph_neg and not ms.scribe_name:
+                ms.is_autograph = True
+            if notes['scribe'] and not (ms.scribe_name or ms.is_bika or ms.is_autograph):
+                ms.scribe = notes['scribe']
+                ms.scribe_name = notes['scribe']
 
         CODICOLOGICAL_LEAKS = r'(?:اهدایی[:\s]|خریداری(?:\s+از)?|وقف(?:\s+بر|:\s*)?|تملک[:\s]|افتادگی[:\s]|با\s+سرلوح|محشی(?:\s+با|\s+به|[؛،\s]|$)|الذریعه|از\s+روی|پس\s+از)'
         DATE_STOP = r'(?:[؛\n\[]|،\s*(?:' + COMMISSION_PREFIXES + r'|' + CODICOLOGICAL_LEAKS + r'|جا:|خط:|کا:|کاتب:|محرر:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر)))'
