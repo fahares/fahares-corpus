@@ -343,8 +343,14 @@ def parse_subjects(subj_str: Optional[str]) -> List[str]:
 
 KNOWN_SCRIPTS_LIST = [
     'شکسته نستعلیق', 'شکسته تعلیق', 'نستعلیق', 'شکسته', 'تعلیق', 'رقعه', 'کوفی', 'ثلث',
-    'ریحان', 'محقق', 'طومار', 'مغربی', 'لاتین', 'تایپی', 'نسخ'
+    'ریحان', 'محقق', 'طومار', 'مغربی', 'لاتین', 'تایپی', 'نسخ',
+    # Never a quality of another hand, so safe to match inside a value (fahares backlog item 55)
+    'سیاق', 'رقاع', 'رقعی', 'عبری', 'پهلوی', 'دیوانی',
 ]
+
+# Scripts that are also a quality («نستعلیق تحریری» is one hand): a second script only when joined to
+# another by «و», as in «نسخ و تحریری»
+SECOND_HANDS = ['تحریری', 'مختلف']
 
 KNOWN_SCRIPT_STYLES = [
     'زیبا', 'خوش', 'خوانا', 'ممتاز', 'پخته', 'جلی', 'خفی',
@@ -410,6 +416,13 @@ def unify_scripts(labels: List[str]) -> Tuple[List[str], List[str]]:
         if style is not None and style not in styles:
             styles.append(style)
     return scripts, styles
+
+
+# Words that make a segment of a value without a known script a script of its own
+SCRIPT_HEADS = {
+    'تحریری', 'مختلف', 'گوناگون', 'سیاق', 'رقعی', 'رقاع', 'چاپی', 'چاپ', 'عبری', 'معتاد', 'پهلوی',
+    'حمایلی', 'چلیپایی', 'چلیپا', 'مشق', 'دیوانی', 'فرنگی',
+} | set(KNOWN_SCRIPTS_LIST)
 
 
 # Words that mark a «خط:» value as a script or a hand rather than a scribe's name
@@ -481,6 +494,10 @@ def split_script_notes(script_str: Optional[str]) -> Dict[str, Any]:
     t = re.sub(r'نستعلیق\s+شکسته(?!\s*(?:نستعلیق|تعلیق))', 'شکسته نستعلیق', s)
     known = _known_scripts_in(re.sub(r'شکسته\s*،\s*نستعلیق', 'شکسته نستعلیق', t))
     if known:
+        for part in re.split(r'\s+و\s+', s):
+            words = _trim_script_part(part).split()
+            if words and words[0] in SECOND_HANDS and not _known_scripts_in(part) and words[0] not in known:
+                known.append(words[0])
         res['scripts'] = known
         return res
 
@@ -492,6 +509,9 @@ def split_script_notes(script_str: Optional[str]) -> Dict[str, Any]:
         return res
 
     for seg in segments:
+        # Only these name a hand; a segment of qualities or of other notes («مجدول زرین») is no script
+        if not (seg in SCRIPT_UNIFY or seg in SCRIPT_SPELLINGS or set(seg.split()) & SCRIPT_HEADS):
+            continue
         name = SCRIPT_SPELLINGS.get(seg, seg)
         if name not in res['scripts']:
             res['scripts'].append(name)
