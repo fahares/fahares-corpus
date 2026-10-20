@@ -659,6 +659,33 @@ def is_bib_citation(text: str) -> bool:
     has_page_word = bool(re.search(r'(?:ص|ج|جلد|صفحه|شماره)\s*\d+', s))
     return has_vol_page or has_catalog_keyword or has_semicolon or has_page_word
 
+CATALOG_NOTE_START_RE = re.compile(r'^(?:از|این|آن|در|تذکر|نام|انجام|آغاز|یادداشت|توضیح|با|به|که|و|یا|تا|نسخه\s+اصل|اصل\s+نسخه|همان|شامل|حاوی|مشتمل|احتمالا|احتمالاً|شاید|کذا|کذ|چنین|ناخوانا|قال)(?=\s|$|:)')
+CATALOG_NAME_RE = r'[^\d:؛،\[\]«»<>\-–]{1,40}?'
+CATALOG_LOCATOR_RE = re.compile(r'[\d\s\-–/:؛،.فسشجصو]*(?:[^\d\s\-–/:؛،.]+(?:\s+[^\d\s\-–/:؛،.]+)?)?[\d\s\-–/:؛،.فسشجصو]*')
+
+def is_catalog_citation(text: str) -> bool:
+    """A catalogue cited by name at the end of a copy, which is_bib_citation misses: a bare name
+    («رایانه»، «د.ث. مجلس»، «ف مخ»), a name with a page or volume («الفبائی: -512»، «ف مخ: 1»،
+    «سنا - ف: 1-5»، «اهدائی رهبر: 2 اخبار 1-112»، «تراثنا: س6ش4-102»، «نسخه‌پژوهی 3: -108»), or a
+    locator whose name was lost («3: - 63»). Only for a copy's last bracket: elsewhere such short
+    text is an editorial word («کذا»، «ناخوانا»)."""
+    s = re.sub(r'\s+', ' ', re.sub(r'<!--.*?-->', ' ', text)).strip()
+    if not s or CATALOG_NOTE_START_RE.match(s):
+        return False
+    if re.fullmatch(r'\d*\s*:\s*[-–]\s*\d+', s):
+        return True
+    m = re.fullmatch(rf'({CATALOG_NAME_RE})\s*(?:([:\-–])\s*(.*)|((?:\d|س\s*\d|دفتر\s).*))?', s)
+    if not m:
+        return False
+    name = m.group(1).strip()
+    if not re.search(r'[^\W\d_]', name) or len(name.split()) > 5:
+        return False
+    rest = (m.group(3) if m.group(2) else m.group(4) or '').strip()
+    if not re.search(r'\d', rest):
+        # a name alone, or with «-» or «ف» for the library's own catalogue: «ف مخ:»، «سلطانی - ف»
+        return len(name.split()) <= 4 and re.fullmatch(r'(?:ف\s*)?[:\-–]?', rest) is not None
+    return len(rest) <= 40 and CATALOG_LOCATOR_RE.fullmatch(rest) is not None
+
 def split_bib_citations(content: str) -> List[str]:
     """Split a bibliography block on «؛» into citations. A piece that begins with a number continues
     the citation before it («الذریعة 865/9؛ 221/2») and a «؛» inside «...» is part of a title, so
@@ -1275,6 +1302,7 @@ class FankhaParser:
         extracted_spans: List[str] = []
 
         # 1. Bracketed notes: catalog citation vs editorial notes
+        b_content = None
         for cm in re.finditer(r'\[([^\]]+)\]', rem_text):
             b_content = cm.group(1).strip()
             if is_bib_citation(b_content):
@@ -1282,6 +1310,11 @@ class FankhaParser:
             else:
                 ms.editorial_notes.append(b_content)
             extracted_spans.append(cm.group(0))
+        # A catalogue cited by name alone («[رایانه]»، «[الفبائی: -512]») closes the copy as its citation
+        cited_by_name = bool(not ms.catalog_citation and b_content is not None and ms.editorial_notes
+                             and ms.editorial_notes[-1] == b_content and is_catalog_citation(b_content))
+        if cited_by_name:
+            ms.catalog_citation = f"[{ms.editorial_notes.pop()}]"
 
         # 2. Original copy reference: نسخه اصل: ... / اصل نسخه: ... or همان نسخه بالا / همان نسخه
         orig_m = re.search(r'(?:^|[؛،\n]\s*)(?:نسخه\s+اصل|اصل\s+نسخه):\s*([^؛\n]+)', rem_text)
@@ -1343,7 +1376,7 @@ class FankhaParser:
         if lead_pre_script_m:
             cand = lead_pre_script_m.group(1).strip()
             if not re.search(r'آغاز|انجام|نسخه اصل|اصل نسخه|چاپ:|افتادگی:', cand):
-                if re.match(r'^(?:از|سروده)\s+', cand) and not ms.editorial_notes:
+                if re.match(r'^(?:از|سروده)\s+', cand) and not ms.editorial_notes and not cited_by_name:
                     ms.editorial_notes.append(cand)
                 else:
                     if not ms.contents_note:

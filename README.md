@@ -94,6 +94,7 @@ fahares-corpus/
 │   ├── remediate_text_headers.py # ابزار پالایش و استانداردسازی هدرها و رسم‌الخط
 │   ├── download_json.sh          # اسکریپت دانلود مستقیم بسته آماده JSON از ریلیزهای گیتهاب
 │   └── build_full_text.sh        # اسکریپت تجمیع ۳۴ جلد در فایل یکپارچه fankha-full.txt
+├── tests/                        # آزمون‌های پارسر: python3 -m unittest discover tests
 ├── json/                         # محل قرارگیری فایل‌های JSON کاتالوگ‌ها (مستثنی از گیت)
 │   └── fankha/                   # ۳۴ فایل JSON فنخا (fankha_vol_01.json تا 34)
 └── README.md                     # شناسنامه، آمار کلان و مستندات فنی
