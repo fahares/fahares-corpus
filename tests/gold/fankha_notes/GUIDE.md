@@ -50,3 +50,9 @@ seal mentioned inside an ownership or endowment note goes to `also`.
 ## Output
 One JSON object per line, same order as input:
 `{"uid", "continuation_of", "type", "also": [], "by_author", "by_author_hedge", "seal_legend", "seal_shape", "hedge", "unclear"}`
+
+## Rulings (user, 6 Aban 1405)
+- A gift between two persons («یادداشت اهدای کتاب از سوی X به Y») is `ownership`; `acquisition` is only how the copy reached its present library.
+- «مجلس» is `illustration` only with a picture word (تصویر، نقاشی، نگاره، «مجلس تصویر»); otherwise it is `contents`.
+- Explanatory figures of a scientific text (anatomy, astronomy, geometry, botany) are `diagram`; `illustration` is artistic or narrative.
+- A binder's seal («مهر صحاف …») is `seal`, with `codicology` in `also`.

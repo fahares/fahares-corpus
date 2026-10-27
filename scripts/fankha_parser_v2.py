@@ -334,8 +334,13 @@ FLAG_SCAN = [(re.compile(r'مصحح|تصحیح\s+شده|تصحیح\s+دارد'),
 COMMISSION_RE = re.compile(r'^(?:جهت|به\s+دستور|حسب\s*الامر|حسب‌الامر|به\s+امر|به\s+فرمایش|به\s+خواهش|به\s+درخواست|برای)\s+(?P<v>.+)$')
 PORTION_RE = re.compile(r'^(?P<n>.*?)\s*\((?P<p>[^()]*(?:ورق|برگ|صفحه|جلد|بخش|دفتر|جزء|جزو)[^()]*)\)$')
 SIMPLE_LABELS = [('paper', r'کاغذ'), ('binding', r'جلد'), ('dimensions', r'اندازه'),
-                 ('text_dimensions', r'(?:ابعاد|اندازه)\s+متن'), ('defects', r'افتادگی'), ('format', r'قطع'),
-                 ('donor', r'(?:واقف|وقف)'), ('ownership', r'(?:تملک|مهر|مهرها)')]
+                 ('text_dimensions', r'(?:ابعاد|اندازه)\s*متن'), ('defects', r'افتادگی'), ('format', r'قطع'),
+                 ('donor', r'(?:واقف|وقف|تاریخ\s+وقف)'), ('ownership', r'(?:تملک|تملکات)'), ('seals', r'(?:مهر|مهرها)')]
+LIST_FIELDS = ('ownership', 'seals', 'acquisition')
+ACQ_RE = re.compile(r'^(?P<k>اهدایی|اهدائی|خریداری|انتقالی|واگذاری|امانی)(?:\s+از)?\s*:?\s*(?P<v>.*)$')
+DATE_FRAG = re.compile(r'^(?:\d{1,2}\s+)?(?:فروردین|اردیبهشت|خرداد|تیر|مرداد|شهریور|مهر|آبان|آذر|دی|بهمن|اسفند|محرم|صفر|'
+                       r'ربیع\S*|جمادی\S*|رجب|شعبان|رمضان|شوال|ذی\S*|ذو\S*)(?:\s+\S+)?(?:\s+\d{3,4})?\s*[قشم]?$'
+                       r'|^(?:به\s+تاریخ\s+)?\d{3,4}\s*[قشم]?$|^\d{4}/\d{1,2}/\d{1,2}$')
 SIMPLE_RE = [(f, re.compile(r'^' + p + r'\s*:\s*(?P<v>.*)$')) for f, p in SIMPLE_LABELS]
 
 
@@ -346,7 +351,8 @@ def new_copy() -> Dict[str, Any]:
             'is_autograph': False, 'autograph_hedge': None, 'no_scribe': False, 'copy_date': None,
             'undated': False, 'copy_place': None, 'commissioned_by': None, 'folios': None, 'lines': None,
             'lines_note': None, 'text_dimensions': None, 'dimensions': None, 'paper': None, 'binding': None,
-            'defects': None, 'format': None, 'donor': None, 'ownership': [], 'flags': [], 'original_copy': None,
+            'defects': None, 'format': None, 'donor': None, 'ownership': [], 'seals': [], 'acquisition': [],
+            'flags': [], 'original_copy': None,
             'other_listings': [], 'catalog_citation': None, 'unparsed': [], 'raw_text': None}
 
 
@@ -459,6 +465,16 @@ def parse_scribe(c, v: str):
     c['scribes'].append({'name': name, 'hedge': hedge, 'portion': portion})
 
 
+NOTE_VERB = re.compile(r'(?:^|\s)(?:است|شده|دارد|کرده|نوشته|آمده|می[‌ ]?\S+|که|را)(?:\s|$)')
+
+
+def is_fragment(ch: str) -> bool:
+    """A date, a name, a seal legend or a seal shape continuing the provenance field before it."""
+    if DATE_FRAG.match(ch) or re.match(r'^«[^»]+»(?:\s*\([^)]*\))?$', ch) or re.match(r'^\((?:مربع|بیضی|دایره|مستطیل|\S+)\)$', ch):
+        return True
+    return len(ch.split()) <= 7 and ':' not in ch and not NOTE_VERB.search(ch) and not re.search(r'\d{3,4}\s*گ', ch)
+
+
 def parse_physical(c, text: str):
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
@@ -467,6 +483,8 @@ def parse_physical(c, text: str):
             if not chunk:
                 continue
             ch = chunk.strip(' .')
+            if re.match(r'^(?:كا|بى|تاريخ)', ch):          # labels printed with Arabic letter forms
+                ch = fa(ch[:6]) + ch[6:]
             m = re.match(r'^خط\s*:\s*(?P<v>.*)$', ch)
             if m:
                 c['script_raw'] = m.group('v').strip()
@@ -502,9 +520,12 @@ def parse_physical(c, text: str):
                 continue
             m = re.match(r'^(?P<v>\d[\d/]*\s*(?:گ|برگ|ص)(?=\s|\(|$).*)$', ch)
             if m:
-                c['folios'], last = m.group('v'), None
+                c['folios'], last = m.group('v'), 'folios'
                 continue
-            m = re.match(r'^(?P<n>\d+(?:\s*(?:[-–]|و)\s*\d+)?\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
+            if last == 'folios' and re.match(r'^\([^()]*\d[^()]*\)$', ch):
+                c['folios'] += ' ' + ch
+                continue
+            m = re.match(r'^(?P<n>\d+(?:\s*(?:[-–]|و)\s*\d+)*\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
             if m:
                 c['lines'] = m.group('n')
                 if m.group('d'):
@@ -527,13 +548,18 @@ def parse_physical(c, text: str):
             for f, rx in SIMPLE_RE:
                 m = rx.match(ch)
                 if m:
-                    if f == 'ownership':
-                        c['ownership'].append(ch)
+                    if f in LIST_FIELDS:
+                        c[f].append(m.group('v').strip())
                     else:
                         c[f] = m.group('v').strip()
                     last, hit = f, True
                     break
             if hit:
+                continue
+            m = ACQ_RE.match(ch)
+            if m:
+                c['acquisition'].append(ch)
+                last = 'acquisition'
                 continue
             m = COMMISSION_RE.match(ch)
             if m and last in ('place', 'date', 'scribe'):
@@ -557,6 +583,31 @@ def parse_physical(c, text: str):
                 continue
             if last in ('paper', 'binding') and not re.search(r':', ch) and len(ch.split()) <= 4:
                 c[last] += '، ' + ch
+                continue
+            if last == 'folios' and re.match(r'^\d+\s*[-–]\s*\d+$', ch):
+                c['folios'] += ' (' + ch + ')'
+                continue
+            if last == 'place' and c['copy_place'] and len(ch.split()) <= 5 and not re.search(r'[\d:]', ch):
+                c['copy_place']['v'] += '، ' + ch
+                continue
+            if re.match(r'^کاغذ\s+\S', ch) and not c['paper']:
+                c['paper'], last = ch[4:].strip(), 'paper'
+                continue
+            if re.match(r'^جلد\s+(?!\d)\S', ch) and not c['binding']:
+                c['binding'], last = ch[3:].strip(), 'binding'
+                continue
+            if last in ('ownership', 'donor') and (re.match(r'^(?:با\s+مهر|با\s+تولیت|\d{3,4}\s)', ch)
+                                                    or re.match(r'^\S+(?:\s+\S+)?\s+بن\s', ch)):
+                if last == 'donor':
+                    c['donor'] += '، ' + ch
+                else:
+                    c['ownership'][-1] += '، ' + ch
+                continue
+            if last in LIST_FIELDS + ('donor',) and is_fragment(ch):
+                if last == 'donor':
+                    c['donor'] += '، ' + ch
+                elif c[last]:
+                    c[last][-1] += '، ' + ch
                 continue
             c['notes'].append({'type': 'remark', 'text': ch, 'hedge': h})
             last = None
@@ -608,6 +659,32 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
             add_flag(c, f)
     if c['shelfmark'] and 'عکسی' in c['shelfmark']:
         add_flag(c, 'facsimile')
+    kept = []
+    for n in c['notes']:
+        if n['type'] == 'remark':
+            t = fa(n['text'])
+            am = ACQ_RE.match(t)
+            if am:
+                c['acquisition'].append(n['text'])
+                continue
+            hit = False
+            for f, rx in SIMPLE_RE:
+                m = rx.match(t)
+                if m and f in LIST_FIELDS + ('donor',):
+                    if f == 'donor':
+                        c['donor'] = (c['donor'] + '، ' if c['donor'] else '') + n['text']
+                    else:
+                        c[f].append(m.group('v').strip())
+                    hit = True
+                    break
+            if hit:
+                continue
+            n.update(classify_note(n['text']))
+        kept.append(n)
+    c['notes'] = kept
+    if any(n.get('by_author') and n['type'] == 'marginalia' or n.get('by_author') and 'marginalia' in n.get('also', [])
+           for n in c['notes']):
+        add_flag(c, 'author_marginalia')
     if c['scribes'] or c['is_autograph']:
         c['no_scribe'] = c['no_scribe'] and not c['scribes']
     return c
@@ -629,6 +706,73 @@ def parse_line_body(c, t: str, hetero: bool, tag_at: Optional[int]):
     if lead:
         classify_leading(c, lead, hetero)
     parse_physical(c, phys)
+
+# ---------------------------------------------------------------- note types (user's approval, 6 Aban 1405; plan section 10)
+
+NOTE_RULES = [   # order = precedence of the main type; every other matching type goes to `also`
+    ('contents', r'^\d+\s*[\.\-)]\s'),   # an item of a numbered list of texts in a collection
+    ('cataloguer', r'^(?:در\s+فهرست|تذکر|مکرر|ضمیمه|ر\.\s*ک|نک\.|نیز\s+ن)|^\(\d+\)$|به\s+خطا|دانسته\s+شده'),
+    ('acquisition', r'^(?:اهدایی|اهدائی|خریداری|انتقالی|واگذاری|امانی)|به\s+کتابخانه\s+\S+\s+(?:اهدا|واگذار)|به\s+کتابخانه(?:\s+\S+){0,3}\s+(?:رسید|آمد|داده)'),
+    ('endowment', r'وقف|واقف|موقوف'),
+    ('certificate', r'اجازه|سماع|قرائت|انهاء|انهای|بلاغ|بلغ\s'),
+    ('ownership', r'تملک|از\s+آن\s+\S+(?:\s+\S+){0,2}\s+بوده|ملکیت|تملّک|مالک|در\s+نزد|اهدای\s+کتاب|اهدا\s+به|هدیه|ابتیاع|انتقال\s+به\s+ملک'),
+    ('seal', r'مهر\s|مهری|مهرها|^مهر|سجع|«عبده|«الراجی|نقش\s+مهر|^«[^»]+»\s*\((?:مربع|بیضی|بیضوی|دایره|مدور|مستطیل|کتابی|لوزی)\)$'),
+    ('collation', r'مقابله|تصحیح|مصحح|نسخه[‌ ]?بدل|«خ\s*ل»|کاستی|افتاده‌ها|بدل\s'),
+    ('marginalia', r'حاشیه|حواشی|محشی|هامش|تعلیقه|تعلیقات|حاشیه‌نویسی'),
+    ('transcription', r'مسوده|مسودّه|مبیضه|منشی|به\s+خط\s+(?!مؤلف)|از\s+روی|نقل\s+از|منقول\s+از|استنساخ|کاتب|کتابت|به\s+خواهش|به\s+جهت|به\s+دستور|نگارش\s+یافته|به\s+دست\s+چند'),
+    ('diagram', r'اشکال|جداول|دایره|دوایر|نقشه|تشریح|هندسی|نجومی|زایچه|شکل\s|اسطرلاب'),
+    ('illustration', r'نگاره|نقاشی|مصور|تصویر|تصاویر|مینیاتور|مجلس\s+(?:تصویر|نقاشی)|صورت\s+\S+\s+کشیده'),
+    ('decoration', r'عناوین|سرنج|سرخی|شنگرفی|پیشانی|مذهب|سرلوح|کمند|ترنج|شنگرف|لاجورد|زرین|طلا|زر\s|زر$|کتیبه|مرصع|افشان|گل\s+و\s+بوته|مجدول|جدول|حل[‌ ]?کاری|تشعیر|شمسه'),
+    ('codicology', r'قلم\s*خوردگی|خط\s*خوردگی|صفحه\s*شمار|شماره\s*گذاری|رکابه|عطف|لبه|صحافی|صحاف|آب[‌ ]?دیدگی|موریانه|وصالی|رطوبت|پارگی|کرم[‌ ]?خوردگی|آشفته|جابجا|نونویس|'
+                   r'ستون|سطور|مورب|کیفیت\s+تصویر|بیاض|سفینه|کاغذ|اوراق|برگ‌ها|ورق‌ها|بی[‌ ]?نقطه|نقطه'),
+    ('annex', r'(?:^|\s)(?:در|پشت|بر|روی)\s+(?:پایان|آخر|آغاز|ابتدا|اول|انتها|پشت|برگ|صفحه|جلد)|فوائد|فائده|فایده|یادداشت|'
+              r'اضافه\s+دارد|افزوده|نوشته‌ای|صورت\s+(?:اجازه|وقفنامه|نامه)|سپس|همراه\s+است'),
+    ('cataloguer', r'فهرست|تذکر|نام\s+(?:مؤلف|کتاب|کاتب)|به\s+قرینه|به\s+استناد|تعیین\s+شد|شناخته\s+نشد|ناشناخته|مجلدات|'
+                   r'شماره\s+\d|غیر\s+از\s+رساله|با\s+نسخه\s+\S+\s+(?:یکی|مقایسه)'),
+    ('contents', r'^کتب\s|^از\s.+\sتا\s|تا\s*(?:کتاب|پایان|آخر)|حدیث|تفسیر|قواعد|نامه|مطالب|^فی\s|پاسخ|شامل|مشتمل|دارای|اشعار|شعر|شاعر|قصیده|قصاید|غزل|مثنوی|رباعی|مراثی|مدایح|جنگ|منتخب|ترجمه|بیت|باب|فصل|'
+                 r'رساله|در\s+(?:بیان|ذکر|شرح|فضیلت|احوال)|درباره|مقدمه'),
+]
+NOTE_RULES = [(t, re.compile(p)) for t, p in NOTE_RULES]
+BY_AUTHOR = re.compile(r'(?:به\s+خط|از|توسط|خود|دست)\s+(?:خود\s+)?(?:مؤلف|مصنف|ناظم|شارح)|(?:حواشی|تصحیح|مقابله|اجازه|تعلیقات|'
+                       r'تعلیقه|یادداشت)(?:\s+و\s+\S+)?\s+(?:از\s+)?(?:مؤلف|مصنف|ناظم|شارح)|شده[‌ ]?ی?\s+(?:مؤلف|مصنف)|(?:مؤلف|مصنف)$')
+SEAL_SHAPE = re.compile(r'\((مربع|بیضی|بیضوی|دایره|دایره‌ای|مدور|گرد|مستطیل|کتابی|لوزی|هشت\s*ضلعی|شش\s*ضلعی|چهارگوش)\)|'
+                        r'(?:مهر\s+)?(مربع|بیضی|بیضوی|مدور|مستطیل|کتابی|لوزی|هشت\s*ضلعی)(?:\s|$)')
+HEDGE_ANY = re.compile(r'(?:^|\s)(گویا|ظاهراً|ظاهرا|احتمالاً|احتمالا|شاید|محتملاً)(?:\s|$)')
+
+
+def classify_note(text: str) -> Dict[str, Any]:
+    t = fa(text)
+    hits = [typ for typ, rx in NOTE_RULES if rx.search(t)]
+    if 'seal' in hits and re.search(r'^مهر\s+صحاف|مهر\s+صحاف', t):
+        hits = ['seal'] + [h for h in hits if h != 'seal'] + ['codicology']        # binder's seal (ruling, 6 Aban)
+    if re.search(r'زر|طلا|لاجورد|سرخ|تحریر|منقش|گل\s|نقاشی|زمینه|الوان|تذهیب', t):
+        for h in ('diagram', 'marginalia'):
+            if h in hits and 'decoration' in hits and hits.index(h) < hits.index('decoration'):
+                hits.remove(h)
+                hits.insert(hits.index('decoration') + 1, h)
+    if 'illustration' in hits and 'diagram' in hits:
+        hits.remove('illustration')            # scientific figures (anatomy, astronomy) are diagrams
+    if 'certificate' in hits and re.search(r'صورت\s+اجازه|متن\s+اجازه', t):
+        hits.remove('certificate')
+        hits = ['annex'] + [h for h in hits if h != 'annex'] + ['certificate']   # an ijaza copied as a text
+    main = hits[0] if hits else 'other'
+    also = [h for h in dict.fromkeys(hits[1:]) if h != main]
+    out: Dict[str, Any] = {'type': main, 'also': also, 'by_author': False, 'by_author_hedge': None,
+                           'seal': None, 'hedge': None}
+    hm = HEDGE_ANY.search(t)
+    if hm:
+        out['hedge'] = hm.group(1)
+    if BY_AUTHOR.search(t) and (main in ('marginalia', 'collation', 'certificate', 'annex', 'transcription')
+                                or set(also) & {'marginalia', 'collation', 'certificate'}):
+        out['by_author'] = True
+        out['by_author_hedge'] = out['hedge']
+    if main == 'seal' or 'seal' in also:
+        lm = re.search(r'«([^»]+)»', text)
+        sm = SEAL_SHAPE.search(t)
+        out['seal'] = {'legend': lm.group(1) if lm else None,
+                       'shape': (sm.group(1) or sm.group(2)) if sm else None}
+    return out
+
 
 # ---------------------------------------------------------------- volume
 
