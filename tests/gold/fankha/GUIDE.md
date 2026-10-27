@@ -94,3 +94,4 @@ Output only the JSONL file you are asked to write.
 - `original_copy_raw`: text after «نسخه اصل:»/«اصل نسخه:» up to «؛» or «[». A bare line «همان نسخه بالا» after a
   copy header without «نسخه اصل» is the same copy as the previous one: `merged_into_previous` true.
 - «آغاز: برابر» → incipit_fw «برابر».
+- Subjects joined by « و » that are two fields («صرف و نحو») are two subjects (ruling, 6 Aban 1405).
