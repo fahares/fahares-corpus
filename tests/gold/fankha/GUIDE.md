@@ -76,3 +76,21 @@ then a final `[...]` catalogue citation.
 ## output
 One JSON object per line, `{"uid": ..., "kind": ..., <fields>, "unclear": null | "note"}`, in the same order as input.
 Output only the JSONL file you are asked to write.
+
+## gold_version 2: the scholar's rulings (5 Aban 1405) — they override anything above
+- `scripts` is a list of objects `{"type": ..., "qualifiers": [...]}`. «تحریری» alone is a type; after another script it is
+  a qualifier («نسخ تحریری» → {نسخ, [تحریری]}). «چلیپا» is always a qualifier; alone → type null. «شکسته نستعلیق» /
+  «نستعلیق شکسته» is one type «شکسته نستعلیق». «نسخ مایل به رقعه» → {نسخ, [مایل به رقعه]}. «نستعلیق راسته و چلیپا» →
+  one script with two qualifiers. Quality words (خوش، زیبا، ریز، خوب …) are qualifiers. «سطور چلیپا»/«مختلف السطر» go to
+  `lines`, not scripts. «تایپی» is a type.
+- «ظاهراً غیر همانند» → is_heterogeneous true, `heterogeneous_qualifier` "doubtful"; «بعضاً غیر همانند» → "partial"; else null.
+- Scribe who wrote only part: `scribe_name` the name, `scribe_portion` the parenthesis («ورق اول و …»).
+- «بی‌کا»/«بی‌تا» followed by a hedged guess: keep is_bika/is_bita true, scribe/date null; put the guess in
+  `scribe_guess`/`date_guess` with `scribe_guess_hedge`/`date_guess_hedge`.
+- «؟» inside the author's death date → `death_hedge` "؟" (doubt about the date, not the author).
+- `contents_scope` only when the text names a part of the work (جلد، کتاب، باب، فصل، «از … تا …»، «را دارد»، «شامل:»،
+  «شامل/دارای ابواب|کتب …»); everything else is `ms_note`.
+- Epithet after the author's name («، امام اول») → `author_epithet`, not part of `author_name`.
+- `original_copy_raw`: text after «نسخه اصل:»/«اصل نسخه:» up to «؛» or «[». A bare line «همان نسخه بالا» after a
+  copy header without «نسخه اصل» is the same copy as the previous one: `merged_into_previous` true.
+- «آغاز: برابر» → incipit_fw «برابر».
