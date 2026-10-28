@@ -136,6 +136,10 @@ def evaluate(prefix=''):
             tl = norm(rl[1]) if len(rl) > 1 else None
             same = [w for w in cands if norm(' = '.join([w['transliteration'] or ''] + w['alt_transliterations'])) == tl]
             cands = same or cands
+            # same title on one page («جنگ», «جنگ نامه»): the author line of the entry decides
+            al = norm(rl[2]) if len(rl) > 2 else ''
+            own = [w for w in cands if w['author'] and al.startswith(norm(w['author']['name_raw'] or '-'))]
+            cands = own or cands
             page = p['page_start']
         else:
             cands = [w for w in works if norm(w['title_line']) == norm(u['work_title'])]
@@ -144,8 +148,11 @@ def evaluate(prefix=''):
             missing.append(g['uid']); continue
         w = min(cands, key=lambda w: abs(w['provenance']['page_start'] - page))
         idx = int(wid.split('w')[1]) if g['kind'] == 'work' else None
-        if idx is not None and idx < len(works) and norm(works[idx]['title_line']) == norm(p['primary_title']):
+        if idx is not None and idx < len(works) and norm(works[idx]['title_line']) == norm(p['primary_title']) \
+                and works[idx] in cands and works[idx]['provenance']['page_start'] == page:
             w = works[idx]                     # same segmentation as v1: the ordinal is exact
+        # (an ordinal can shift when the text gains entries, e.g. a page restored from its image; then the
+        # transliteration and page decide)
         if g['kind'] == 'work':
             fields = work_fields(w, g)
         else:

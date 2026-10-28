@@ -23,6 +23,7 @@ import random
 import re
 import subprocess
 from collections import Counter, defaultdict
+from difflib import SequenceMatcher
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE_TAG = re.compile(r'<!--\s*page:\s*\d+\s*-->')
@@ -279,6 +280,21 @@ def match_copies(db_copies, v2_copies):
 # --- main ----------------------------------------------------------------------------------------------------
 
 
+def align(v2_works, v1_works):
+    """v2 ordinal -> v1 ordinal (= the site's slug ordinal). Equal while the text keeps its entries; when a page
+    restored from its image adds entries (vol 10 p. 150, vol 16 p. 930) the later ordinals shift, so the two title
+    sequences are aligned and an added work maps to nothing."""
+    a = [norm(w['title_line']) for w in v2_works]
+    b = [norm(w['primary_title']) for w in v1_works]
+    if a == b:
+        return {w['key']['ordinal']: w['key']['ordinal'] for w in v2_works}
+    out = {}
+    for blk in SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
+        for k in range(blk.size):
+            out[v2_works[blk.a + k]['key']['ordinal']] = blk.b + k + 1
+    return out
+
+
 def load_json(dirname, vol):
     return json.load(open(os.path.join(ROOT, 'json', dirname, f'fankha_vol_{vol:02d}.json')))['works']
 
@@ -351,20 +367,28 @@ def main():
             for i, c in enumerate(w['copies']):
                 where.setdefault(rkey(c['raw_text']), (vol, w['key']['ordinal'], i))
     deferred = defaultdict(list)                        # vol -> (db row, label, (ordinal, index))
+    aligned = {}                                        # vol -> v2 ordinal -> site ordinal
     v2_left = set()
 
     for vol in args.volumes:
         v2_works = load_json('fankha_v2', vol)
         v1_works = load_json('fankha', vol)
+        amap = aligned[vol] = align(v2_works, v1_works)
         for w in v2_works:
             ordinal = w['key']['ordinal']
-            rows = db_works.get((vol, ordinal), [])
+            site_ord = amap.get(ordinal)
+            if site_ord is None:
+                match['work_new_in_v2'] += 1
+                if len(samples[('Work', '_match', 'new_in_v2')]) < SAMPLES:
+                    samples[('Work', '_match', 'new_in_v2')].append({'label': f'v{vol}-{ordinal} «{w["title"]}»'})
+                continue
+            rows = db_works.get((vol, site_ord), [])
             if len(rows) != 1:
                 match['work_' + ('missing' if not rows else 'ambiguous')] += 1
                 continue
             match['work_matched'] += 1
             row = rows[0]
-            v1 = v1_works[ordinal - 1] if ordinal <= len(v1_works) else None
+            v1 = v1_works[site_ord - 1]
             label = f'v{vol}-{ordinal} «{w["title"]}»'
             wrest = norm(json.dumps({k: v for k, v in w.items() if k not in ('raw_text', 'copies')}, ensure_ascii=False))
             for field, get in WORK_FIELDS.items():
@@ -398,7 +422,8 @@ def main():
         v1_works = load_json('fankha', vol)
         for d, label, (ordinal, i) in items:
             c = v2_works[ordinal]['copies'][i]
-            v1 = v1_works[ordinal - 1] if ordinal <= len(v1_works) else {}
+            so = aligned.get(vol, {}).get(ordinal)
+            v1 = v1_works[so - 1] if so else {}
             v1c = next((m for m in v1.get('manuscripts', []) if rkey(m['raw_text']) == rkey(d['raw_text'])), None)
             match['copy_other_work'] += 1
             v2_left.discard((vol, ordinal, i))
