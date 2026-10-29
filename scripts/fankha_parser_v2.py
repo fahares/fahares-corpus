@@ -423,10 +423,11 @@ def parse_ie_line(c, text: str, tag_at: Optional[int] = None) -> Optional[str]:
         pm = IE_START.match(part)
         if not pm:
             continue
-        lab, val = ' '.join(pm.group('l').split()), part[pm.end():].strip().rstrip(' ؛،')
+        lab, val = ' '.join(pm.group('l').split()), part[pm.end():].strip()
+        val = val.rstrip(' ؛،') or val                # an empty value keeps its mark, so the next line continues it
         sub = None
         lm = re.match(r'^((?:آغاز|انجام)\s+[^:؛«»\d]{2,25}?)\s*:\s*', val)
-        if lm and lab in ('آغاز', 'انجام'):         # «آغاز: آغاز قصیده نخست: …» names which part it is
+        if lm and lab in ('آغاز', 'انجام') and val[lm.end():].strip():         # «آغاز: آغاز قصیده نخست: …» names which part it is
             sub, val = lm.group(1), val[lm.end():]
         sm = re.match(r'^برابر\s*(\d)?$', val)
         ref = re.match(r'^برابر\s+(?:با\s+)?(?P<r>(?:جلد|ج|مجلد|قسمت|بخش|دفتر|ربع|کتاب|مقدمه|دیباچه|متن|نسخه|شماره|ش)\b.{0,40})$', val)
