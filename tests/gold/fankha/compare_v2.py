@@ -2,7 +2,8 @@
 """Per-field accuracy of parser v2 (json/fankha_v2) against the gold set (gold_version 2).
 
 Usage: compare_v2.py [--mismatches FILE]   prints the table; returns per-field results via evaluate()."""
-import json, os, re, sys
+import json
+import re, os, re, sys
 from collections import Counter, defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -139,6 +140,12 @@ def evaluate(prefix=''):
             # same title on one page («جنگ», «جنگ نامه»): the author line of the entry decides
             al = norm(rl[2]) if len(rl) > 2 else ''
             own = [w for w in cands if w['author'] and al.startswith(norm(w['author']['name_raw'] or '-'))]
+            if not own:
+                # no author line in the entry («الخمرية» / شعر), or a «غیر همانند» block: the restored works
+                # of the same title on the same page differ in exactly that
+                latin = len(rl) > 3 and re.match(r'^[A-Za-zāīūšžḥṣṭẓ‘’\s\-,.()0-9]+$', rl[3])
+                hetero = bool(re.search(r'غیر\s?همانند', u['raw']))
+                own = [w for w in cands if (w['author'] is not None) == bool(latin) and bool(w['heterogeneous']) == hetero]
             cands = own or cands
             page = p['page_start']
         else:
