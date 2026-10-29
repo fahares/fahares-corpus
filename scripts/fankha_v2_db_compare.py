@@ -65,6 +65,8 @@ def ie_text(rec):
     rec = rec or {}
     if rec.get('same_as_work_n'):
         return f"برابر{rec['same_as_work_n']}"
+    if rec.get('same_as_ref'):
+        return f"برابر {rec['same_as_ref']}"          # «برابر جلد 6» stays readable on the site
     return rec.get('text')
 
 

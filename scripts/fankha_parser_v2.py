@@ -180,6 +180,10 @@ def is_latin_line(s: str) -> bool:
     return bool(s) and len(LATIN.findall(s)) > len(PERSIAN.findall(s))
 
 
+# an author line with its transliteration on the same line: «کلن، ویلیام kolen, vīlīyām»
+MIXED_AUTHOR = re.compile(r'^(?P<p>[^A-Za-z]*[؀-ۿ][^A-Za-z]*?)\s+(?P<l>[A-Za-zāīūḥṣṭẓḍčšžġḡ‘’][^؀-ۿ]*)$')
+
+
 def parse_author(line: str, latin: Optional[str]) -> Dict[str, Any]:
     name_raw, date = extract_author_and_date(line)
     name, hedge = split_hedge(name_raw)
@@ -230,9 +234,13 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
     if i < len(body) and not LABEL_LINE.match(body[i].text) and not HETERO_LINE.match(body[i].text):
         cand = body[i].text
         nxt = body[i + 1].text if i + 1 < len(body) else None
+        mixed = MIXED_AUTHOR.match(cand)
         if nxt and is_latin_line(nxt) and len(cand) <= 150 and not cand.startswith('['):
             w['author'] = parse_author(cand, nxt)
             i += 2
+        elif mixed and len(cand) <= 150:
+            w['author'] = parse_author(mixed.group('p').strip(), mixed.group('l').strip())
+            i += 1
         elif is_author_line(cand, nxt):
             w['author'] = parse_author(cand, None)
             i += 1
@@ -318,7 +326,8 @@ IE_SPLIT = re.compile(r'\s*؛\s*(?=(?:آغاز|انجام)[^:؛]{0,25}?:)')
 BARE_EXPLICIT = re.compile(r'(?:\s*،?\s+|(?<=برابر)|(?<=برابر\d))(?=انجام(?:\s+(?:نسخه|کتاب|متن))?\s*:)')
 PHYS_LABEL = (r'(?:خط\s*:|کا\s*:|بی[‌ ]?کا\b|تا\s*:|بی[‌ ]?تا\b|کاغذ\s*:|جلد\s*:|اندازه\s*:|افتادگی\s*:|'
               r'جا\s*:|\d+\s*گ\b|\d+\s*برگ\b|\d+\s*ص\s*\(|کاتب\s*=)')
-PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')')
+# «کاتب: …» opens the copy's own line only at its start; after «نسخه اصل: …؛» it is the original's scribe
+PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')|^(?=کاتب\s*:)')
 ORIG_RE = re.compile(r'^(?:نسخه\s+اصل[یی]?|اصل\s+نسخه)\s*:\s*(?P<v>.*)$')
 SCOPE_RE = re.compile(r'^(?:جلد|ج\s*\d|مجلد|دفتر|کتاب|باب|فصل|مقاله|مقالت|جزء|جزو|بخش|قسمت|فن|مقصد|مطلب|مجلس|'
                       r'از\s+(?:باب|فصل|کتاب|جلد|ابتدا|آغاز|اول|اواسط|اواخر|برگ|مقاله|جزء|جزو|بخش|\S+\s+تا\s)|تا\s+|شامل\s*:|(?:شامل|دارای|مشتمل\s+بر)\s+(?:ابواب|باب|کتب|کتاب|جلد|مجلد|فصول|بخش|مقالات)|فقط|نیمه|نیمی|حدود\s+(?:یک|دو|سه|نیمی)|مقدمه|خاتمه|دیباچه|'
@@ -347,7 +356,7 @@ FLAG_RULES = [
                                      r'قدس\s+سره|ایده\s+الله|حفظه\s+الله|دام\s+علوه|مد\s+عزه)|محشی\s+با\s+(?:نشان|رمز)[^؛]{0,40}«منه')),
 ]
 BINDING_TEXT = re.compile(r'جلد\s*:[^؛\[]*')
-COMMISSION_RE = re.compile(r'^(?:جهت|به\s+دستور|حسب\s*الامر|حسب‌الامر|به\s+امر|به\s+فرمایش|به\s+خواهش|به\s+درخواست|برای)\s+(?P<v>.+)$')
+COMMISSION_RE = re.compile(r'^(?:جهت|به\s+جهت|به\s+سفارش|بنا\s+بر\s+(?:خواهش|درخواست|فرمایش|امر)|حسب\s*(?:ال)?فرمایش|حسب‌(?:ال)?فرمایش|به\s+دستور|حسب\s*الامر|حسب‌الامر|به\s+امر|به\s+فرمایش|به\s+خواهش|به\s+درخواست|برای)\s+(?P<v>.+)$')
 PORTION_RE = re.compile(r'^(?P<n>.*?)\s*\((?P<p>[^()]*(?:ورق|برگ|صفحه|جلد|بخش|دفتر|جزء|جزو)[^()]*)\)$')
 SIMPLE_LABELS = [('paper', r'کاغذ'), ('binding', r'جلد'), ('dimensions', r'اندازه'),
                  ('text_dimensions', r'(?:ابعاد|اندازه)\s*متن'), ('defects', r'افتادگی'), ('format', r'قطع'),
@@ -414,12 +423,21 @@ def parse_ie_line(c, text: str, tag_at: Optional[int] = None) -> Optional[str]:
         pm = IE_START.match(part)
         if not pm:
             continue
-        lab, val = ' '.join(pm.group('l').split()), part[pm.end():].strip()
+        lab, val = ' '.join(pm.group('l').split()), part[pm.end():].strip().rstrip(' ؛،')
+        sub = None
+        lm = re.match(r'^((?:آغاز|انجام)\s+[^:؛«»\d]{2,25}?)\s*:\s*', val)
+        if lm and lab in ('آغاز', 'انجام'):         # «آغاز: آغاز قصیده نخست: …» names which part it is
+            sub, val = lm.group(1), val[lm.end():]
         sm = re.match(r'^برابر\s*(\d)?$', val)
+        ref = re.match(r'^برابر\s+(?:با\s+)?(?P<r>(?:جلد|ج|مجلد|قسمت|بخش|دفتر|ربع|کتاب|مقدمه|دیباچه|متن|نسخه|شماره|ش)\b.{0,40})$', val)
         same = bool(sm)
-        rec = {'text': None if same else val, 'same_as_work': same}
+        rec = {'text': None if same or ref else val, 'same_as_work': same}
         if sm and sm.group(1):
             rec['same_as_work_n'] = int(sm.group(1))     # «برابر2»: the work's second incipit/explicit
+        if ref:
+            rec['same_as_ref'] = ref.group('r').strip()  # «برابر جلد 6»: same as that part, not the text itself
+        if sub:
+            rec['label'] = sub
         if lab in ('آغاز', 'آغاز نسخه'):
             if c['incipit'] is None:
                 c['incipit'] = rec
@@ -479,6 +497,9 @@ def set_original(c, v: str):
 def parse_scribe(c, v: str):
     v = v.strip()
     name, hedge = split_hedge(v)
+    if name:
+        name = re.sub(r'^به\s+خط\s+', '', name).strip()
+        name = re.sub(r'^(?:گرد\s*آورنده|گردآورنده|جامع|خود\s+(?:مؤلف|مولف|مصنف))$', 'مؤلف', name)
     if name and AUTOGRAPH_RE.match(name):
         c['is_autograph'], c['autograph_hedge'] = True, hedge
         return
@@ -517,7 +538,7 @@ def parse_physical(c, text: str):
                 c['scripts'] = parse_scripts(c['script_raw'])
                 last = 'script'
                 continue
-            m = re.match(r'^کا\s*:\s*(?P<v>.*)$', ch) or re.match(r'^(?P<v>کاتب\s*=\s*.*)$', ch)
+            m = re.match(r'^(?:کا|کاتب)\s*:\s*(?P<v>.*)$', ch) or re.match(r'^(?P<v>کاتب\s*=\s*.*)$', ch)
             if m:
                 parse_scribe(c, m.group('v'))
                 last = 'scribe'
@@ -546,7 +567,14 @@ def parse_physical(c, text: str):
                 continue
             m = re.match(r'^(?P<v>\d[\d/]*\s*(?:گ|برگ|ص)(?=\s|\(|$).*)$', ch)
             if m:
-                c['folios'], last = m.group('v'), 'folios'
+                # «86گ، 170ص»: a leaf count and a page count both stay; otherwise the later count wins
+                bare = r'^\d+\s*(?:گ|برگ|ص)\s*(?:\([^()]*\))?$'
+                if c['folios'] and re.match(bare, c['folios']) and re.match(bare, m.group('v')) \
+                        and ('ص' in c['folios']) != ('ص' in m.group('v')):
+                    c['folios'] += '، ' + m.group('v')
+                else:
+                    c['folios'] = m.group('v')
+                last = 'folios'
                 continue
             if last == 'folios' and re.match(r'^\([^()]*\d[^()]*\)$', ch):
                 c['folios'] += ' ' + ch
@@ -587,6 +615,16 @@ def parse_physical(c, text: str):
                 c['acquisition'].append(ch)
                 last = 'acquisition'
                 continue
+            if last == 'date' and c['copy_date']:
+                m = re.match(r'^((?:مطابق|برابر)\s+(?:با\s+)?.{0,40}?\d+\s*(?:ق|ش|م|قمری|شمسی|میلادی)(?=\s|$))\s*(.*)$', ch)
+                if m:
+                    c['copy_date']['raw'] += '، ' + m.group(1)
+                    if not m.group(2):
+                        continue
+                    ch = m.group(2)
+                elif re.match(r'^در\s+(?:زمان\s+)?(?:حیات|زندگی|زمان)\s+(?:مؤلف|مولف|مصنف|ناظم|شارح)', ch):
+                    c['copy_date']['note'] = ch
+                    continue
             m = COMMISSION_RE.match(ch)
             if m and last in ('place', 'date', 'scribe'):
                 c['commissioned_by'], last = m.group('v').strip(), None
