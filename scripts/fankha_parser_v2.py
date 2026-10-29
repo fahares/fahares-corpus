@@ -171,6 +171,8 @@ def take_trailing_citation(s: str) -> Tuple[str, Optional[str]]:
 
 LABEL_LINE = re.compile(r'^(?P<l>وابسته به|تاریخ تألیف|تاریخ تالیف|تألیف|تاریخ اجازه|اجازه|اهداء به|اهدا به|اهدایی به|'
                         r'به درخواست|به دستور|به فرمایش|به خواهش|به نام|چاپ|آغاز(?: کتاب| متن)?|انجام(?: کتاب| متن)?|شرح و حواشی|شروح و حواشی|مترجم|اسم مترجم|اصل از)\s*:\s*(?P<v>.*)$')
+# a part of a work named before its incipit or explicit: «جلد دوم: …», «دفتر 3: …»
+PART_LINE = re.compile(r'^(?P<l>(?:جلد|ج|مجلد|دفتر|قسمت|بخش|ربع|مقاله|کتاب|فن|جزء|جزو)\s*[^:؛«»]{0,15}?)\s*:\s*(?P<v>\S.*)$')
 HETERO_LINE = re.compile(r'^(?P<q>ظاهراً|ظاهرا|بعضاً|بعضا|احتمالاً|احتمالا|گویا)?\s*غیر\s?همانند\s*:?\s*$')
 HETERO_QUAL = {'بعضاً': 'partial', 'بعضا': 'partial'}
 EPITHET_TAIL = re.compile(r'،\s*(?P<e>(?:امام|پیامبر|خلیفه)\s+\S+(?:\s+\S+)?)$')
@@ -222,7 +224,7 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
         'transliteration': None, 'alt_transliterations': [], 'author': None, 'author_unknown': False, 'translator': None,
         'original_author': None, 'heterogeneous': None, 'identification_uncertain': False,
         'composition': None, 'dedication': None, 'related_work': None, 'print_info': None,
-        'description': None, 'incipit': None, 'explicit': None, 'commentaries': [], 'bibliography': [],
+        'description': None, 'incipit': None, 'explicit': None, 'incipit_parts': [], 'explicit_parts': [], 'commentaries': [], 'bibliography': [],
     }
     body = [l for l in lines[1:] if l.text]
     i = 0
@@ -247,6 +249,7 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
     desc: List[str] = []
     bib: List[str] = []
     comm_mode = False
+    parts_of = None                  # «آغاز: جلد اول: …» and the «جلد دوم: …» lines under it
     for l in body[i:]:
         t = l.text
         if re.match(r'^(?:مؤلف\s+|پدیدآور\s+)?(?:ناشناخته|ناشناس|نامعلوم)\s*:?$', t):
@@ -260,6 +263,12 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
         if re.search(r'همانندی\s+(?:نامعلوم|غیر معلوم|نامشخص)', t) and len(t) < 40:
             w['identification_uncertain'] = True
             continue
+        if parts_of:
+            pm = PART_LINE.match(t)
+            if pm:
+                w[parts_of].append({'label': pm.group('l').strip(), 'text': pm.group('v').strip()})
+                continue
+            parts_of = None
         if comm_mode:
             item = re.sub(r'^\d+[\.\-]\s*', '', t)
             item, _ = take_trailing_citation(item)
@@ -281,6 +290,10 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
             if lab in ('آغاز', 'انجام'):
                 parts = IE_SPLIT.split(v)
                 w['incipit' if lab == 'آغاز' else 'explicit'] = parts[0].strip()
+                pm = PART_LINE.match(parts[0].strip())
+                if pm and len(parts) == 1:
+                    parts_of = 'incipit_parts' if lab == 'آغاز' else 'explicit_parts'
+                    w[parts_of].append({'label': pm.group('l').strip(), 'text': pm.group('v').strip()})
                 for part in parts[1:]:
                     pm = IE_START.match(part)
                     if pm and pm.group('l').startswith('انجام') and not w['explicit']:
@@ -873,6 +886,35 @@ def split_entries(lines: List[Line]) -> List[Tuple[str, List[Line]]]:
     return entries
 
 
+ORDINALS = {'اول': 1, 'نخست': 1, 'یکم': 1, 'دوم': 2, 'سوم': 3, 'سیم': 3, 'چهارم': 4, 'پنجم': 5, 'ششم': 6,
+            'هفتم': 7, 'هشتم': 8, 'نهم': 9, 'دهم': 10, 'یازدهم': 11, 'دوازدهم': 12}
+
+
+def part_key(label: str) -> Optional[Tuple[str, int]]:
+    """«جلد ششم», «جلد 6», «ج6» → ('جلد', 6); None when the label names no numbered part."""
+    m = re.match(r'^(جلد|ج|مجلد|دفتر|قسمت|بخش|ربع|مقاله|کتاب|فن|جزء|جزو)\s*(.*)$', fa(label.strip()))
+    if not m:
+        return None
+    kind, rest = ('جلد' if m.group(1) in ('ج', 'مجلد') else 'جزء' if m.group(1) == 'جزو' else m.group(1)), m.group(2).strip()
+    d = re.match(r'^(\d+)', rest)
+    n = int(d.group(1)) if d else ORDINALS.get(rest.split()[0] if rest else '')
+    return (kind, n) if n else None
+
+
+def link_part_refs(w):
+    """A copy whose incipit or explicit is «برابر جلد 6» points at the work's own part incipit/explicit, when listed."""
+    for side in ('incipit', 'explicit'):
+        index = {part_key(p['label']): i for i, p in enumerate(w[side + '_parts'], 1) if part_key(p['label'])}
+        if not index:
+            continue
+        for c in w['copies']:
+            rec = c.get(side)
+            if rec and rec.get('same_as_ref'):
+                i = index.get(part_key(rec['same_as_ref']))
+                if i:
+                    rec['same_as_part'] = i
+
+
 def parse_work(lines: List[Line], vol: int, ordinal: int) -> Dict[str, Any]:
     first_copy = next((i for i, l in enumerate(lines) if 'شماره نسخه' in l.text and i > 0), len(lines))
     w = parse_work_header(lines[:first_copy], vol, ordinal)
@@ -903,6 +945,7 @@ def parse_work(lines: List[Line], vol: int, ordinal: int) -> Dict[str, Any]:
         w['provenance']['line_end'] = lines[-1].no
         w['provenance']['page_end'] = lines[-1].page_end
     w['copies'] = copies
+    link_part_refs(w)
     return w
 
 
