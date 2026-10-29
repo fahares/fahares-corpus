@@ -314,6 +314,8 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
 COPY_HEAD = re.compile(r'^(?:(?P<seq>\d+)\s*[\.\-]\s*)?(?P<loc>.+?)\s*؛\s*شماره\s*نسخه\s*:\s*(?P<shelf>.*)$')
 IE_START = re.compile(r'^(?P<l>(?:آغاز|انجام)[^:؛]{0,25}?)\s*:\s*')
 IE_SPLIT = re.compile(r'\s*؛\s*(?=(?:آغاز|انجام)[^:؛]{0,25}?:)')
+# an explicit label after the incipit with no «؛», as printed («آغاز: برابر انجام: …», «برابرانجام:»)
+BARE_EXPLICIT = re.compile(r'(?:\s*،?\s+|(?<=برابر)|(?<=برابر\d))(?=انجام(?:\s+(?:نسخه|کتاب|متن))?\s*:)')
 PHYS_LABEL = (r'(?:خط\s*:|کا\s*:|بی[‌ ]?کا\b|تا\s*:|بی[‌ ]?تا\b|کاغذ\s*:|جلد\s*:|اندازه\s*:|افتادگی\s*:|'
               r'جا\s*:|\d+\s*گ\b|\d+\s*برگ\b|\d+\s*ص\s*\(|کاتب\s*=)')
 PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')')
@@ -327,10 +329,24 @@ AUTOGRAPH_RE = re.compile(r'^(?:کاتب\s*=\s*)?(?:مؤلف|مولف|مصنف|�
 FLAG_WORDS = {'مصحح': 'corrected', 'تصحیح شده': 'corrected', 'محشی': 'marginal_notes', 'مذهب': 'illuminated',
               'مجدول': 'ruled', 'مصور': 'illustrated', 'مقابله شده': 'collated', 'عکسی': 'facsimile',
               'رکابه دار': 'catchwords', 'با رکابه': 'catchwords'}
-FLAG_SCAN = [(re.compile(r'مصحح|تصحیح\s+شده|تصحیح\s+دارد'), 'corrected'),
-             (re.compile(r'محشی|حاشیه\s+دارد|با\s+حواشی|دارای\s+حواشی|حواشی\s+(?:مختصر|فراوان|بسیار)'), 'marginal_notes'),
-             (re.compile(r'مذهب|تذهیب|سرلوح|زرافشان|طلااندازی|طلا\s*اندازی'), 'illuminated'),
-             (re.compile(r'مصور|مجلس\s+تصویر|تصاویر|نقاشی'), 'illustrated')]
+# v1's flag rules (scripts/fankha_parser.py), which v2 had narrowed: the phase 3 comparison found 21k flags
+# v1 set correctly and v2 did not. «مجدول» in the binding describes the binding, not ruled leaves; a gilt binding
+# («جلد: تیماج مذهب») does count as «مذهب» (gold set), and «در حاشیه آمده» is not a glossed copy.
+FLAG_RULES = [
+    ('corrected', re.compile(r'مصحح|تصحیح\s+شده|تصحیح\s+دارد|تصحیح\s+و\s+مقابله')),
+    ('marginal_notes', re.compile(r'محشی|حاشیه\s+دارد|(?:با|دارای)\s+حواشی|حواشی\s+(?:مختصر|فراوان|بسیار)')),
+    ('ruled', re.compile(r'مجدول|(?:دارای\s+|با\s+)?کمند(?:[‌\s]کشی)?|جدول[‌\s]کشی|با\s+جدول|جدول\s+[^\s؛،]+\s+خطی')),
+    ('catchwords', re.compile(r'رکابه[‌\s]?دار|با\s+رکابه|دارای\s+رکابه')),
+    ('collated', re.compile(r'مقابله\s+(?:شده|گردیده|نموده|کردم)|تصحیح\s+و\s+مقابله|مقابل\s+کرده|(?:با|دارای)\s+(?:علامت|نشان(?:ی)?|امضای|امضا)?\s*(?:بلاغ|بلغ)|'
+                            r'با\s+(?:نشان|عبارت)\s*«بلغ|(?:سه\s+بار|دو\s+مرتبه)\s+مقابله')),
+    ('illuminated', re.compile(r'(?:(?:سرلوح|کتیبه|شمسه)\s+)?(?:مذهب|مرصع|زرین)(?!\s+(?:شیعه|حنفی|شافعی|مالکی|امامیه|جعفری|اهل\s+سنت))|'
+                               r'تذهیب|طلاپوش|زرنگار|زرافشان|اکلیل|سر[‌\s]?لوح|طلااندازی|طلا\s+اندازی')),
+    ('illustrated', re.compile(r'مصور|دارای\s+(?:تصاویر|عکس‌های\s+فتوگرافیک|نقاشی|نگاره)|با\s+(?:اشکال\s+هندسی|تصاویر)|مجلس\s+تصویر')),
+    ('author_marginalia', re.compile(r'محشی\s+با\s+(?:نشان|علامت|رمز|امضاء|امضای)\s*«?منه|محشی\s+(?:از|به\s+خط)\s+(?:مؤلف|مولف)|'
+                                     r'حاشیه(?:[‌\s]+های[ی‌]?)?\s+از\s+(?:مؤلف|مولف)|منه\s+(?:سلمه\s+الله|مد\s*ظله|دام\s*ظله|عفی\s+عنه|رحمه\s+الله|'
+                                     r'قدس\s+سره|ایده\s+الله|حفظه\s+الله|دام\s+علوه|مد\s+عزه)|محشی\s+با\s+(?:نشان|رمز)[^؛]{0,40}«منه')),
+]
+BINDING_TEXT = re.compile(r'جلد\s*:[^؛\[]*')
 COMMISSION_RE = re.compile(r'^(?:جهت|به\s+دستور|حسب\s*الامر|حسب‌الامر|به\s+امر|به\s+فرمایش|به\s+خواهش|به\s+درخواست|برای)\s+(?P<v>.+)$')
 PORTION_RE = re.compile(r'^(?P<n>.*?)\s*\((?P<p>[^()]*(?:ورق|برگ|صفحه|جلد|بخش|دفتر|جزء|جزو)[^()]*)\)$')
 SIMPLE_LABELS = [('paper', r'کاغذ'), ('binding', r'جلد'), ('dimensions', r'اندازه'),
@@ -381,19 +397,29 @@ def parse_ie_line(c, text: str, tag_at: Optional[int] = None) -> Optional[str]:
     When a page tag stood between the explicit and that tail, the text after the tag is a lost line of
     its own (copy description or note), not part of the explicit."""
     tail = None
-    m = re.search(r'\s*؛?\s*(?=(?:خط\s*:\s*[^،؛]+[،؛]\s*(?:کا\s*:|بی[‌ ]?کا|بی[‌ ]?تا|تا\s*:)|'
+    m = re.search(r'\s*؛?\s*(?=(?:خط\s*:\s*[^،؛]+[،؛]\s*(?:کا\s*:|کاتب\s*=|بی[‌ ]?کا|بی[‌ ]?تا|تا\s*:)|'
+                  r'کا\s*:\s*[^،؛:]{2,80}،\s*(?:تا\s*:|بی[‌ ]?تا)|'
                   r'بی[‌ ]?کا\s*،\s*(?:تا|بی)))', text)
     if m and m.start() > 0:
         text, tail = text[:m.start()], text[m.end():]
         if tag_at and 0 < tag_at < len(text) and not IE_SPLIT.search(text[tag_at:]):
             text, tail = text[:tag_at], text[tag_at:].strip() + '؛ ' + tail
+    parts = []
     for part in IE_SPLIT.split(text):
+        if re.match(r'^آغاز(?:\s+(?:نسخه|کتاب|متن))?\s*:', part):
+            parts += BARE_EXPLICIT.split(part, maxsplit=1)
+        else:
+            parts.append(part)
+    for part in parts:
         pm = IE_START.match(part)
         if not pm:
             continue
         lab, val = ' '.join(pm.group('l').split()), part[pm.end():].strip()
-        same = bool(re.match(r'^برابر\s*\d?$', val))
+        sm = re.match(r'^برابر\s*(\d)?$', val)
+        same = bool(sm)
         rec = {'text': None if same else val, 'same_as_work': same}
+        if sm and sm.group(1):
+            rec['same_as_work_n'] = int(sm.group(1))     # «برابر2»: the work's second incipit/explicit
         if lab in ('آغاز', 'آغاز نسخه'):
             if c['incipit'] is None:
                 c['incipit'] = rec
@@ -565,6 +591,11 @@ def parse_physical(c, text: str):
             if m and last in ('place', 'date', 'scribe'):
                 c['commissioned_by'], last = m.group('v').strip(), None
                 continue
+            # «جلد: تیماج سرخ، مجدول، ترنج و سرترنج»: an unlabelled chunk after the binding describes the binding
+            # (a flag word there is the binding's, not the leaves')
+            if last == 'binding' and not re.search(r'[:\d]', ch) and len(ch.split()) <= 8:
+                c['binding'] += '، ' + ch
+                continue
             if flag_chunk(c, ch):
                 continue
             # unlabelled chunk: continuation of the previous field, or a note
@@ -654,9 +685,12 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
             continue
         parse_line_body(c, t, hetero, l.tag_at)
     body = ' '.join(l.text for l in rest if l.text and not IE_START.match(l.text))
-    for rx, f in FLAG_SCAN:
-        if rx.search(body):
+    leaves = BINDING_TEXT.sub(' ', body)
+    for f, rx in FLAG_RULES:
+        if rx.search(leaves if f == 'ruled' else body):
             add_flag(c, f)
+    if 'author_marginalia' in c['flags']:
+        add_flag(c, 'marginal_notes')
     if c['shelfmark'] and 'عکسی' in c['shelfmark']:
         add_flag(c, 'facsimile')
     kept = []

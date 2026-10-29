@@ -60,6 +60,14 @@ def lead_int(s):
     return int(m.group(1)) if m else None
 
 
+def ie_text(rec):
+    """The site keeps «برابر1» (the work's first incipit) as text and a plain «برابر» as empty."""
+    rec = rec or {}
+    if rec.get('same_as_work_n'):
+        return f"برابر{rec['same_as_work_n']}"
+    return rec.get('text')
+
+
 FLAGS = {'is_corrected': 'corrected', 'has_marginal_notes': 'marginal_notes', 'is_ruled': 'ruled',
          'has_catchwords': 'catchwords', 'is_facsimile': 'facsimile', 'is_collated': 'collated',
          'is_illuminated': 'illuminated', 'is_illustrated': 'illustrated',
@@ -80,8 +88,8 @@ COPY_FIELDS = {
     'dimensions': lambda c: c['dimensions'],
     'paper': lambda c: c['paper'],
     'binding': lambda c: c['binding'],
-    'incipit_text': lambda c: (c['incipit'] or {}).get('text'),
-    'explicit_text': lambda c: (c['explicit'] or {}).get('text'),
+    'incipit_text': lambda c: ie_text(c['incipit']),
+    'explicit_text': lambda c: ie_text(c['explicit']),
     'catalog_citation': lambda c: c['catalog_citation'],
     **{col: (lambda f: lambda c: f in c['flags'])(f) for col, f in FLAGS.items()},
 }
@@ -123,6 +131,7 @@ def untag(s):
 
 def norm(s):
     s = untag(s).replace('‌', '').replace('ي', 'ی').replace('ك', 'ک').replace('ى', 'ی')
+    s = re.sub(r'(?<=برابر)\s+(?=\d)', '', s)
     s = re.sub(r'[\s.،؛:,;]+', ' ', s)
     return s.strip()
 
