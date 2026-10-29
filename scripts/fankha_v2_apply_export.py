@@ -3,7 +3,7 @@
 
 Usage: fankha_v2_apply_export.py --diffs reports/fankha_v2_db_review2/diffs.jsonl --out FILE CATEGORY ...
 
-Categories (item 87, sample review step 13.64):
+Categories (item 87, sample review step 13.65):
   facsimile  manuscripts with «نسخه اصل: …» get is_facsimile = 1 (site still has the v1 value 0)
   print_bib  the bracket of citations glued to the end of «چاپ» leaves print_info, when every citation in it is
              already in the work's bibliography; the command checks that again before writing
