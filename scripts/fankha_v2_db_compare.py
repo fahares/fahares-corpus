@@ -13,7 +13,8 @@ correction in the audit log (`protected`, the guard of step 11.6).
 
     python3 scripts/fankha_v2_db_compare.py [--out DIR] [--volumes 1 2 …] [--db fahares_prod]
 
-Writes DIR/diffs.jsonl (every difference), DIR/report.json (counts and samples) and DIR/report.md.
+Writes DIR/diffs.jsonl (every difference), DIR/other_work.jsonl (copies the site keeps under another work than v2),
+DIR/report.json (counts and samples) and DIR/report.md.
 """
 import argparse
 import glob
@@ -331,6 +332,7 @@ def main():
     seen = Counter()
     rng = random.Random(args.seed)
     out = open(os.path.join(args.out, 'diffs.jsonl'), 'w')
+    other = open(os.path.join(args.out, 'other_work.jsonl'), 'w')
 
     def record(table, rec_id, label, field, db_val, v1_val, v2_val, raw=None, v2_rest=''):
         if field in ('folios', 'lines') and not db_val:
@@ -437,6 +439,9 @@ def main():
             v1 = v1_works[so - 1] if so else {}
             v1c = next((m for m in v1.get('manuscripts', []) if rkey(m['raw_text']) == rkey(d['raw_text'])), None)
             match['copy_other_work'] += 1
+            other.write(json.dumps({'id': d['id'], 'site_work': label, 'v2_work': f'v{vol}-{ordinal} «{v2_works[ordinal]["title"]}»',
+                                    'v2_page': (c.get('provenance') or {}).get('page_start'), 'raw_text': d['raw_text']},
+                                   ensure_ascii=False) + '\n')
             v2_left.discard((vol, ordinal, i))
             compare_copy(d, c, v1c, f'{label} ← v{vol}-{ordinal}')
     match['copy_v2_unmatched'] = len(v2_left)
