@@ -7,6 +7,12 @@ Categories (item 87, sample review step 13.65):
   facsimile  manuscripts with «نسخه اصل: …» get is_facsimile = 1 (site still has the v1 value 0)
   print_bib  the bracket of citations glued to the end of «چاپ» leaves print_info, when every citation in it is
              already in the work's bibliography; the command checks that again before writing
+  commissioner  a copy's commissioner («حسب الامر میرزا …») that v2 split off the copy date or found elsewhere
+             (fahares item 96): the name, for a people row of role patron; the date loses its tail only when the
+             tail is that commissioner and nothing else (its phrase and name), so no other text leaves the site.
+             The phrase itself is read by the command from the copy's raw text on the site
+  copy_date_note  a note on the date («در حیات مؤلف») that v2 split off it: the date loses the tail only when the
+             tail is that note
 
 Each record names the row by id and by natural key (its work's slug suffix and, for a copy, its shelfmark, as
 the site has them in --db, a copy of production: the command then finds a record merged, moved or renumbered since), and each change
@@ -38,6 +44,29 @@ def site_keys(db, table, ids):
     return keys
 
 
+def date_tail(d):
+    """What v2 cut off the end of a copy date, without the separating «،», or None when it is not a cut."""
+    if not d or d['category'] != 'trimmed':
+        return None
+    db, v2 = d['db'] or '', d['v2'] or ''
+    if not v2 or not db.startswith(v2):
+        return None
+    return db[len(v2):].strip(' ،,.')
+
+
+def date_notes(v2dir):
+    """The note v2 split off each copy date, by the date as the catalogue printed it (raw date and note)."""
+    import glob
+    notes = {}
+    for f in sorted(glob.glob(f'{v2dir}/fankha_vol_*.json')):
+        for w in json.load(open(f, encoding='utf-8'))['works']:
+            for c in w.get('copies') or []:
+                cd = c.get('copy_date') or {}
+                if cd.get('note'):
+                    notes[f"{cd['raw']}، {cd['note']}".strip()] = cd['note']
+    return notes
+
+
 def citations(bracket):
     return [t.strip() for t in re.split(r'[؛;]', bracket.strip(' ،.[]')) if t.strip()]
 
@@ -47,14 +76,20 @@ def main():
     ap.add_argument('--diffs', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib'])
+    ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note'])
     args = ap.parse_args()
 
     records, skipped = [], {}
+    dates, commissioners = {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
             continue
+        if x['table'] == 'Manuscript' and x['field'] == 'copy_date_raw':
+            dates[x['id']] = x
+        if x['table'] == 'Manuscript' and x['field'] == 'commissioned_by' and x['category'] == 'filled':
+            commissioners[x['id']] = x
         if 'facsimile' in args.categories and x['field'] == 'is_facsimile' and x['category'] == 'flag_on':
             records.append({'table': 'manuscripts', 'id': x['id'],
                             'category': 'facsimile', 'changes': {'is_facsimile': {'from': 0, 'to': 1}}})
@@ -68,6 +103,30 @@ def main():
             records.append({'table': 'works', 'id': x['id'], 'category': 'print_bib',
                             'changes': {'print_info': {'from': db, 'to': v2 or None}},
                             'require_in_bibliography': citations(tail)})
+
+    if 'commissioner' in args.categories:
+        for rid, c in commissioners.items():
+            name = (c['v2'] or '').strip()
+            if not name:
+                continue
+            rec = {'table': 'manuscripts', 'id': rid, 'category': 'commissioner', 'changes': {},
+                   'commissioner': name}
+            d = dates.get(rid)
+            tail = date_tail(d)
+            # «، حسب الامر میرزا …»: a short phrase with no digits, then the name, and nothing after it
+            if tail is not None and tail.endswith(name) and len(tail) - len(name) <= 30 \
+                    and not re.search(r'[0-9۰-۹]', tail[:len(tail) - len(name)]):
+                rec['changes']['copy_date_raw'] = {'from': d['db'], 'to': d['v2']}
+            records.append(rec)
+    if 'copy_date_note' in args.categories:
+        notes = date_notes(args.v2)
+        for rid, d in dates.items():
+            tail = date_tail(d)
+            note = notes.get((d['db'] or '').strip())
+            if tail and note and tail == note.strip(' ،.'):
+                records.append({'table': 'manuscripts', 'id': rid, 'category': 'copy_date_note',
+                                'changes': {'copy_date_raw': {'from': d['db'], 'to': d['v2']},
+                                            'copy_date_note': {'from': None, 'to': note}}})
 
     for table in ('manuscripts', 'works'):
         keys = site_keys(args.db, table, [r['id'] for r in records if r['table'] == table])
