@@ -43,7 +43,7 @@ def values(c):
         'copy_date_hijri_year': year,
         'copy_place': (c['copy_place'] or {}).get('v'),
         'commissioned_by': c['commissioned_by'],
-        'folios': lead_int(c['folios']),
+        'folios': lead_int(c['folios']) if 'گ' in (c['folios'] or '') else None,   # «2ص» is pages, not leaves
         'lines': lead_int(c['lines']),
         'dimensions': c['dimensions'],
         'paper': c['paper'],
