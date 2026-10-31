@@ -89,10 +89,15 @@ def people(w):
     return out
 
 
+def seq(c):
+    """A copy Fankha lists alone has no number; the site gives it 1."""
+    return c['key']['seq'] or 1
+
+
 def copy_record(c):
     v = copy_values(c)
     pr = c.get('provenance') or {}
-    v.update({'sequence_number': c['key']['seq'], 'page_start': pr.get('page_start'), 'page_end': pr.get('page_end'),
+    v.update({'sequence_number': seq(c), 'page_start': pr.get('page_start'), 'page_end': pr.get('page_end'),
               'city': c['city'], 'library': c['library'], 'shelfmark': c['shelfmark']})
     return v
 
@@ -128,7 +133,7 @@ def main():
             if pc['site_id']:
                 slug, city, library, shelf = site[pc['site_id']]
                 copies.append({'move': {'id': pc['site_id'], 'from_slug': slug, 'city': city, 'library': library, 'shelfmark': shelf},
-                               'sequence_number': c['key']['seq']})
+                               'sequence_number': seq(c)})
                 moved.add(pc['site_id'])
             else:
                 copies.append({'make': copy_record(c)})
@@ -152,7 +157,7 @@ def main():
             if len(hits) == 1:
                 r = hits[0]
                 copies.append({'move': {'id': int(r[0]), 'from_slug': r[1], 'city': r[2], 'library': r[3], 'shelfmark': r[4]},
-                               'sequence_number': c['key']['seq']})
+                               'sequence_number': seq(c)})
                 moved.add(int(r[0]))
             else:
                 copies.append({'make': copy_record(c)})
