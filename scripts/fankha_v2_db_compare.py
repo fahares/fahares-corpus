@@ -61,6 +61,11 @@ def lead_int(s):
     return int(m.group(1)) if m else None
 
 
+def count_of(s, unit):
+    m = re.search(r'(\d+)\s*' + unit, s or '')
+    return int(m.group(1)) if m else None
+
+
 def ie_text(rec):
     """The site keeps «برابر1» (the work's first incipit) as text and a plain «برابر» as empty."""
     rec = rec or {}
@@ -86,7 +91,9 @@ COPY_FIELDS = {
     'copy_date_raw': lambda c: (c['copy_date'] or {}).get('raw'),
     'copy_place': lambda c: (c['copy_place'] or {}).get('v'),
     'commissioned_by': lambda c: c['commissioned_by'],
-    'folios': lambda c: lead_int(c['folios']),
+    # since step 13.86 the site keeps leaves in folios and pages in pages («86گ، 170ص» holds both)
+    'folios': lambda c: count_of(c['folios'], 'گ'),
+    'pages': lambda c: count_of(c['folios'], 'ص'),
     'lines': lambda c: lead_int(c['lines']),
     'dimensions': lambda c: c['dimensions'],
     'paper': lambda c: c['paper'],
@@ -379,6 +386,14 @@ def main():
         for w in load_json('fankha_v2', vol):
             for i, c in enumerate(w['copies']):
                 where.setdefault(rkey(c['raw_text']), (vol, w['key']['ordinal'], i))
+    # works fahares:add-corpus-works made from v2 (step 13.79): their slug ordinal is the volume's next free one,
+    # and the audit log keeps the v2 key they came from
+    added = defaultdict(dict)                           # vol -> v2 ordinal -> site ordinal
+    for r in query(args.db, "select json_object('v2', json_unquote(json_extract(a.new_values, '$.v2')), 'slug', w.slug) "
+                            "from audit_logs a join works w on w.id = a.auditable_id where a.auditable_type like '%Work' "
+                            "and a.action = 'create' and json_extract(a.new_values, '$.v2') is not null"):
+        vol, ordinal = (int(x) for x in r['v2'][1:].split('-'))
+        added[vol][ordinal] = int(r['slug'].rsplit('-', 1)[1])
     deferred = defaultdict(list)                        # vol -> (db row, label, (ordinal, index))
     aligned = {}                                        # vol -> v2 ordinal -> site ordinal
     v2_left = set()
@@ -387,6 +402,7 @@ def main():
         v2_works = load_json('fankha_v2', vol)
         v1_works = load_json('fankha', vol)
         amap = aligned[vol] = align(v2_works, v1_works)
+        amap.update(added[vol])
         for w in v2_works:
             ordinal = w['key']['ordinal']
             site_ord = amap.get(ordinal)
@@ -401,7 +417,7 @@ def main():
                 continue
             match['work_matched'] += 1
             row = rows[0]
-            v1 = v1_works[site_ord - 1]
+            v1 = v1_works[site_ord - 1] if site_ord <= len(v1_works) else None
             label = f'v{vol}-{ordinal} «{w["title"]}»'
             wrest = norm(json.dumps({k: v for k, v in w.items() if k not in ('raw_text', 'copies')}, ensure_ascii=False))
             for field, get in WORK_FIELDS.items():
