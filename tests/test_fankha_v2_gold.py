@@ -69,5 +69,32 @@ class ScriptRulingsTest(unittest.TestCase):
                 self.assertEqual([(s['type'], s['qualifiers']) for s in parse_scripts(raw)], expected)
 
 
+class NumberedIncipitsTest(unittest.TestCase):
+    """A work's numbered incipits and explicits, which its copies cite as «برابر2»."""
+    ENTRY = '\n'.join([
+        '● اثر آزمایشی / عرفان / فارسی',
+        'asar-e azmayeshi',
+        '',
+        'آغاز: 1: دیباچه: تحصنت بذی الملک ... 2: بسمله. الحمدلله الذی تعزز',
+        '3. سپاس آن خدای را',
+        'انجام (1): و الله اعلم [الذریعة 9: 815]',
+        'انجام (2): تمت الرسالة',
+        '',
+        '1. تهران؛ مجلس؛ شماره نسخه: 1',
+        'آغاز: برابر2؛ انجام: برابر1',
+        'خط: نسخ، تا: 18 ربیع الثانی، 1268',
+    ])
+
+    def test_numbered_lines_and_the_year_after_the_comma(self):
+        w = parse_volume(99, self.ENTRY)['works'][0]
+        self.assertEqual([(x['n'], x['label']) for x in w['incipit_numbered']], [(1, 'دیباچه'), (2, None), (3, None)])
+        self.assertEqual([x['text'] for x in w['explicit_numbered']], ['و الله اعلم', 'تمت الرسالة'])
+        self.assertIn('الذریعة 9: 815', w['bibliography'])
+        self.assertIsNone(w['description'])
+        c = w['copies'][0]
+        self.assertEqual((c['incipit']['same_as_work_n'], c['explicit']['same_as_work_n']), (2, 1))
+        self.assertEqual((c['copy_date']['raw'], c['copy_date']['sort_year']), ('18 ربیع الثانی، 1268', 1268))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -171,6 +171,47 @@ def take_trailing_citation(s: str) -> Tuple[str, Optional[str]]:
 
 LABEL_LINE = re.compile(r'^(?P<l>وابسته به|تاریخ تألیف|تاریخ تالیف|تألیف|تاریخ اجازه|اجازه|اهداء به|اهدا به|اهدایی به|'
                         r'به درخواست|به دستور|به فرمایش|به خواهش|به نام|چاپ|آغاز(?: کتاب| متن)?|انجام(?: کتاب| متن)?|شرح و حواشی|شروح و حواشی|مترجم|اسم مترجم|اصل از)\s*:\s*(?P<v>.*)$')
+# a work's numbered incipit or explicit, which copies cite as «برابر2»: on a line of its own («آغاز 2: …»,
+# «آغاز1: …»), or as the value of the label («آغاز: 1: دیباچه: …», «آغاز کتاب: آغاز 1: …»)
+NUM_IE_LINE = re.compile(r'^(?P<side>آغاز|انجام)(?:\s+(?:کتاب|متن))?\s*\(?(?P<n>\d{1,2})\)?\s*:\s*(?P<v>\S.*)$')
+# «1: …», «1. …», «(1): …», «آغاز 1: …»; a dot only right after the number («1. بسمک»), not in «1.5»
+NUM_IE_VALUE = re.compile(r'^(?:(?P<side>آغاز|انجام)\s*)?\(?(?P<n>\d{1,2})\)?\s*(?::|\.(?!\d))\s*(?P<v>\S.*)$')
+# the next number on the same line: «1: بسمله … 2: بسمله …»
+NUM_IE_NEXT = re.compile(r'\s+(?=\(?\d{1,2}\)?\s*:\s)')
+# a short name before the text of a numbered incipit: «دیباچه: …», «متن: …»
+NUM_IE_LABEL = re.compile(r'^(?P<l>[^\d:؛«»()]{2,20}?)\s*:\s*(?P<v>\S.*)$')
+
+
+SIDE = {'incipit': 'آغاز', 'explicit': 'انجام'}
+
+
+def numbered_ies(n, v):
+    """One numbered incipit, or several when the line runs on into the next numbers in order («1: … 2: …»)."""
+    out = [numbered_ie(n, v)]
+    pieces = NUM_IE_NEXT.split(v)
+    if len(pieces) > 1:
+        items, want = [], int(n)
+        for i, p in enumerate(pieces):
+            m = NUM_IE_VALUE.match(p) if i else None
+            if i and m and int(m.group('n')) == want + 1:
+                want += 1
+                items.append((want, m.group('v')))
+            elif items:
+                items[-1] = (items[-1][0], items[-1][1] + ' ' + p)
+            else:
+                items.append((int(n), p))
+        if len(items) > 1:
+            out = [numbered_ie(k, t) for k, t in items]
+    return out
+
+
+def numbered_ie(n, v):
+    lm = NUM_IE_LABEL.match(v)
+    if lm and len(lm.group('l').split()) <= 2:
+        return {'n': int(n), 'label': lm.group('l').strip(), 'text': lm.group('v').strip()}
+    return {'n': int(n), 'label': None, 'text': v.strip()}
+
+
 # a part of a work named before its incipit or explicit: «جلد دوم: …», «دفتر 3: …»
 PART_LINE = re.compile(r'^(?P<l>(?:جلد|ج|مجلد|دفتر|قسمت|بخش|ربع|مقاله|کتاب|فن|جزء|جزو)\s*[^:؛«»]{0,15}?)\s*:\s*(?P<v>\S.*)$')
 HETERO_LINE = re.compile(r'^(?P<q>ظاهراً|ظاهرا|بعضاً|بعضا|احتمالاً|احتمالا|گویا)?\s*غیر\s?همانند\s*:?\s*$')
@@ -224,7 +265,7 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
         'transliteration': None, 'alt_transliterations': [], 'author': None, 'author_unknown': False, 'translator': None,
         'original_author': None, 'heterogeneous': None, 'identification_uncertain': False,
         'composition': None, 'dedication': None, 'related_work': None, 'print_info': None,
-        'description': None, 'incipit': None, 'explicit': None, 'incipit_parts': [], 'explicit_parts': [], 'commentaries': [], 'bibliography': [],
+        'description': None, 'incipit': None, 'explicit': None, 'incipit_parts': [], 'explicit_parts': [], 'incipit_numbered': [], 'explicit_numbered': [], 'commentaries': [], 'bibliography': [],
     }
     body = [l for l in lines[1:] if l.text]
     i = 0
@@ -250,6 +291,7 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
     bib: List[str] = []
     comm_mode = False
     parts_of = None                  # «آغاز: جلد اول: …» and the «جلد دوم: …» lines under it
+    num_side = None                  # «آغاز: 1: …» and the «2: …» lines under it
     for l in body[i:]:
         t = l.text
         if re.match(r'^(?:مؤلف\s+|پدیدآور\s+)?(?:ناشناخته|ناشناس|نامعلوم)\s*:?$', t):
@@ -262,6 +304,19 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
             continue
         if re.search(r'همانندی\s+(?:نامعلوم|غیر معلوم|نامشخص)', t) and len(t) < 40:
             w['identification_uncertain'] = True
+            continue
+        if num_side:
+            nm = NUM_IE_VALUE.match(t)
+            if nm and (nm.group('side') or SIDE[num_side]) == SIDE[num_side]:
+                w[num_side + '_numbered'] += numbered_ies(nm.group('n'), nm.group('v'))
+                continue
+            num_side = None
+        nm = NUM_IE_LINE.match(t)
+        if nm:
+            num_side = 'incipit' if nm.group('side') == 'آغاز' else 'explicit'
+            w[num_side + '_numbered'] += numbered_ies(nm.group('n'), nm.group('v'))
+            if w[num_side] is None:
+                w[num_side] = t
             continue
         if parts_of:
             pm = PART_LINE.match(t)
@@ -290,6 +345,10 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
             if lab in ('آغاز', 'انجام'):
                 parts = IE_SPLIT.split(v)
                 w['incipit' if lab == 'آغاز' else 'explicit'] = parts[0].strip()
+                nm = NUM_IE_VALUE.match(parts[0].strip())
+                if nm and len(parts) == 1:
+                    num_side = 'incipit' if lab == 'آغاز' else 'explicit'
+                    w[num_side + '_numbered'] += numbered_ies(nm.group('n'), nm.group('v'))
                 pm = PART_LINE.match(parts[0].strip())
                 if pm and len(parts) == 1:
                     parts_of = 'incipit_parts' if lab == 'آغاز' else 'explicit_parts'
@@ -327,6 +386,14 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
             for x in re.findall(r'\[([^\[\]]*)\]', cit):
                 bib += split_bib_citations(x.strip())
         w['description'] = text or None
+    # the entry's sources printed at the end of its last numbered incipit or explicit line
+    for side in ('incipit_numbered', 'explicit_numbered'):
+        for item in w[side]:
+            item['text'], cit = take_trailing_citation(item['text'])
+            if cit:
+                for x in re.findall(r'\[([^\[\]]*)\]', cit):
+                    if is_bib_citation(x.strip()):
+                        bib += split_bib_citations(x.strip())
     w['bibliography'] = bib
     return w
 
@@ -628,6 +695,12 @@ def parse_physical(c, text: str):
             if m:
                 c['acquisition'].append(ch)
                 last = 'acquisition'
+                continue
+            # «تا: 18 ربیع الثانی، 1268»: the year after the comma is the date's own
+            if last == 'date' and c['copy_date'] and not re.search(r'\d{3,4}', c['copy_date']['raw']) \
+                    and re.match(r'^\d{3,4}\s*(?:ق|ش|م|قمری|شمسی|میلادی)?$', ch):
+                c['copy_date']['raw'] += '، ' + ch
+                c['copy_date']['century'], c['copy_date']['sort_year'], _ = parse_date_triad(c['copy_date']['raw'])
                 continue
             if last == 'date' and c['copy_date']:
                 m = re.match(r'^((?:مطابق|برابر)\s+(?:با\s+)?.{0,40}?\d+\s*(?:ق|ش|م|قمری|شمسی|میلادی)(?=\s|$))\s*(.*)$', ch)
