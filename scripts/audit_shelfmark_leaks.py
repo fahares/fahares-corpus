@@ -18,7 +18,7 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
-CORPUS_DIR = Path("/home/tabib/projects/apps/fahares-corpus")
+CORPUS_DIR = Path(__file__).resolve().parent.parent
 TEXT_DIR = CORPUS_DIR / "text"
 REPORTS_DIR = CORPUS_DIR / "reports"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
