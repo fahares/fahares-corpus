@@ -340,6 +340,8 @@ def main():
     rng = random.Random(args.seed)
     out = open(os.path.join(args.out, 'diffs.jsonl'), 'w')
     other = open(os.path.join(args.out, 'other_work.jsonl'), 'w')
+    unmatched = open(os.path.join(args.out, 'unmatched.jsonl'), 'w')   # every record left without a pair
+    site_work = {}                                                       # (vol, v2 ordinal) -> site work id
 
     def record(table, rec_id, label, field, db_val, v1_val, v2_val, raw=None, v2_rest=''):
         if field in ('folios', 'lines') and not db_val:
@@ -408,6 +410,8 @@ def main():
             site_ord = amap.get(ordinal)
             if site_ord is None:
                 match['work_new_in_v2'] += 1
+                unmatched.write(json.dumps({'kind': 'v2_work', 'v2': f'v{vol}-{ordinal}', 'title': w['title'],
+                                            'page': w['provenance']['page_start'], 'copies': len(w['copies'])}, ensure_ascii=False) + '\n')
                 if len(samples[('Work', '_match', 'new_in_v2')]) < SAMPLES:
                     samples[('Work', '_match', 'new_in_v2')].append({'label': f'v{vol}-{ordinal} «{w["title"]}»'})
                 continue
@@ -417,6 +421,7 @@ def main():
                 continue
             match['work_matched'] += 1
             row = rows[0]
+            site_work[(vol, ordinal)] = row['id']
             v1 = v1_works[site_ord - 1] if site_ord <= len(v1_works) else None
             label = f'v{vol}-{ordinal} «{w["title"]}»'
             wrest = norm(json.dumps({k: v for k, v in w.items() if k not in ('raw_text', 'copies')}, ensure_ascii=False))
@@ -437,6 +442,9 @@ def main():
                     deferred[hit[0]].append((d, label, hit[1:]))
                     continue
                 match['copy_db_' + how] += 1
+                if how == 'unmatched':
+                    unmatched.write(json.dumps({'kind': 'site_copy', 'id': d['id'], 'work': label, 'raw_text': d['raw_text']},
+                                               ensure_ascii=False) + '\n')
                 if how == 'unmatched' and len(samples[('Manuscript', '_match', how)]) < SAMPLES:
                     samples[('Manuscript', '_match', how)].append({'id': d['id'], 'label': label, 'db': d['raw_text']})
             for c in left_v2:
@@ -461,6 +469,17 @@ def main():
             v2_left.discard((vol, ordinal, i))
             compare_copy(d, c, v1c, f'{label} ← v{vol}-{ordinal}')
     match['copy_v2_unmatched'] = len(v2_left)
+    by_vol = {}
+    for vol, ordinal, i in sorted(v2_left):
+        if vol not in by_vol:
+            by_vol[vol] = {x['key']['ordinal']: x for x in load_json('fankha_v2', vol)}
+        w = by_vol[vol][ordinal]
+        c = w['copies'][i]
+        unmatched.write(json.dumps({'kind': 'v2_copy', 'v2': f'v{vol}-{ordinal}#{i}', 'title': w['title'],
+                                    'site_work_id': site_work.get((vol, ordinal)), 'page': (c.get('provenance') or {}).get('page_start'),
+                                    'city': c['city'], 'library': c['library'], 'shelfmark': c['shelfmark'],
+                                    'raw_text': c['raw_text']}, ensure_ascii=False) + '\n')
+    unmatched.close()
     rng.seed(args.seed)
     picked = defaultdict(list)
     for vol, ordinal, i in rng.sample(sorted(v2_left), min(SAMPLES, len(v2_left))):
