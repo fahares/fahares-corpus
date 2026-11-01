@@ -16,6 +16,13 @@ Categories (item 87, sample review step 13.65):
   lines      a copy the site left without a line count gets v2's, only when the copy's own raw text on the site
              names one count («21 سطر») and it is that number; ranges («18 و 21 سطر»), several counts and counts
              the site's text does not hold are left (step 13.132)
+  explicit_tail  the line after a copy's explicit, which the site kept in the explicit («جلد اول», a note on the
+             contents): the explicit loses it, and each of its parts («؛») becomes a cataloguer's note, with the
+             type v2 gave it when v2 has that part as a scope, description or typed note; a part already in the
+             copy's notes on the site is not added twice, and a list of more than three parts stays one note. A
+             tail that is the script or scribe («کاتب = مؤلف، بی‌تا») is left. The text moves word for word (step 13.139)
+  explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
+             script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
 
 Each record names the row by id and by natural key (its work's slug suffix and, for a copy, its shelfmark, as
 the site has them in --db, a copy of production: the command then finds a record merged, moved or renumbered since), and each change
@@ -73,6 +80,59 @@ def single_line_count(raw):
     return int(found[0])
 
 
+def metadata(db, ids):
+    """Each copy's script names, whether it is dated, its metadata JSON and its raw text (no page tags) on the site."""
+    rows = {}
+    for i in range(0, len(ids), 2000):
+        sql = (f"select id, coalesce(script_names, ''), (copy_date_raw is not null or is_bita = 1), replace(to_base64(metadata), '\\n', ''), replace(to_base64(raw_text), '\\n', '') "
+               f"from manuscripts where id in ({','.join(map(str, ids[i:i + 2000]))})")
+        out = subprocess.run(['docker', 'exec', '-i', 'fahares_mariadb', 'sh', '-c',
+                              f'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" {db} -N --raw'],
+                             input=sql, capture_output=True, text=True, check=True).stdout
+        import base64
+        for line in out.strip().split('\n'):
+            rid, script, dated, meta, raw = line.split('\t')
+            meta = json.loads(base64.b64decode(meta).decode()) if meta != 'NULL' else {}
+            raw = base64.b64decode(raw).decode() if raw != 'NULL' else ''
+            rows[int(rid)] = (script, dated == '1', meta or {}, PAGE_TAG.sub(' ', raw))
+    return rows
+
+
+def norm(t):
+    return re.sub(r'\s+', ' ', (t or '').replace('ي', 'ی').replace('ك', 'ک')).strip(' .،؛')
+
+
+def v2_parts(v2dir):
+    """By a copy's explicit in v2: the type of each scope, description and note v2 found in that copy."""
+    import glob
+    parts = {}
+    for f in sorted(glob.glob(f'{v2dir}/fankha_vol_*.json')):
+        for w in json.load(open(f, encoding='utf-8'))['works']:
+            for c in w.get('copies') or []:
+                e = c.get('explicit')
+                text = e.get('text') if isinstance(e, dict) else e
+                if not text:
+                    continue
+                kinds = parts.setdefault(norm(text), {})
+                if c.get('contents_scope'):
+                    kinds[norm(c['contents_scope'])] = 'contents_scope'
+                if c.get('copy_description'):
+                    kinds[norm(c['copy_description'])] = 'copy_description'
+                for n in c.get('notes') or []:
+                    kinds[norm(n['text'])] = n['type']
+    return parts
+
+
+def site_notes(meta):
+    """Every note text the site already shows for a copy, normalised."""
+    have = [*(meta.get('editorial_notes') or [])]
+    res = meta.get('residual_notes')
+    have += res if isinstance(res, list) else [res or '']
+    for o in meta.get('ownership_and_seals') or []:
+        have.append(o.get('text', '') if isinstance(o, dict) else str(o))
+    return {norm(x) for x in have if x}
+
+
 def date_tail(d):
     """What v2 cut off the end of a copy date, without the separating «،», or None when it is not a cut."""
     if not d or d['category'] != 'trimmed':
@@ -106,11 +166,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners, lines = {}, {}, {}
+    dates, commissioners, lines, explicits = {}, {}, {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -119,6 +179,8 @@ def main():
             dates[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'commissioned_by' and x['category'] == 'filled':
             commissioners[x['id']] = x
+        if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
+            explicits[int(x['id'])] = x
         if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] == 'filled':
             lines[int(x['id'])] = x
         if 'facsimile' in args.categories and x['field'] == 'is_facsimile' and x['category'] == 'flag_on':
@@ -169,6 +231,55 @@ def main():
                 continue
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
+
+    if 'explicit_tail' in args.categories or 'explicit_script' in args.categories:
+        kinds = v2_parts(args.v2) if 'explicit_tail' in args.categories else {}
+        site = metadata(args.db, sorted(explicits))
+        for rid, x in explicits.items():
+            db, v2 = x['db'] or '', x['v2'] or ''
+            if not v2 or not db.startswith(v2) or rid not in site:
+                skipped[rid] = 'the v2 explicit is not the start of the site one'
+                continue
+            tail = db[len(v2):]
+            script, dated, meta, raw = site[rid]
+            if re.match(r'^[؛\s]*\n', tail) and 'explicit_tail' in args.categories:
+                if '\n' in tail.strip():
+                    skipped[rid] = 'the tail is more than one line'
+                    continue
+                have, mine, notes = site_notes(meta), kinds.get(norm(v2), {}), []
+                if re.match(r'^[؛\s]*(?:خط:|بی‌کا|کا:|کاتب)', tail):
+                    skipped[rid] = 'the tail is the copy\'s script or scribe, not a note'
+                    continue
+                # the tail must be the line right after the explicit in the copy's text, not a piece from further on
+                if re.sub(r'\s+', ' ', v2 + tail).strip() not in re.sub(r'\s+', ' ', raw):
+                    skipped[rid] = 'the tail is not the line after the explicit in the copy text'
+                    continue
+                # «…؛ خط: نستعلیق، بی‌کا، بی‌تا»: the script and date after the note stay out of the notes, so the
+                # site must hold them already
+                said, cut = tail, re.search(r'؛\s*(?:خط:|بی‌کا|کا:|کاتب)', tail)
+                if cut:
+                    if ('خط:' in tail[cut.start():] and not script) or not dated:
+                        skipped[rid] = 'the site has not the script or the date the tail names'
+                        continue
+                    said = tail[:cut.start()]
+                pieces = [p for p in (q.strip(' \n') for q in said.strip(' ؛\n').split('؛')) if p]
+                # a long list («فصل …؛ فصل …») stays one note, as the catalogue printed it
+                typed = len(pieces) <= 3 and all(norm(p) in mine for p in pieces)
+                for p in (pieces if typed else [said.strip(' ؛\n')]):
+                    if norm(p) not in have:
+                        notes.append({'text': p, 'type': mine.get(norm(p)) if typed else None})
+                # a script, scribe or date written inside the note («جلد 3، کا: …، تا: قرن 13») is left for review
+                if any(re.search(r'(?:^|[،؛\s])(?:خط:|کا:|تا:|بی‌کا|بی‌تا)', n['text']) for n in notes):
+                    skipped[rid] = 'the note holds a script, scribe or date'
+                    continue
+                records.append({'table': 'manuscripts', 'id': rid, 'category': 'explicit_tail',
+                                'changes': {'explicit_text': {'from': db, 'to': v2}}, 'notes': notes})
+            elif 'explicit_script' in args.categories and re.match(r'^\s*(?:خط:|بی‌کا|کا:)', tail):
+                if ('خط:' in tail and not script) or not dated:
+                    skipped[rid] = 'the site has not the script or the date the tail names'
+                    continue
+                records.append({'table': 'manuscripts', 'id': rid, 'category': 'explicit_script',
+                                'changes': {'explicit_text': {'from': db, 'to': v2}}, 'notes': []})
 
     for table in ('manuscripts', 'works'):
         keys = site_keys(args.db, table, [r['id'] for r in records if r['table'] == table])
