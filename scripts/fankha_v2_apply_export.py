@@ -13,6 +13,9 @@ Categories (item 87, sample review step 13.65):
              The phrase itself is read by the command from the copy's raw text on the site
   copy_date_note  a note on the date («در حیات مؤلف») that v2 split off it: the date loses the tail only when the
              tail is that note
+  lines      a copy the site left without a line count gets v2's, only when the copy's own raw text on the site
+             names one count («21 سطر») and it is that number; ranges («18 و 21 سطر»), several counts and counts
+             the site's text does not hold are left (step 13.132)
 
 Each record names the row by id and by natural key (its work's slug suffix and, for a copy, its shelfmark, as
 the site has them in --db, a copy of production: the command then finds a record merged, moved or renumbered since), and each change
@@ -42,6 +45,32 @@ def site_keys(db, table, ids):
             m = re.search(r'-v\d+-\d+$', slug)
             keys[int(rid)] = (m.group(0) if m else None, shelfmark)
     return keys
+
+
+PAGE_TAG = re.compile(r'\s*<!--\s*page:\s*\d+\s*-->\s*')
+LINE_COUNT = re.compile(r'(?<![\d/×\-و])\s*(\d+)\s*سطر')
+
+
+def raw_texts(db, ids):
+    """Each copy's raw text on the site, page tags out and Persian digits as Latin ones."""
+    texts = {}
+    for i in range(0, len(ids), 2000):
+        sql = f"select id, replace(replace(raw_text, '\\n', ' '), '\\t', ' ') from manuscripts where id in ({','.join(map(str, ids[i:i + 2000]))})"
+        out = subprocess.run(['docker', 'exec', '-i', 'fahares_mariadb', 'sh', '-c',
+                              f'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" {db} -N --raw'],
+                             input=sql, capture_output=True, text=True, check=True).stdout
+        for line in out.strip().split('\n'):
+            rid, raw = line.split('\t', 1)
+            texts[int(rid)] = PAGE_TAG.sub(' ', raw).translate(str.maketrans('۰۱۲۳۴۵۶۷۸۹', '0123456789'))
+    return texts
+
+
+def single_line_count(raw):
+    """The one line count a copy's text names, or None for none, several or a range («18 و 21 سطر», «15-22 سطر»)."""
+    found = LINE_COUNT.findall(raw)
+    if len(found) != 1 or re.search(r'\d\s*(?:و|-)\s*\d+\s*سطر', raw):
+        return None
+    return int(found[0])
 
 
 def date_tail(d):
@@ -77,11 +106,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners = {}, {}
+    dates, commissioners, lines = {}, {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -90,6 +119,8 @@ def main():
             dates[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'commissioned_by' and x['category'] == 'filled':
             commissioners[x['id']] = x
+        if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] == 'filled':
+            lines[int(x['id'])] = x
         if 'facsimile' in args.categories and x['field'] == 'is_facsimile' and x['category'] == 'flag_on':
             records.append({'table': 'manuscripts', 'id': x['id'],
                             'category': 'facsimile', 'changes': {'is_facsimile': {'from': 0, 'to': 1}}})
@@ -127,6 +158,17 @@ def main():
                 records.append({'table': 'manuscripts', 'id': rid, 'category': 'copy_date_note',
                                 'changes': {'copy_date_raw': {'from': d['db'], 'to': d['v2']},
                                             'copy_date_note': {'from': None, 'to': note}}})
+
+    if 'lines' in args.categories:
+        texts = raw_texts(args.db, sorted(lines))
+        for rid, x in lines.items():
+            if x['db'] is not None or x['v2'] is None:
+                continue
+            if single_line_count(texts.get(rid, '')) != int(x['v2']):
+                skipped[rid] = 'the copy text does not name that one line count'
+                continue
+            records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
+                            'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
 
     for table in ('manuscripts', 'works'):
         keys = site_keys(args.db, table, [r['id'] for r in records if r['table'] == table])
