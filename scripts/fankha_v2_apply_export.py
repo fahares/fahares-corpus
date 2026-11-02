@@ -36,6 +36,9 @@ Categories (item 87, sample review step 13.65):
              the date (category date_note). Left on the date: the author's time («در عصر مؤلف», which gives the
              date its range), a hedge mark («؟»), another date, year or century («، قرن 13»), a reign («سلطنت …»), a part
              («(پایان کتاب سوم)») and a commissioner («حسب الخواهش …», item 96) (step 14.2)
+  text_fill  a copy the site left without its incipit or explicit gets v2's, only when that text stands in the
+             copy's own raw text on the site («آغازو انجام: برابر», a label v1 did not read) and the copy's metadata
+             list of incipits or explicits is empty too, so the page shows the column (step 14.14)
   incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
@@ -227,11 +230,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off', 'binding_fill', 'date_tail'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off', 'binding_fill', 'date_tail', 'text_fill'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners, lines, explicits, incipits, flags, bindings = {}, {}, {}, {}, {}, {}, {}
+    dates, commissioners, lines, explicits, incipits, flags, bindings, fills = {}, {}, {}, {}, {}, {}, {}, []
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -242,6 +245,8 @@ def main():
             commissioners[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
             explicits[int(x['id'])] = x
+        if x['table'] == 'Manuscript' and x['field'] in ('incipit_text', 'explicit_text') and x['category'] == 'filled':
+            fills.append(x)
         if x['table'] == 'Manuscript' and x['field'] == 'binding' and x['category'] == 'filled':
             bindings[int(x['id'])] = x
         if x['field'] in ('is_ruled', 'is_illuminated') and x['category'] == 'flag_off':
@@ -309,6 +314,23 @@ def main():
                 continue
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
+
+    if 'text_fill' in args.categories:
+        site = metadata(args.db, sorted({int(x['id']) for x in fills}))
+        for x in fills:
+            rid, field = int(x['id']), x['field']
+            value = (x['v2'] or '').strip()
+            if rid not in site or not value:
+                continue
+            script, dated, meta, raw = site[rid]
+            listed = meta.get('incipits' if field == 'incipit_text' else 'explicits') or []
+            if listed:
+                skipped[rid] = f'{field}: the metadata lists one already'
+            elif re.sub(r'\s+', ' ', value) not in re.sub(r'\s+', ' ', raw):
+                skipped[rid] = f'{field}: the copy text has not that text'
+            else:
+                records.append({'table': 'manuscripts', 'id': rid, 'category': 'text_fill',
+                                'changes': {field: {'from': x['db'], 'to': value}}})
 
     if 'date_tail' in args.categories:
         kinds = date_parts(args.v2)
