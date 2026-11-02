@@ -23,6 +23,10 @@ Categories (item 87, sample review step 13.65):
              type v2 gave it when v2 has that part as a scope, description or typed note; a part already in the
              copy's notes on the site is not added twice, and a list of more than three parts stays one note. A
              tail that is the script or scribe («کاتب = مؤلف، بی‌تا») is left. The text moves word for word (step 13.139)
+  flags_off  is_ruled and is_illuminated the site set on, v2 off, where the copy's text gives them only from its
+             binding («جلد: تیماج مجدول», «جلد: تیماج مذهب») or, for illumination, from the incipit or explicit
+             («مذهب المعتزلة» is a school, not gilding) or nothing at all; «مجدول» or «سرلوح» said of the pages keeps
+             the flag (step 13.167)
   incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
@@ -136,6 +140,29 @@ def site_notes(meta):
     return {norm(x) for x in have if x}
 
 
+RULED = re.compile(r'مجدول|جدول')
+GILT = re.compile(r'مذهب|تذهیب|سرلوح|زر|طلا')
+
+
+def flag_without_ground(raw, fields):
+    """For each flag, why the copy's text does not give it (None when its pages are said to be ruled or gilt): the
+    word is in the binding only, or in the incipit or explicit only, or nowhere."""
+    binding = (re.search(r'جلد\s*:[^؛\[]*', raw) or [''])[0]
+    body = re.sub(r'(?:آغاز|انجام)\s*:[^؛]*', '', raw).replace(binding, '') if binding else re.sub(r'(?:آغاز|انجام)\s*:[^؛]*', '', raw)
+    out = {}
+    for field, word in (('is_ruled', RULED), ('is_illuminated', GILT)):
+        if field not in fields or word.search(body):
+            out[field] = None
+        elif word.search(binding):
+            out[field] = 'binding'
+        elif field == 'is_illuminated':
+            out[field] = 'text' if word.search(raw) else 'nowhere'
+        else:
+            # a ruled flag with no word but in the incipit is left: «جدول» there may be the work's own tables
+            out[field] = None
+    return out
+
+
 def date_tail(d):
     """What v2 cut off the end of a copy date, without the separating «،», or None when it is not a cut."""
     if not d or d['category'] != 'trimmed':
@@ -169,11 +196,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners, lines, explicits, incipits = {}, {}, {}, {}, {}
+    dates, commissioners, lines, explicits, incipits, flags = {}, {}, {}, {}, {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -184,6 +211,8 @@ def main():
             commissioners[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
             explicits[int(x['id'])] = x
+        if x['field'] in ('is_ruled', 'is_illuminated') and x['category'] == 'flag_off':
+            flags.setdefault(int(x['id']), []).append(x['field'])
         if x['table'] == 'Manuscript' and x['field'] == 'incipit_text' and x['category'] == 'trimmed':
             incipits[int(x['id'])] = x
         if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] in ('filled', 'emptied'):
@@ -247,6 +276,17 @@ def main():
                 continue
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
+
+    if 'flags_off' in args.categories:
+        texts = raw_texts(args.db, sorted(flags))
+        for rid, fields in flags.items():
+            reason = flag_without_ground(texts.get(rid, ''), fields)
+            for field in fields:
+                if reason.get(field):
+                    records.append({'table': 'manuscripts', 'id': rid, 'category': f'{field}_off',
+                                    'changes': {field: {'from': 1, 'to': 0}}, 'why': reason[field]})
+                else:
+                    skipped[rid] = f'{field}: the pages are said to be so'
 
     for kind, trimmed in (('explicit', explicits), ('incipit', incipits)):
         tail_cat, script_cat, column = f'{kind}_tail', f'{kind}_script', f'{kind}_text'
