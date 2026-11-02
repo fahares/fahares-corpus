@@ -27,6 +27,9 @@ Categories (item 87, sample review step 13.65):
              binding («جلد: تیماج مجدول», «جلد: تیماج مذهب») or, for illumination, from the incipit or explicit
              («مذهب المعتزلة» is a school, not gilding) or nothing at all; «مجدول» or «سرلوح» said of the pages keeps
              the flag (step 13.167)
+  binding_fill  a copy the site left without its binding gets v2's, only when the copy's text has «جلد: <that
+             binding>» (a page tag before «جلد:» kept v1 from reading it) and the binding has no digit, so no leaf
+             count or date came along with it (step 13.169)
   incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
@@ -196,11 +199,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off', 'binding_fill'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners, lines, explicits, incipits, flags = {}, {}, {}, {}, {}, {}
+    dates, commissioners, lines, explicits, incipits, flags, bindings = {}, {}, {}, {}, {}, {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -211,6 +214,8 @@ def main():
             commissioners[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
             explicits[int(x['id'])] = x
+        if x['table'] == 'Manuscript' and x['field'] == 'binding' and x['category'] == 'filled':
+            bindings[int(x['id'])] = x
         if x['field'] in ('is_ruled', 'is_illuminated') and x['category'] == 'flag_off':
             flags.setdefault(int(x['id']), []).append(x['field'])
         if x['table'] == 'Manuscript' and x['field'] == 'incipit_text' and x['category'] == 'trimmed':
@@ -276,6 +281,17 @@ def main():
                 continue
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
+
+    if 'binding_fill' in args.categories:
+        texts = raw_texts(args.db, sorted(bindings))
+        for rid, x in bindings.items():
+            value = (x['v2'] or '').strip()
+            flat = re.sub(r'\s+', ' ', texts.get(rid, ''))
+            if not value or re.search(r'\d', value) or not re.search(r'جلد\s*:?\s*' + re.escape(re.sub(r'\s+', ' ', value)), flat):
+                skipped[rid] = 'the copy text has not «جلد: <binding>», or the binding holds a number'
+                continue
+            records.append({'table': 'manuscripts', 'id': rid, 'category': 'binding_fill',
+                            'changes': {'binding': {'from': x['db'], 'to': value}}})
 
     if 'flags_off' in args.categories:
         texts = raw_texts(args.db, sorted(flags))
