@@ -35,7 +35,7 @@ Categories (item 87, sample review step 13.65):
              date_note); a note on the date itself («این تاریخ درست نیست») goes to copy_date_note, shown under
              the date (category date_note). Left on the date: the author's time («در عصر مؤلف», which gives the
              date its range), a hedge mark («؟»), another date, year or century («، قرن 13»), a reign («سلطنت …»), a part
-             («(پایان کتاب سوم)») and a commissioner («حسب الخواهش …», item 96) (step 13.174)
+             («(پایان کتاب سوم)») and a commissioner («حسب الخواهش …», item 96) (step 14.2)
   incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
