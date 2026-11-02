@@ -57,13 +57,72 @@ def by_title_and_author(works, vol, title, name):
     return hits[0] if len(hits) == 1 else None
 
 
+def raw_lines(db, ids):
+    """Each work's Fankha text on the site, as its non-empty lines without page tags."""
+    lines = {}
+    for i in range(0, len(ids), 2000):
+        sql = (f"select id, replace(to_base64(raw_text), '\\n', '') from works where id in ({','.join(map(str, ids[i:i + 2000]))})")
+        out = subprocess.run(['docker', 'exec', '-i', 'fahares_mariadb', 'sh', '-c',
+                              f'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" {db} -N --raw'],
+                             input=sql, capture_output=True, text=True, check=True).stdout
+        for line in out.rstrip('\n').split('\n'):
+            rid, raw = line.split('\t')
+            text = re.sub(r'<!--\s*page:\s*\d+\s*-->', ' ', base64.b64decode(raw).decode() if raw != 'NULL' else '')
+            lines[int(rid)] = [x.strip() for x in text.split('\n') if x.strip()]
+    return lines
+
+
+def from_raw(args, v2):
+    """Works with no author on the site whose own Fankha text has the author line v1 did not read (step 14.11): the
+    line after the title and its transliteration is the name v2 reads, at the work's ordinal or, where the ordinals
+    shift, at the one work of the volume with that title and that author."""
+    ids = [int(d['id']) for d in map(json.loads, open(args.diffs, encoding='utf-8'))
+           if d['table'] == 'Work' and d['field'] == 'author_name' and d['category'] == 'filled'
+           and d['site'] == 'v1' and not d['protected']]
+    site, raws = site_rows(args.db, ids), raw_lines(args.db, ids)
+    updates, skipped = [], {}
+    for rid in ids:
+        slug, desc, author, title, vol = site[rid]
+        lines = raws.get(rid, [])
+        name = lines[2] if len(lines) > 2 and lines[0].startswith('●') and LATIN.search(lines[1]) else None
+        m = re.search(r'-v\d+-\d+$', slug)
+        w = v2.get(m.group(0)) if m else None
+        a = (w or {}).get('author') or {}
+        if name and norm(name) not in (norm(a.get('name')), norm(a.get('name_raw'))):
+            w = by_title_and_author(v2, vol, title, name) or w
+            a = (w or {}).get('author') or {}
+        if author:
+            skipped[rid] = 'the site has an author'
+        elif not name or LATIN.search(name):
+            skipped[rid] = 'no author line after the title in the text'
+        elif a.get('hedge') or name.startswith('؟'):
+            skipped[rid] = 'the author is hedged («؟»), which the update would not keep'
+        elif norm(name) not in (norm(a.get('name')), norm(a.get('name_raw'))):
+            skipped[rid] = 'v2 reads another author'
+        else:
+            death = a.get('death') or {}
+            updates.append({'work_slug': slug, 'v2': m.group(0).lstrip('-'), 'id': rid,
+                            'changes': {'author_name': {'from': None, 'to': a['name']}},
+                            'author': {'name': a['name'], 'century': death['century']} if death.get('century') else None})
+    return updates, skipped
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--diffs', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2')
+    ap.add_argument('--from-raw', action='store_true', help='authors the work text names after its title (step 14.11)')
     args = ap.parse_args()
+    if args.from_raw:
+        updates, skipped = from_raw(args, v2_works(args.v2))
+        out = {'source': f'fankha parser v2 against the site ({args.diffs}), {date.today()}; step 14.11',
+               'works': [], 'fills': [], 'work_updates': updates,
+               'skipped': [{'id': k, 'why': v} for k, v in skipped.items()]}
+        json.dump(out, open(args.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        print(f'{len(updates)} works, {len(skipped)} skipped', file=sys.stderr)
+        return
 
     ids = [int(d['id']) for d in map(json.loads, open(args.diffs, encoding='utf-8'))
            if d['table'] == 'Work' and d['field'] == 'description' and d['category'] == 'emptied'
