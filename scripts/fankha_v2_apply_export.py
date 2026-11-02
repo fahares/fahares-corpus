@@ -30,6 +30,12 @@ Categories (item 87, sample review step 13.65):
   binding_fill  a copy the site left without its binding gets v2's, only when the copy's text has «جلد: <that
              binding>» (a page tag before «جلد:» kept v1 from reading it) and the binding has no digit, so no leaf
              count or date came along with it (step 13.169)
+  date_tail  what the site kept after a copy date («1272ق، مهر: «عبده محمد هادی»», «قرن 13، در عصر مؤلف»):
+             the date loses it and it becomes a cataloguer's note, typed as v2 typed it (a note on the date is
+             date_note); a note on the date itself («این تاریخ درست نیست») goes to copy_date_note, shown under
+             the date (category date_note). Left on the date: the author's time («در عصر مؤلف», which gives the
+             date its range), a hedge mark («؟»), another date, year or century («، قرن 13»), a reign («سلطنت …»), a part
+             («(پایان کتاب سوم)») and a commissioner («حسب الخواهش …», item 96) (step 13.174)
   incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
@@ -133,6 +139,28 @@ def v2_parts(v2dir, kind='explicit'):
     return parts
 
 
+# as App\\Support\\CopyDateRange::namesAuthorTime: a date in the author's time takes its range from his death
+AUTHOR_TIME = re.compile(r'(?:عصر|زمان|روزگار|عهد|حیات|هنگام)\s*(?:خود\s*)?(?:مؤلف|مولف|مصنف|ناظم|سراینده|نگارنده|شاعر|شارح|نویسنده|تألیف|تالیف)')
+
+
+def date_parts(v2dir):
+    """By a copy's date in v2: the type of each note v2 found in that copy, and date_note for the date's own."""
+    import glob
+    parts = {}
+    for f in sorted(glob.glob(f'{v2dir}/fankha_vol_*.json')):
+        for w in json.load(open(f, encoding='utf-8'))['works']:
+            for c in w.get('copies') or []:
+                cd = c.get('copy_date') or {}
+                if not cd.get('raw'):
+                    continue
+                kinds = parts.setdefault(norm(cd['raw']), {})
+                for n in c.get('notes') or []:
+                    kinds[norm(n['text'])] = n['type']
+                if cd.get('note'):
+                    kinds[norm(cd['note'])] = 'date_note'
+    return parts
+
+
 def site_notes(meta):
     """Every note text the site already shows for a copy, normalised."""
     have = [*(meta.get('editorial_notes') or [])]
@@ -199,7 +227,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off', 'binding_fill'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script', 'flags_off', 'binding_fill', 'date_tail'])
     args = ap.parse_args()
 
     records, skipped = [], {}
@@ -281,6 +309,44 @@ def main():
                 continue
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
+
+    if 'date_tail' in args.categories:
+        kinds = date_parts(args.v2)
+        site = metadata(args.db, sorted(int(i) for i, d in dates.items() if d['category'] == 'trimmed'))
+        for rid, d in dates.items():
+            rid = int(rid)
+            if d['category'] != 'trimmed' or rid not in site:
+                continue
+            db, v2 = d['db'] or '', d['v2'] or ''
+            tail = db[len(v2):].strip(' ،,') if v2 and db.startswith(v2) else None
+            if not tail:
+                skipped[rid] = 'the v2 date is not the start of the site one'
+                continue
+            if re.match(r'^جا\s*:', tail):
+                skipped[rid] = 'the tail is the place of copying'
+                continue
+            labelled = re.match(r'^(?:مهر|تملک|واقف|وقف)\s*:', tail)
+            if len(tail) < 4 or re.fullmatch(r'[؟?.()\s]*', tail) or tail.startswith('(') \
+                    or (re.search(r'\d|قرن|سده', tail) and not labelled) \
+                    or re.match(r'^(?:سلطنت|عهد|دوره|دولت|ایام|اوایل|اواخر|اواسط|اوائل)', tail) or re.match(r'^(?:مطابق|برابر|=|/|\d)', tail) \
+                    or re.search(r'حسب|به[\s\u200c]*(?:امر|خواهش|جهت|دستور|درخواست|سفارش|خواست|فرموده)|برای|استکتاب|بنا\s+به', tail[:25]):
+                skipped[rid] = 'the tail is part of the date, a hedge or a commissioner'
+                continue
+            # «در عصر مؤلف» stays in the date: the date's range is read from it (CopyDateRange::namesAuthorTime)
+            if AUTHOR_TIME.search(tail):
+                skipped[rid] = 'the tail names the author\'s time, which gives the date its range'
+                continue
+            # a note on the date itself («این تاریخ درست نیست») goes by the date, as its note
+            if re.search(r'تاریخ|عصر|حیات|زمان', tail):
+                records.append({'table': 'manuscripts', 'id': rid, 'category': 'date_note',
+                                'changes': {'copy_date_raw': {'from': db, 'to': v2}, 'copy_date_note': {'from': None, 'to': tail}}})
+                continue
+            script, dated, meta, raw = site[rid]
+            mine = kinds.get(norm(v2), {})
+            note = {'text': tail, 'type': mine.get(norm(tail))}
+            records.append({'table': 'manuscripts', 'id': rid, 'category': 'date_tail',
+                            'changes': {'copy_date_raw': {'from': db, 'to': v2}},
+                            'notes': [] if norm(tail) in site_notes(meta) else [note]})
 
     if 'binding_fill' in args.categories:
         texts = raw_texts(args.db, sorted(bindings))
