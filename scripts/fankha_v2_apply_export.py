@@ -23,6 +23,7 @@ Categories (item 87, sample review step 13.65):
              type v2 gave it when v2 has that part as a scope, description or typed note; a part already in the
              copy's notes on the site is not added twice, and a list of more than three parts stays one note. A
              tail that is the script or scribe («کاتب = مؤلف، بی‌تا») is left. The text moves word for word (step 13.139)
+  incipit_tail, incipit_script  the same for a copy's incipit, the line the site kept after it (step 13.164)
   explicit_script  «خط: …، بی‌کا، تا: …» the site kept in the explicit: it goes, when the site has the copy's
              script (or the tail names none) and its date or «بی‌تا»; the copy keeps its raw text (step 13.139)
 
@@ -104,14 +105,14 @@ def norm(t):
     return re.sub(r'\s+', ' ', (t or '').replace('ي', 'ی').replace('ك', 'ک')).strip(' .،؛')
 
 
-def v2_parts(v2dir):
-    """By a copy's explicit in v2: the type of each scope, description and note v2 found in that copy."""
+def v2_parts(v2dir, kind='explicit'):
+    """By a copy's explicit (or incipit) in v2: the type of each scope, description and note v2 found in that copy."""
     import glob
     parts = {}
     for f in sorted(glob.glob(f'{v2dir}/fankha_vol_*.json')):
         for w in json.load(open(f, encoding='utf-8'))['works']:
             for c in w.get('copies') or []:
-                e = c.get('explicit')
+                e = c.get(kind)
                 text = e.get('text') if isinstance(e, dict) else e
                 if not text:
                     continue
@@ -168,11 +169,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt', 'incipit_tail', 'incipit_script'])
     args = ap.parse_args()
 
     records, skipped = [], {}
-    dates, commissioners, lines, explicits = {}, {}, {}, {}
+    dates, commissioners, lines, explicits, incipits = {}, {}, {}, {}, {}
     for line in open(args.diffs, encoding='utf-8'):
         x = json.loads(line)
         if x['protected'] or x['site'] == 'unknown':
@@ -183,6 +184,8 @@ def main():
             commissioners[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
             explicits[int(x['id'])] = x
+        if x['table'] == 'Manuscript' and x['field'] == 'incipit_text' and x['category'] == 'trimmed':
+            incipits[int(x['id'])] = x
         if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] in ('filled', 'emptied'):
             lines[int(x['id'])] = x
         if 'facsimile' in args.categories and x['field'] == 'is_facsimile' and x['category'] == 'flag_on':
@@ -245,17 +248,20 @@ def main():
             records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines',
                             'changes': {'lines': {'from': None, 'to': int(x['v2'])}}})
 
-    if 'explicit_tail' in args.categories or 'explicit_script' in args.categories:
-        kinds = v2_parts(args.v2) if 'explicit_tail' in args.categories else {}
-        site = metadata(args.db, sorted(explicits))
-        for rid, x in explicits.items():
+    for kind, trimmed in (('explicit', explicits), ('incipit', incipits)):
+        tail_cat, script_cat, column = f'{kind}_tail', f'{kind}_script', f'{kind}_text'
+        if tail_cat not in args.categories and script_cat not in args.categories:
+            continue
+        kinds = v2_parts(args.v2, kind) if tail_cat in args.categories else {}
+        site = metadata(args.db, sorted(trimmed))
+        for rid, x in trimmed.items():
             db, v2 = x['db'] or '', x['v2'] or ''
             if not v2 or not db.startswith(v2) or rid not in site:
-                skipped[rid] = 'the v2 explicit is not the start of the site one'
+                skipped[rid] = f'the v2 {kind} is not the start of the site one'
                 continue
             tail = db[len(v2):]
             script, dated, meta, raw = site[rid]
-            if re.match(r'^[؛\s]*\n', tail) and 'explicit_tail' in args.categories:
+            if re.match(r'^[؛\s]*\n', tail) and tail_cat in args.categories:
                 if '\n' in tail.strip():
                     skipped[rid] = 'the tail is more than one line'
                     continue
@@ -263,9 +269,9 @@ def main():
                 if re.match(r'^[؛\s]*(?:خط:|بی‌کا|کا:|کاتب)', tail):
                     skipped[rid] = 'the tail is the copy\'s script or scribe, not a note'
                     continue
-                # the tail must be the line right after the explicit in the copy's text, not a piece from further on
+                # the tail must be the line right after the explicit (incipit) in the copy's text, not a piece from further on
                 if re.sub(r'\s+', ' ', v2 + tail).strip() not in re.sub(r'\s+', ' ', raw):
-                    skipped[rid] = 'the tail is not the line after the explicit in the copy text'
+                    skipped[rid] = f'the tail is not the line after the {kind} in the copy text'
                     continue
                 # «…؛ خط: نستعلیق، بی‌کا، بی‌تا»: the script and date after the note stay out of the notes, so the
                 # site must hold them already
@@ -285,14 +291,18 @@ def main():
                 if any(re.search(r'(?:^|[،؛\s])(?:خط:|کا:|تا:|بی‌کا|بی‌تا)', n['text']) for n in notes):
                     skipped[rid] = 'the note holds a script, scribe or date'
                     continue
-                records.append({'table': 'manuscripts', 'id': rid, 'category': 'explicit_tail',
-                                'changes': {'explicit_text': {'from': db, 'to': v2}}, 'notes': notes})
-            elif 'explicit_script' in args.categories and re.match(r'^\s*(?:خط:|بی‌کا|کا:)', tail):
+                # a verse («… ×× …») or a part's own incipit («آغاز كتاب الصلوة: …») goes on the text, it is no note
+                if any('××' in n['text'] or re.match(r'^(?:آغاز|انجام)', n['text']) for n in notes):
+                    skipped[rid] = f'the line after the {kind} goes on its text'
+                    continue
+                records.append({'table': 'manuscripts', 'id': rid, 'category': tail_cat,
+                                'changes': {column: {'from': db, 'to': v2}}, 'notes': notes})
+            elif script_cat in args.categories and re.match(r'^\s*(?:خط:|بی‌کا|کا:)', tail):
                 if ('خط:' in tail and not script) or not dated:
                     skipped[rid] = 'the site has not the script or the date the tail names'
                     continue
-                records.append({'table': 'manuscripts', 'id': rid, 'category': 'explicit_script',
-                                'changes': {'explicit_text': {'from': db, 'to': v2}}, 'notes': []})
+                records.append({'table': 'manuscripts', 'id': rid, 'category': script_cat,
+                                'changes': {column: {'from': db, 'to': v2}}, 'notes': []})
 
     for table in ('manuscripts', 'works'):
         keys = site_keys(args.db, table, [r['id'] for r in records if r['table'] == table])
