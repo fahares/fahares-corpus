@@ -16,6 +16,8 @@ Categories (item 87, sample review step 13.65):
   lines      a copy the site left without a line count gets v2's, only when the copy's own raw text on the site
              names one count («21 سطر») and it is that number; ranges («18 و 21 سطر»), several counts and counts
              the site's text does not hold are left (step 13.132)
+  lines_bayt  a copy whose line count on the site is the number of its verses («حدود 540 بیت»): its text names
+             no lines at all and that number stands before «بیت», so the count leaves `lines` (step 13.152)
   explicit_tail  the line after a copy's explicit, which the site kept in the explicit («جلد اول», a note on the
              contents): the explicit loses it, and each of its parts («؛») becomes a cataloguer's note, with the
              type v2 gave it when v2 has that part as a scope, description or typed note; a part already in the
@@ -166,7 +168,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2', help='parser v2 JSON, for the notes on copy dates')
-    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script'])
+    ap.add_argument('categories', nargs='+', choices=['facsimile', 'print_bib', 'commissioner', 'copy_date_note', 'lines', 'explicit_tail', 'explicit_script', 'lines_bayt'])
     args = ap.parse_args()
 
     records, skipped = [], {}
@@ -181,7 +183,7 @@ def main():
             commissioners[x['id']] = x
         if x['table'] == 'Manuscript' and x['field'] == 'explicit_text' and x['category'] == 'trimmed':
             explicits[int(x['id'])] = x
-        if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] == 'filled':
+        if x['table'] == 'Manuscript' and x['field'] == 'lines' and x['category'] in ('filled', 'emptied'):
             lines[int(x['id'])] = x
         if 'facsimile' in args.categories and x['field'] == 'is_facsimile' and x['category'] == 'flag_on':
             records.append({'table': 'manuscripts', 'id': x['id'],
@@ -221,6 +223,17 @@ def main():
                                 'changes': {'copy_date_raw': {'from': d['db'], 'to': d['v2']},
                                             'copy_date_note': {'from': None, 'to': note}}})
 
+    if 'lines_bayt' in args.categories:
+        texts = raw_texts(args.db, sorted(lines))
+        for rid, x in lines.items():
+            if x['category'] != 'emptied' or x['db'] is None:
+                continue
+            raw = texts.get(rid, '')
+            if 'سطر' in raw or not re.search(rf'(?<![\d/]){int(x["db"])}\s*بیت', raw):
+                skipped[rid] = 'the copy text names lines, or not that number of verses'
+                continue
+            records.append({'table': 'manuscripts', 'id': rid, 'category': 'lines_bayt',
+                            'changes': {'lines': {'from': int(x['db']), 'to': None}}})
     if 'lines' in args.categories:
         texts = raw_texts(args.db, sorted(lines))
         for rid, x in lines.items():
