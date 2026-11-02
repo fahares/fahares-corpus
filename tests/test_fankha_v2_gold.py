@@ -96,5 +96,22 @@ class NumberedIncipitsTest(unittest.TestCase):
         self.assertEqual((c['copy_date']['raw'], c['copy_date']['sort_year']), ('18 ربیع الثانی، 1268', 1268))
 
 
+class LineCountsTest(unittest.TestCase):
+    """A copy's line count where the catalogue left a quotation open or wrote no «،» before it (fahares step 13.161)."""
+
+    def copy(self, desc):
+        entry = '\n'.join(['● اثر آزمایشی / عرفان / فارسی', 'asar-e azmayeshi', '', '1. تهران؛ مجلس؛ شماره نسخه: 1', desc])
+        return parse_volume(99, entry)['works'][0]['copies'][0]
+
+    def test_an_open_quotation_hides_nothing_after_it(self):
+        c = self.copy('خط: نسخ، بی‌کا، بی‌تا؛ مهر: «العبد المذنب محمد 1230 (بیضی)؛ کاغذ: شرقی، 37گ، 5 سطر، اندازه: 11/5×17/5سم')
+        self.assertEqual((c['folios'], c['lines'], c['dimensions']), ('37گ', '5 سطر', '11/5×17/5سم'))
+
+    def test_counts_glued_or_joined_by_ta_and_ya(self):
+        self.assertEqual(self.copy('خط: نسخ، بی‌کا، بی‌تا؛ 2گ (142پ-143پ) 17 سطر (9×14)')['lines'], '17 سطر')
+        self.assertEqual(self.copy('خط: نسخ، بی‌کا، بی‌تا؛ 124گ، 23 تا 27 سطر')['lines'], '23 تا 27 سطر')
+        self.assertEqual(self.copy('خط: نسخ، بی‌کا، بی‌تا؛ 94ص، 18یا 19 سطر')['lines'], '18یا 19 سطر')
+
+
 if __name__ == '__main__':
     unittest.main()

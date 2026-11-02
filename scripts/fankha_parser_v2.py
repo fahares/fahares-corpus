@@ -138,11 +138,42 @@ def parse_scripts(raw: Optional[str]) -> List[Dict[str, Any]]:
 
 # ---------------------------------------------------------------- shared splitting helpers
 
-def split_outside(s: str, sep: str) -> List[str]:
-    """Split on sep outside (), [] and «»."""
-    out, depth, cur = [], 0, []
-    for ch in s:
+def unclosed(s: str) -> set:
+    """Positions of the (, [ and « that never close: a catalogue that forgot a » («العبد المذنب محمد 1230 (بیضی)…)
+    would otherwise hide every field after it (folios, lines, size) inside the quotation."""
+    stack = []
+    for i, ch in enumerate(s):
         if ch in '([«':
+            stack.append(i)
+        elif ch in ')]»' and stack:
+            stack.pop()
+    return set(stack)
+
+
+# a line count written after the leaves or the binding with no «،» between («2گ (142پ-143پ) 17 سطر (9×14)»)
+LINES_GLUED = re.compile(r'^(?P<head>(?:\d[\d/]*\s*(?:گ|برگ|ص)|جلد\s*:?)\S*.*?)\s+'
+                         r'(?P<tail>\d+(?:\s*(?:[-–+]|و|تا|یا)\s*\d+)*\s*سطر(?!ها).*)$')
+
+
+def lines_apart(chunks: List[str]) -> List[str]:
+    """The chunks, with a line count glued to the leaves or the binding before it as a chunk of its own."""
+    out = []
+    for ch in chunks:
+        m = LINES_GLUED.match(ch)
+        if m and '(' not in m.group('tail')[:m.group('tail').find('سطر')]:
+            # «جلد: 25 سطر»: no binding was written, only the count
+            out += ([] if re.match(r'^جلد\s*:?$', m.group('head').strip()) else [m.group('head').strip()]) + [m.group('tail').strip()]
+        else:
+            out.append(ch)
+    return out
+
+
+def split_outside(s: str, sep: str) -> List[str]:
+    """Split on sep outside (), [] and «» (an opening mark that never closes protects nothing)."""
+    out, depth, cur = [], 0, []
+    skip = unclosed(s)
+    for i, ch in enumerate(s):
+        if ch in '([«' and i not in skip:
             depth += 1
         elif ch in ')]»' and depth:
             depth -= 1
@@ -607,7 +638,7 @@ def parse_physical(c, text: str):
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
         last = None
-        for chunk in split_outside(group, '،'):
+        for chunk in lines_apart(split_outside(group, '،')):
             if not chunk:
                 continue
             ch = chunk.strip(' .')
@@ -660,7 +691,7 @@ def parse_physical(c, text: str):
             if last == 'folios' and re.match(r'^\([^()]*\d[^()]*\)$', ch):
                 c['folios'] += ' ' + ch
                 continue
-            m = re.match(r'^(?P<n>\d+(?:\s*(?:[-–]|و)\s*\d+)*\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
+            m = re.match(r'^(?:(?:متن|جمعاً|جمعا|حدود)\s+)?(?P<n>\d+(?:\s*(?:[-–+]|و|تا|یا)\s*\d+)*\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
             if m:
                 c['lines'] = m.group('n')
                 if m.group('d'):
