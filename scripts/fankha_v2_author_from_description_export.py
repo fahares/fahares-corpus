@@ -80,7 +80,7 @@ def from_raw(args, v2):
            if d['table'] == 'Work' and d['field'] == 'author_name' and d['category'] == 'filled'
            and d['site'] == 'v1' and not d['protected']]
     site, raws = site_rows(args.db, ids), raw_lines(args.db, ids)
-    updates, skipped = [], {}
+    updates, skipped, hedged = [], {}, []
     for rid in ids:
         slug, desc, author, title, vol = site[rid]
         lines = raws.get(rid, [])
@@ -95,8 +95,16 @@ def from_raw(args, v2):
             skipped[rid] = 'the site has an author'
         elif not name or LATIN.search(name):
             skipped[rid] = 'no author line after the title in the text'
-        elif a.get('hedge') or name.startswith('؟'):
+        elif a.get('hedge') or name.startswith('؟') or name.endswith('؟'):
             skipped[rid] = 'the author is hedged («؟»), which the update would not keep'
+            if norm(re.sub(r'^؟\s*|\s*؟$', '', name)) in (norm(a.get('name')), norm(a.get('name_raw'))):
+                # the description v1 filled with the author line and its transliteration loses them
+                dl = desc.split('\n')
+                rest = desc
+                if dl and norm(re.sub(r'^؟\s*|\s*؟$', '', dl[0])) == norm(a['name']) and len(dl) > 1 and LATIN.search(dl[1]):
+                    rest = '\n'.join(dl[2:]).strip() or None
+                hedged.append({'work_slug': slug, 'name': a['name'], 'hedge': a.get('hedge') or '؟',
+                               'description_from': desc or None, 'description_to': rest if rest != desc else desc or None})
         elif norm(name) not in (norm(a.get('name')), norm(a.get('name_raw'))):
             skipped[rid] = 'v2 reads another author'
         else:
@@ -104,7 +112,7 @@ def from_raw(args, v2):
             updates.append({'work_slug': slug, 'v2': m.group(0).lstrip('-'), 'id': rid,
                             'changes': {'author_name': {'from': None, 'to': a['name']}},
                             'author': {'name': a['name'], 'century': death['century']} if death.get('century') else None})
-    return updates, skipped
+    return updates, skipped, hedged
 
 
 def main():
@@ -114,9 +122,15 @@ def main():
     ap.add_argument('--db', default='fahares_prod')
     ap.add_argument('--v2', default='json/fankha_v2')
     ap.add_argument('--from-raw', action='store_true', help='authors the work text names after its title (step 14.11)')
+    ap.add_argument('--hedged', action='store_true', help='with --from-raw: only the hedged authors («؟ …»), for fahares:mark-hedged-authors (step 14.38)')
     args = ap.parse_args()
     if args.from_raw:
-        updates, skipped = from_raw(args, v2_works(args.v2))
+        updates, skipped, hedged = from_raw(args, v2_works(args.v2))
+        if args.hedged:
+            json.dump({'source': f'hedged authors of the entry text, {date.today()}; step 14.38', 'items': hedged},
+                      open(args.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            print(f'{len(hedged)} hedged authors', file=sys.stderr)
+            return
         out = {'source': f'fankha parser v2 against the site ({args.diffs}), {date.today()}; step 14.11',
                'works': [], 'fills': [], 'work_updates': updates,
                'skipped': [{'id': k, 'why': v} for k, v in skipped.items()]}
