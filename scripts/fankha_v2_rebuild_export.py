@@ -30,8 +30,15 @@ def values(c):
     """The site's columns for a v2 copy."""
     date_raw = (c['copy_date'] or {}).get('raw')
     year = (c['copy_date'] or {}).get('sort_year') if date_raw and re.search(r'\d{3,4}', date_raw) else None
-    notes = [n['text'] for n in c['notes'] if n['type'] not in ('seal', 'ownership')]
+    # the copy's scope and description are notes on the site too, typed as v2 types them (step 14.51)
+    typed = [(c[k], k) for k in ('contents_scope', 'copy_description') if c.get(k)]
+    typed += [(n['text'], n['type']) for n in c['notes'] if n['type'] not in ('seal', 'ownership')]
+    notes = list(dict.fromkeys(t for t, _ in typed))
+    types = {t: k for t, k in typed if k}
     owned = [n['text'] for n in c['notes'] if n['type'] in ('seal', 'ownership')] + list(c['ownership'])
+    # a copy with more than one incipit lists them all; with one, the page shows incipit_text
+    extra = [{'label': x.get('label'), 'text': x['text']} for x in c['extra_incipits'] if x.get('text')]
+    incipits = [{'label': None, 'text': ie_text(c['incipit'])}, *extra] if extra and ie_text(c['incipit']) else extra
     v = {
         'raw_text': c['raw_text'],
         'scribe_name': c['scribes'][0]['name'] if c['scribes'] else None,
@@ -51,8 +58,9 @@ def values(c):
         'incipit_text': ie_text(c['incipit']),
         'explicit_text': ie_text(c['explicit']),
         **{col: int(f in c['flags']) for col, f in FLAGS.items()},
-        'metadata': {'incipits': [], 'explicits': [], 'editorial_notes': notes, 'ownership_and_seals': owned,
-                     'catalog_citation': c['catalog_citation'], 'residual_notes': None},
+        'metadata': {'incipits': incipits, 'explicits': [], 'editorial_notes': notes, 'ownership_and_seals': owned,
+                     'catalog_citation': c['catalog_citation'], 'residual_notes': None,
+                     **({'editorial_note_types': types} if types else {})},
     }
     return v
 
