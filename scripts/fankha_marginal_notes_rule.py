@@ -6,6 +6,8 @@ judge(text) gives «notes» on strong evidence of notes («دارای حواشی
 «1ص (87ر حاشیه)»), the layout of lines or decoration and binding, and «unclear» otherwise; «none» when the word is absent.
 The flag was changed only where this and a reading of the copy agreed (reports/fankha_v2_db_review8/marginal_notes_step14_75).
 """
+import re
+
 W = r'(?:حاشیه|حاشيه|حواشی|حواشي)'
 NOTE = re.compile('|'.join([
     r'محشی|محشا|محشّی|تعلیقات|تعلیقه|هامش|حاشیه[\s‌]*نویسی|حاشیه[\s‌]*نگاری',
