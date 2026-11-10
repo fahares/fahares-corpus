@@ -140,7 +140,7 @@ def untag(s):
 
 
 def norm(s):
-    s = untag(s).replace('‌', '').replace('ي', 'ی').replace('ك', 'ک').replace('ى', 'ی')
+    s = untag(s).replace('‌', '').replace('`', '').replace('ي', 'ی').replace('ك', 'ک').replace('ى', 'ی')  # «ارجن` گیتا» (v1)
     s = re.sub(r'(?<=برابر)\s+(?=\d)', '', s)
     s = re.sub(r'[\s.،؛:,;]+', ' ', s)
     return s.strip()
@@ -322,6 +322,18 @@ def align(v2_works, v1_works):
         for k in range(blk.size):
             out[v2_works[blk.a + k]['key']['ordinal']] = blk.b + k + 1
         ia, ib = blk.a + blk.size, blk.b + blk.size
+    # a work left out by both passes, a few rows from its place («احوال تاجران» v2 687 = site 686): the free site
+    # work of the same title within five rows, with the same author if both name one
+    free = set(range(1, len(v1_works) + 1)) - set(out.values())
+    for i, w in enumerate(v2_works):
+        o = w['key']['ordinal']
+        if o in out:
+            continue
+        near = [j for j in sorted(free, key=lambda j: abs(j - 1 - i)) if abs(j - 1 - i) <= 5 and b[j - 1] == a[i]
+                and (not a2[i].split('|')[1] or not b2[j - 1].split('|')[1] or a2[i] == b2[j - 1])]
+        if near:
+            out[o] = near[0]
+            free.discard(near[0])
     return out
 
 
