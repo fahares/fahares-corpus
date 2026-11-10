@@ -30,7 +30,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.0.0'
+PARSER_VERSION = '2.1.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -247,7 +247,10 @@ def numbered_ie(n, v):
 PART_LINE = re.compile(r'^(?P<l>(?:جلد|ج|مجلد|دفتر|قسمت|بخش|ربع|مقاله|کتاب|فن|جزء|جزو)\s*[^:؛«»]{0,15}?)\s*:\s*(?P<v>\S.*)$')
 HETERO_LINE = re.compile(r'^(?P<q>ظاهراً|ظاهرا|بعضاً|بعضا|احتمالاً|احتمالا|گویا)?\s*غیر\s?همانند\s*:?\s*$')
 HETERO_QUAL = {'بعضاً': 'partial', 'بعضا': 'partial'}
-EPITHET_TAIL = re.compile(r'،\s*(?P<e>(?:امام|پیامبر|خلیفه)\s+\S+(?:\s+\S+)?)$')
+# «علی بن ابی طالب (ع)، امام اول», «…، پیامبر اسلام», «…، خلیفه عباسی»; not a name after the comma such as
+# «اموی، امام الدین یوسف» or «امام ویردی بیگ» (fahares step 14.141)
+_ORD = r'(?:اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم|یازدهم|دوازدهم)'
+EPITHET_TAIL = re.compile(r'،\s*(?P<e>امام\s+' + _ORD + r'|پیامبر\s+\S+(?:\s+\S+)?|خلیفه\s+(?:اموی|عباسی|فاطمی|عثمانی|' + _ORD[3:-1] + r'))$')
 
 
 def is_latin_line(s: str) -> bool:
@@ -301,9 +304,17 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
     body = [l for l in lines[1:] if l.text]
     i = 0
     if i < len(body) and is_latin_line(body[i].text):
-        parts = [p.strip() for p in body[i].text.split('=') if p.strip()]
-        w['transliteration'], w['alt_transliterations'] = (parts[0] if parts else None), parts[1:]
+        # a long transliteration runs over several lines (vol 32 «منهاج الدکان»: three lines); an author line is
+        # Persian before its Latin line, so every Latin line here is the title's (fahares step 14.141)
+        latin = [body[i].text.strip()]
         i += 1
+        # only a line with no Persian letter: «… یزدی، محمد بن محمد نصیر yazdī …» is a mixed author line
+        while i < len(body) and is_latin_line(body[i].text) and not re.search('[\u0621-\u064A\u067E\u0686\u0698\u06A9\u06AF\u06CC]', body[i].text) \
+                and not re.search(r'\(\s*-?\s*\d{1,4}\s*c?\s*(?:-\s*\d{1,4}\s*c?)?\s*\)\s*$', body[i].text):  # an author's, with his dates
+            latin.append(body[i].text.strip())
+            i += 1
+        parts = [p.strip() for p in ' '.join(latin).split('=') if p.strip()]
+        w['transliteration'], w['alt_transliterations'] = (parts[0] if parts else None), parts[1:]
     # author: a Persian line followed by a Latin line (dates optional), else v1's author-line test
     if i < len(body) and not LABEL_LINE.match(body[i].text) and not HETERO_LINE.match(body[i].text):
         cand = body[i].text
@@ -440,6 +451,11 @@ PHYS_LABEL = (r'(?:خط\s*:|کا\s*:|بی[‌ ]?کا\b|تا\s*:|بی[‌ ]?تا\
 # «کاتب: …» opens the copy's own line only at its start; after «نسخه اصل: …؛» it is the original's scribe
 PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')|^(?=کاتب\s*:)')
 ORIG_RE = re.compile(r'^(?:نسخه\s+اصل[یی]?|اصل\s+نسخه)\s*:\s*(?P<v>.*)$')
+# the label inside a line: after a sentence («… در 627. نسخه اصل: …»), after «؛» in the physical description, or after
+# «برابر» of «آغاز و انجام: برابر», or glued to «است» by the OCR («نوشته استنسخه اصل:») (fahares step 14.141); not «متن اصل نسخه:», «آغاز: اصل نسخه:», «پایان نسخه اصل:» or «با نسخه اصل:» (collated with it), which quote or compare the text
+ORIG_IN = re.compile(r'(?<!متن )(?<!آغاز )(?<!انجام )(?<!با )(?<!پایان )(?<!موجود )(?<!آغاز: )(?<!انجام: )(?:^|(?<=[\s.؛،])|(?<=است))(?:نسخه\s+اصل[یی]?|اصل\s+نسخه)\s*:\s*(?P<v>[^؛\[\n]+)')
+# a second shelfmark on the next line: «شماره نسخه: 272-ف و» / «392-ف نسخه اصل: …»
+SHELF_MORE = re.compile(r'^(?P<s>\S+)\s+(?=(?:نسخه\s+اصل|اصل\s+نسخه)\s*:)')
 SCOPE_RE = re.compile(r'^(?:جلد|ج\s*\d|مجلد|دفتر|کتاب|باب|فصل|مقاله|مقالت|جزء|جزو|بخش|قسمت|فن|مقصد|مطلب|مجلس|'
                       r'از\s+(?:باب|فصل|کتاب|جلد|ابتدا|آغاز|اول|اواسط|اواخر|برگ|مقاله|جزء|جزو|بخش|\S+\s+تا\s)|تا\s+|شامل\s*:|(?:شامل|دارای|مشتمل\s+بر)\s+(?:ابواب|باب|کتب|کتاب|جلد|مجلد|فصول|بخش|مقالات)|فقط|نیمه|نیمی|حدود\s+(?:یک|دو|سه|نیمی)|مقدمه|خاتمه|دیباچه|'
                       r'تمام|کامل|ناقص|طهارت|صلاة|صلات)'
@@ -815,6 +831,9 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
         c['city'], c['library'] = loc[0], '؛ '.join(loc[1:]) or None
         c['shelfmark'] = hm.group('shelf').strip() or None
     rest = content[1:]
+    if rest and c['shelfmark'] and c['shelfmark'].endswith(' و') and (sm := SHELF_MORE.match(rest[0].text)):
+        c['shelfmark'] += ' ' + sm.group('s')
+        rest[0] = Line(rest[0].no, rest[0].text[sm.end():], rest[0].page_start, rest[0].page_end, rest[0].tag_at)
     if rest:                                      # the closing bracket(s) are the catalogue citation
         last_text, cit = take_trailing_citation(rest[-1].text)
         if cit:
@@ -849,6 +868,12 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
         add_flag(c, 'marginal_notes')
     if c['shelfmark'] and 'عکسی' in c['shelfmark']:
         add_flag(c, 'facsimile')
+    if c['original_copy'] is None:                # a label the segments did not open with
+        for l in rest:
+            om = ORIG_IN.search(l.text)
+            if om and om.group('v').strip():
+                set_original(c, om.group('v').strip(' .،'))
+                break
     kept = []
     for n in c['notes']:
         if n['type'] == 'remark':
@@ -1020,7 +1045,9 @@ def link_part_refs(w):
 
 
 def parse_work(lines: List[Line], vol: int, ordinal: int) -> Dict[str, Any]:
-    first_copy = next((i for i, l in enumerate(lines) if 'شماره نسخه' in l.text and i > 0), len(lines))
+    # the first copy heading, not any line with «شماره نسخه» («… و شماره نسخه اصل در محل نگهداری آن …» in a
+    # description, vol 24 «فهرس للمصورات»), which cut the description short and dropped the line (fahares step 14.141)
+    first_copy = next((i for i, l in enumerate(lines) if i > 0 and 'شماره نسخه' in l.text and COPY_HEAD.match(l.text)), len(lines))
     w = parse_work_header(lines[:first_copy], vol, ordinal)
     hetero = w['heterogeneous'] is not None
     blocks: List[List[Line]] = []

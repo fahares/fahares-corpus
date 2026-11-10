@@ -301,16 +301,27 @@ def match_copies(db_copies, v2_copies):
 
 def align(v2_works, v1_works):
     """v2 ordinal -> v1 ordinal (= the site's slug ordinal). Equal while the text keeps its entries; when a page
-    restored from its image adds entries (vol 10 p. 150, vol 16 p. 930) the later ordinals shift, so the two title
-    sequences are aligned and an added work maps to nothing."""
+    restored from its image adds entries (vol 10 p. 150, vol 16 p. 930) the later ordinals shift, so the two
+    sequences are aligned and an added work maps to nothing. They are aligned on title and author first, since in a
+    run of one title (vol 17: «ساقی نامه» after «ساقی نامه») the titles alone slide by the entries one side lacks;
+    the gaps between those blocks, where an author is spelt differently, are aligned on the title alone (step 14.141)."""
     a = [norm(w['title_line']) for w in v2_works]
     b = [norm(w['primary_title']) for w in v1_works]
     if a == b:
         return {w['key']['ordinal']: w['key']['ordinal'] for w in v2_works}
+    who = lambda n: norm(n or '').replace(' ', '')
+    a2 = [t + '|' + who((w.get('author') or {}).get('name')) for t, w in zip(a, v2_works)]
+    b2 = [t + '|' + who(w.get('author_name')) for t, w in zip(b, v1_works)]
     out = {}
-    for blk in SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
+    ia = ib = 0
+    for blk in SequenceMatcher(None, a2, b2, autojunk=False).get_matching_blocks():
+        # the gap before this block, on titles alone
+        for g in SequenceMatcher(None, a[ia:blk.a], b[ib:blk.b], autojunk=False).get_matching_blocks():
+            for k in range(g.size):
+                out[v2_works[ia + g.a + k]['key']['ordinal']] = ib + g.b + k + 1
         for k in range(blk.size):
             out[v2_works[blk.a + k]['key']['ordinal']] = blk.b + k + 1
+        ia, ib = blk.a + blk.size, blk.b + blk.size
     return out
 
 
