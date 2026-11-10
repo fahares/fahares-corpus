@@ -92,7 +92,7 @@ COPY_FIELDS = {
     'copy_place': lambda c: (c['copy_place'] or {}).get('v'),
     'commissioned_by': lambda c: c['commissioned_by'],
     # since step 13.86 the site keeps leaves in folios and pages in pages («86گ، 170ص» holds both)
-    'folios': lambda c: count_of(c['folios'], 'گ'),
+    'folios': lambda c: count_of(c['folios'], '(?:گ|برگ)'),     # «16برگ» as well as «16گ» (step 14.147)
     'pages': lambda c: count_of(c['folios'], 'ص'),
     'lines': lambda c: lead_int(c['lines']),
     'dimensions': lambda c: c['dimensions'],

@@ -30,7 +30,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.2.0'
+PARSER_VERSION = '2.3.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -565,9 +565,12 @@ def parse_ie_line(c, text: str, tag_at: Optional[int] = None) -> Optional[str]:
     tail = None
     m = re.search(r'\s*؛?\s*(?=(?:خط\s*:\s*[^،؛]+[،؛]\s*(?:کا\s*:|کاتب\s*=|بی[‌ ]?کا|بی[‌ ]?تا|تا\s*:)|'
                   r'کا\s*:\s*[^،؛:]{2,80}،\s*(?:تا\s*:|بی[‌ ]?تا)|'
-                  r'بی[‌ ]?کا\s*،\s*(?:تا|بی)))', text)
+                  r'بی[‌ ]?کا\s*،\s*(?:تا|بی)))', fa(text))   # «كا:»، «بى‌كا»: Arabic letter forms (fahares step 14.147)
     if m and m.start() > 0:
         text, tail = text[:m.start()], text[m.end():]
+        # a page tag between the explicit and the tail: the text after it is a lost line of its own. In about one in
+        # ten it is the explicit running on; a narrower rule kept the cataloguer's prose instead (step 14.147), so
+        # those lines are for the text file (fahares backlog item 124)
         if tag_at and 0 < tag_at < len(text) and not IE_SPLIT.search(text[tag_at:]):
             text, tail = text[:tag_at], text[tag_at:].strip() + '؛ ' + tail
     parts = []
@@ -680,6 +683,10 @@ def is_fragment(ch: str) -> bool:
     return len(ch.split()) <= 7 and ':' not in ch and not NOTE_VERB.search(ch) and not re.search(r'\d{3,4}\s*گ', ch)
 
 
+GLUED_LEAVES = re.compile(r'\s+(?P<v>\d[\d/]*\s*(?:گ|برگ|ص)(?:\s*\([^()]*\))?)\s*$')
+WEEKDAY = re.compile(r'(?:یک|دو|سه|چهار|پنج)\s*[‌ ]?\s*شنبه|شنبه|جمعه|آدینه')
+
+
 def parse_physical(c, text: str):
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
@@ -688,8 +695,9 @@ def parse_physical(c, text: str):
             if not chunk:
                 continue
             ch = chunk.strip(' .')
-            if re.match(r'^(?:كا|بى|تاريخ)', ch):          # labels printed with Arabic letter forms
-                ch = fa(ch[:6]) + ch[6:]
+            lm = re.match(r'^[^:؛،]{1,12}(?::|$)', ch)          # a label printed with Arabic letter forms («كا:»، «بى‌تا»)
+            if lm and re.search('[كيى]', lm.group(0)):
+                ch = fa(ch[:lm.end()]) + ch[lm.end():]
             m = re.match(r'^خط\s*:\s*(?P<v>.*)$', ch)
             if m:
                 c['script_raw'] = m.group('v').strip()
@@ -760,10 +768,18 @@ def parse_physical(c, text: str):
             for f, rx in SIMPLE_RE:
                 m = rx.match(ch)
                 if m:
+                    v = m.group('v').strip()
+                    # «جلد: تیماج سبز 11گ (16پ-27پ)», «کاغذ: فرنگی 60گ»: the leaf count glued to the paper or the
+                    # binding with no «،» (fahares step 14.147)
+                    lm = GLUED_LEAVES.search(v) if f in ('paper', 'binding') else None
+                    if lm and lm.start() > 0:
+                        v = v[:lm.start()].strip()
+                        if not c['folios']:
+                            c['folios'] = lm.group('v').strip()
                     if f in LIST_FIELDS:
-                        c[f].append(m.group('v').strip())
+                        c[f].append(v)
                     else:
-                        c[f] = m.group('v').strip()
+                        c[f] = v
                     last, hit = f, True
                     break
             if hit:
@@ -773,9 +789,13 @@ def parse_physical(c, text: str):
                 c['acquisition'].append(ch)
                 last = 'acquisition'
                 continue
-            # «تا: 18 ربیع الثانی، 1268»: the year after the comma is the date's own
-            if last == 'date' and c['copy_date'] and not re.search(r'\d{3,4}', c['copy_date']['raw']) \
-                    and re.match(r'^\d{3,4}\s*(?:ق|ش|م|قمری|شمسی|میلادی)?$', ch):
+            # «تا: 18 ربیع الثانی، 1268»: the year after the comma is the date's own; so is the date after a weekday
+            # («تا: چهارشنبه، 2 جمادی الثانی 837ق») and the century after a date with no year («…الاول؟، قرن 11»)
+            # (fahares step 14.147)
+            if last == 'date' and c['copy_date'] and not re.search(r'\d{3,4}|قرن', c['copy_date']['raw']) \
+                    and (re.match(r'^\d{3,4}\s*(?:ق|ش|م|قمری|شمسی|میلادی)?$', ch)
+                         or (WEEKDAY.fullmatch(c['copy_date']['raw'].strip(' ،')) and re.match(r'^[^:؛]{0,40}?\d{3,4}\s*(?:ق|ش|م|قمری|شمسی|میلادی)\b', ch))
+                         or re.match(r'^(?:اواخر\s+|اوایل\s+|اواسط\s+|نیمه\s+(?:اول|دوم)\s+)?قرن\s*\d{1,2}(?:\s*(?:و|-|–)\s*\d{1,2})?\s*(?:ق|قمری|هجری)?$', ch)):
                 c['copy_date']['raw'] += '، ' + ch
                 c['copy_date']['century'], c['copy_date']['sort_year'], _ = parse_date_triad(c['copy_date']['raw'])
                 continue
@@ -948,7 +968,7 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
 
 def parse_line_body(c, t: str, hetero: bool, tag_at: Optional[int]):
     m = None
-    for gm in PHYS_GROUP_START.finditer(t):
+    for gm in PHYS_GROUP_START.finditer(fa(t)):            # «كا:» is «کا:» (fa keeps every offset)
         m = gm
         break
     if m is None:
