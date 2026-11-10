@@ -30,7 +30,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.1.0'
+PARSER_VERSION = '2.2.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -253,6 +253,14 @@ _ORD = r'(?:اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|ن
 EPITHET_TAIL = re.compile(r'،\s*(?P<e>امام\s+' + _ORD + r'|پیامبر\s+\S+(?:\s+\S+)?|خلیفه\s+(?:اموی|عباسی|فاطمی|عثمانی|' + _ORD[3:-1] + r'))$')
 
 
+PERSIAN_LETTER = re.compile('[\u0621-\u064A\u067E\u0686\u0698\u06A9\u06AF\u06CC]')
+# a transliteration line that ends in a Persian name: OCR joined the author's line to it (fahares step 14.146)
+GLUED_AUTHOR = re.compile(r'^(?P<l>[^\u0600-\u06FF]*[A-Za-zāīū][^\u0600-\u06FF]*?)\s+(?P<p>[\u0600-\u06FF][\u0600-\u06FF\s،]{1,60})$')
+
+# a letter or a joint only the transliteration uses («ā», «š», «‘», «-ol », «-e »)
+TRANSLIT_MARK = re.compile(r'[āīūḥṣṭẓḍčšžġḏṯẖ‘’ʻʼ]|\w-(?:ul|ol|il|al|ud|od|e|ye|i|ur|ut)\b')
+
+
 def is_latin_line(s: str) -> bool:
     return bool(s) and len(LATIN.findall(s)) > len(PERSIAN.findall(s))
 
@@ -296,13 +304,19 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
         'alt_titles': titles[1:], 'subjects': parse_subjects(subject_raw), 'subject_raw': subject_raw,
         'languages': languages, 'language_raw': language_raw, 'source_language': src_lang,
         'target_language': tgt_lang, 'language_uncertain': lang_unc,
-        'transliteration': None, 'alt_transliterations': [], 'author': None, 'author_unknown': False, 'translator': None,
+        'transliteration': None, 'alt_transliterations': [], 'original_title': None, 'author': None, 'author_unknown': False, 'translator': None,
         'original_author': None, 'heterogeneous': None, 'identification_uncertain': False,
         'composition': None, 'dedication': None, 'related_work': None, 'print_info': None,
         'description': None, 'incipit': None, 'explicit': None, 'incipit_parts': [], 'explicit_parts': [], 'incipit_numbered': [], 'explicit_numbered': [], 'commentaries': [], 'bibliography': [],
     }
     body = [l for l in lines[1:] if l.text]
     i = 0
+    # the author's name glued to the end of the title's transliteration («tohfat-ol molūk لقمان», «loqmān» below it)
+    glued = None
+    if i < len(body) and (gm := GLUED_AUTHOR.match(body[i].text)) and i + 1 < len(body) \
+            and is_latin_line(body[i + 1].text) and not PERSIAN_LETTER.search(body[i + 1].text):
+        glued = (gm.group('p').strip(), body[i + 1].text.strip())
+        body = body[:i] + [Line(body[i].no, gm.group('l').strip(), body[i].page_start, body[i].page_end, None)] + body[i + 2:]
     if i < len(body) and is_latin_line(body[i].text):
         # a long transliteration runs over several lines (vol 32 «منهاج الدکان»: three lines); an author line is
         # Persian before its Latin line, so every Latin line here is the title's (fahares step 14.141)
@@ -313,10 +327,18 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
                 and not re.search(r'\(\s*-?\s*\d{1,4}\s*c?\s*(?:-\s*\d{1,4}\s*c?)?\s*\)\s*$', body[i].text):  # an author's, with his dates
             latin.append(body[i].text.strip())
             i += 1
+        # a line with no mark of the transliteration is the work's own title in a European language
+        # («Le Rythme de La Vie» above «āhang-e hayāt», «Travels in Beloochistan and Sinde») (fahares step 14.146)
+        foreign = [l for l in latin if not TRANSLIT_MARK.search(l) and re.search(r'\b[A-Z][a-z]', l)]
+        if foreign and len(foreign) < len(latin):
+            w['original_title'] = ' '.join(foreign)
+            latin = [l for l in latin if l not in foreign]
         parts = [p.strip() for p in ' '.join(latin).split('=') if p.strip()]
         w['transliteration'], w['alt_transliterations'] = (parts[0] if parts else None), parts[1:]
+    if glued:
+        w['author'] = parse_author(*glued)
     # author: a Persian line followed by a Latin line (dates optional), else v1's author-line test
-    if i < len(body) and not LABEL_LINE.match(body[i].text) and not HETERO_LINE.match(body[i].text):
+    elif i < len(body) and not LABEL_LINE.match(body[i].text) and not HETERO_LINE.match(body[i].text):
         cand = body[i].text
         nxt = body[i + 1].text if i + 1 < len(body) else None
         mixed = MIXED_AUTHOR.match(cand)
@@ -442,6 +464,14 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
 # ---------------------------------------------------------------- copies
 
 COPY_HEAD = re.compile(r'^(?:(?P<seq>\d+)\s*[\.\-]\s*)?(?P<loc>.+?)\s*؛\s*شماره\s*نسخه\s*:\s*(?P<shelf>.*)$')
+# a heading the OCR bent, tried only on a numbered line: «2. قم،فرهاد معتمد شماره نسخه: …», «4 شیراز علامه
+# طباطبائی؛ شماره نسخه 68/3», «6. قم؛ مرکز احیاء؛ برابرشماره نسخه: 4010»; v2 merged such a copy into the one above
+# (fahares step 14.146)
+COPY_HEAD_LOOSE = re.compile(r'^(?P<seq>\d{1,4})\s*[\.\-]?\s+(?P<loc>[^:\d][^:]{1,80}?)\s*[؛،]?\s*(?:برابر\s*)?شماره\s*نسخه\s*:?\s*(?P<shelf>\S.*)$')
+
+
+def copy_head(text: str):
+    return COPY_HEAD.match(text) or COPY_HEAD_LOOSE.match(text)
 IE_START = re.compile(r'^(?P<l>(?:آغاز|انجام)[^:؛]{0,25}?)\s*:\s*')
 IE_SPLIT = re.compile(r'\s*؛\s*(?=(?:آغاز|انجام)[^:؛]{0,25}?:)')
 # an explicit label after the incipit with no «؛», as printed («آغاز: برابر انجام: …», «برابرانجام:»)
@@ -823,13 +853,24 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
                        'line_start': lines[0].no, 'line_end': lines[-1].no}
     c['raw_text'] = '\n'.join(l.text for l in lines if l.text)
     content = [l for l in lines if l.text]
-    hm = COPY_HEAD.match(content[0].text)
+    hm = copy_head(content[0].text)
     if hm:
         if hm.group('seq'):
             c['key']['seq'] = int(hm.group('seq'))
-        loc = [p.strip() for p in hm.group('loc').split('؛')]
+        # «،» parts city and library only in a bent heading («قم،فرهاد معتمد»); in a sound one it is inside the
+        # library's name («مینوی، مجتبی»)
+        loc = [p.strip() for p in re.split(r'[؛،]' if hm.re is COPY_HEAD_LOOSE else '؛', hm.group('loc'))]
+        loc = loc[:1] + [p for p in loc[1:] if p]        # «؛ مجلس» keeps its empty city; «تهران؛ ؛ سپهسالار» its library
+        if len(loc) == 1 and ' ' in loc[0] and hm.re is COPY_HEAD_LOOSE:      # «4 شیراز علامه طباطبائی؛ …»
+            loc = loc[0].split(' ', 1)
         c['city'], c['library'] = loc[0], '؛ '.join(loc[1:]) or None
-        c['shelfmark'] = hm.group('shelf').strip() or None
+        shelf = hm.group('shelf').strip()
+        # «شماره نسخه: 76 خط: نستعلیق، …»: the copy's description on the heading's line
+        sm = re.search(r'\s(?=' + PHYS_LABEL + ')', shelf) if hm.re is COPY_HEAD_LOOSE or ' خط:' in shelf else None
+        if sm:
+            shelf, spill = shelf[:sm.start()].strip(), shelf[sm.end():].strip()
+            content.insert(1, Line(content[0].no, spill, content[0].page_start, content[0].page_end, None))
+        c['shelfmark'] = shelf or None
     rest = content[1:]
     if rest and c['shelfmark'] and c['shelfmark'].endswith(' و') and (sm := SHELF_MORE.match(rest[0].text)):
         c['shelfmark'] += ' ' + sm.group('s')
@@ -1047,12 +1088,12 @@ def link_part_refs(w):
 def parse_work(lines: List[Line], vol: int, ordinal: int) -> Dict[str, Any]:
     # the first copy heading, not any line with «شماره نسخه» («… و شماره نسخه اصل در محل نگهداری آن …» in a
     # description, vol 24 «فهرس للمصورات»), which cut the description short and dropped the line (fahares step 14.141)
-    first_copy = next((i for i, l in enumerate(lines) if i > 0 and 'شماره نسخه' in l.text and COPY_HEAD.match(l.text)), len(lines))
+    first_copy = next((i for i, l in enumerate(lines) if i > 0 and 'شماره نسخه' in l.text and copy_head(l.text)), len(lines))
     w = parse_work_header(lines[:first_copy], vol, ordinal)
     hetero = w['heterogeneous'] is not None
     blocks: List[List[Line]] = []
     for l in lines[first_copy:]:
-        if 'شماره نسخه' in l.text and COPY_HEAD.match(l.text):
+        if 'شماره نسخه' in l.text and copy_head(l.text):
             blocks.append([l])
         elif blocks:
             blocks[-1].append(l)
