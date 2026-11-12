@@ -28,6 +28,17 @@ FIXES = [
     (12, '\n3. شیراز؛ شاهچراغ؛ برابر شماره نسخه: 342/3\nآغاز و انجام:\n',
          '\n3. شیراز؛ شاهچراغ؛ شماره نسخه: 342/3\nآغاز و انجام: برابر\n'),
     (22, '\n2. تهران؛ لغت نامه دهخدا شماره نسخه: 76 خط: ', '\n2. تهران؛ لغت نامه دهخدا؛ شماره نسخه: 76\nخط: '),
+    # vol 23 p. 115 (item 47): the sources' bracket of «عويص المسائل» broken off at «139/», the Marashi copy's
+    # heading, incipit and the start of its explicit lost, the end of the explicit (the other column) run on, and
+    # the leaves read reversed; as printed
+    (23, '(سید محمود مرعشی) [بیان الحق بضمان الصدق: نسخه چاپی، 74؛ ریحانة الادب 139/ خدمته، مادحين كلامنا بذكر صفته، اقتداء بما قاله حسان بن ثابت رضى الله عنه ما ان مدحت محمد بمقالتی ×× لكن مدحت مقالتی بمحمد (صلی الله علیه و آله) خط: نستعلیق، کا: محمد بن اسعد دوانی',
+         '(سید محمود مرعشی) [بیان الحق بضمان الصدق: نسخه چاپی، 74؛ ریحانة الادب 139/5؛ محبوب القلوب: نسخه عکسی، برگ 245، الف]\n\n'
+         'قم؛ مرعشی؛ شماره نسخه: 12388/7\n'
+         'آغاز: الحمدلله مخترع العقل الفعال و مبدع النفس الكمال، معلق الصور بالمواد و مؤلف النسب بين الاعداد و الابعاد و محرك الفلك؛ '
+         'انجام: و قد آن لنا ان نختم الكلام فی هذا الموضع، حامدين لله تعالى، داعين لايام مولانا، مستنجحين مرامنا عن خدمته، مادحين كلامنا بذكر صفته، اقتداء بما قاله حسان بن ثابت رضى الله عنه ما ان مدحت محمد بمقالتی ×× لكن مدحت مقالتی بمحمد (صلی الله علیه و آله)\n'
+         'خط: نستعلیق، کا: محمد بن اسعد دوانی'),
+    (23, 'در موضوعات کلامی و فلسفی آمده است؛ 14گ (168-155)، 23 سطر، اندازه: 8/5×17سم [ف: 31 - 306]',
+         'در موضوعات کلامی و فلسفی آمده است؛ 14گ (155-168)، 23 سطر، اندازه: 8/5×17سم [ف: 31 - 306]'),
     # the explicit's last word glued to the next line's label
     (31, 'توران شاه شامی نوشته استنسخه اصل: ملی تبریز ش 3626؛', 'توران شاه شامی نوشته است\nنسخه اصل: ملی تبریز ش 3626؛'),
 ]
@@ -40,6 +51,18 @@ LABELS = [(re.compile(r'(?<![\w‌])كا(\s*):'), r'کا\1:'),
           (re.compile(r'(?<![\w‌])بى[‌ ]?کا(?![\w‌])'), 'بی‌کا'),
           (re.compile(r'(?<![\w‌])بى[‌ ]?تا(?![\w‌])'), 'بی‌تا'),
           (re.compile(r'(?<![\w‌])كاغذ(\s*):'), r'کاغذ\1:')]
+
+
+# the values of «خط:»، «قطع:»، «کاغذ:» and «جلد:», which are Persian words («تيماج»، «نستعليق»، «مشكی»), in Persian
+# letters; a catalogue's or a book's name in a bracket keeps its Arabic letters
+FIELD = re.compile(r'(?:(?<=^)|(?<=[؛،]\s)|(?<=[؛،]))((?:خط|قطع|کاغذ|جلد)\s*:\s*)([^؛،\[\n]*)')
+
+
+def fields(line):
+    parts = re.split(r'(«[^«»]*»)', line)
+    return ''.join(p if p.startswith('«') else
+                   FIELD.sub(lambda m: m.group(1) + m.group(2).replace('ي', 'ی').replace('ى', 'ی').replace('ك', 'ک'), p)
+                   for p in parts)
 
 
 def labels(line):
@@ -73,6 +96,14 @@ def main():
         changed += sum(a != b for a, b in zip(lines, new))
         p.write_text('\n'.join(new), encoding='utf-8')
     print(f'{changed} lines with Arabic-letter labels')
+    changed = 0
+    for vol in range(1, 35):
+        p = ROOT / f'fankha_vol_{vol:02d}.txt'
+        lines = p.read_text(encoding='utf-8').split('\n')
+        new = [fields(l) for l in lines]
+        changed += sum(a != b for a, b in zip(lines, new))
+        p.write_text('\n'.join(new), encoding='utf-8')
+    print(f'{changed} lines with Persian words of the copy description in Arabic letters')
     # a page tag inside an incipit or explicit line that joined the cataloguer's next line to it: a line break after
     # the tag, as judged in reconciliations/page_tag_breaks_step14_149.json (the quotation running on stays)
     plan = json.loads((ROOT.parent.parent / 'reconciliations' / 'page_tag_breaks_step14_149.json').read_text(encoding='utf-8'))
