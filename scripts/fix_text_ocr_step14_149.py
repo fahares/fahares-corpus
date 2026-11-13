@@ -50,7 +50,9 @@ LABELS = [(re.compile(r'(?<![\w‌])كا(\s*):'), r'کا\1:'),
           (re.compile(r'(?<![\w‌])ب[یى][‌ ]?كا(?![\w‌])'), 'بی‌کا'),
           (re.compile(r'(?<![\w‌])بى[‌ ]?کا(?![\w‌])'), 'بی‌کا'),
           (re.compile(r'(?<![\w‌])بى[‌ ]?تا(?![\w‌])'), 'بی‌تا'),
-          (re.compile(r'(?<![\w‌])كاغذ(\s*):'), r'کاغذ\1:')]
+          (re.compile(r'(?<![\w‌])كاغذ(\s*):'), r'کاغذ\1:'),
+          # «كاتب = مؤلف» (fahares step 14.171): the old parser read no autograph from it
+          (re.compile(r'(?<![\w‌])كاتب(\s*=\s*)مؤلف'), r'کاتب\1مؤلف')]
 
 
 # the values of «خط:»، «قطع:»، «کاغذ:» and «جلد:», which are Persian words («تيماج»، «نستعليق»، «مشكی»), in Persian
