@@ -14,6 +14,7 @@ import argparse
 import json
 import re
 import subprocess
+import unicodedata
 import sys
 from collections import Counter
 from datetime import date
@@ -41,8 +42,26 @@ def cut(site, v2):
         if letters(ch):
             n += 1
             if n == len(want):
-                return site[:i + 1].rstrip()
+                j = i + 1
+                # a letter's marks (tanwin, shadda, kasra) belong to it, and a bracket opened in the kept text closes there
+                while j < len(site) and unicodedata.combining(site[j]):
+                    j += 1
+                if site[j:j + 1] == ')' and site[:j].count('(') > site[:j].count(')'):
+                    j += 1
+                return site[:j].rstrip()
     return None
+
+
+# words of a cataloguer's note (scope, completeness, attribution), as against the rest of a quotation
+NOTE_WORD = re.compile(r'(?<![\w\u200c])(?:است|اند|شامل|کامل|ناقص|جلد|کاتب|رساله|نسخه|مؤلف|ترجمه|بخش|باب|کتاب|دانسته|گویا|'
+                       r'تذکر|فاقد|مقدمه|قصیده|غزل|تقریرات|جزء|سوره|درس|فصل|شرح|بیاض|جنگ|منتخب|مطالب|آغاز|انجام|پایان|'
+                       r'نام|خط|تا)(?![\w\u200c])')
+
+
+def is_note(tail, kept):
+    """The cut text reads as a cataloguer's note: short, a repeat of the kept text, or with a note's words near its start."""
+    t = tail.strip(' .؛،:\n')
+    return len(letters(t)) <= 20 or letters(t) in letters(kept) or bool(NOTE_WORD.search(t[:100].replace('ك', 'ک').replace('ي', 'ی')))
 
 
 def main():
@@ -89,6 +108,9 @@ def main():
         # a second incipit, a verse or a quotation, a date's year («… سنه» / «1114»): part of what is quoted, not a note
         if re.match(r'^[\s.؛،:]*(?:«|\(|\d|بسمله|بسم|الحمد|×|\.\.\.|…)', tail) or '××' in tail[:80]:
             counts['tail is quoted text'] += 1
+            continue
+        if not is_note(tail, new):
+            counts['tail not clearly a note'] += 1
             continue
         key = FIELDS[f]
         meta = s['metadata']
