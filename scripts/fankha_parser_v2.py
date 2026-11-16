@@ -30,7 +30,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.3.0'
+PARSER_VERSION = '2.3.1'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -200,8 +200,32 @@ def take_trailing_citation(s: str) -> Tuple[str, Optional[str]]:
 
 # ---------------------------------------------------------------- work header
 
-LABEL_LINE = re.compile(r'^(?P<l>وابسته به|تاریخ تألیف|تاریخ تالیف|تألیف|تاریخ اجازه|اجازه|اهداء به|اهدا به|اهدایی به|'
-                        r'به درخواست|به دستور|به فرمایش|به خواهش|به نام|چاپ|آغاز(?: کتاب| متن)?|انجام(?: کتاب| متن)?|شرح و حواشی|شروح و حواشی|مترجم|اسم مترجم|اصل از)\s*:\s*(?P<v>.*)$')
+LABEL_LINE = re.compile(r'^(?P<l>وابسته به|تاریخ تألیف|تاریخ تالیف|سال تألیف|سال تالیف|زمان تألیف|زمان تالیف|تاریخ ترجمه|تألیف|تاریخ اجازه|اجازه|'
+                        r'اهداء به|اهدا به|اهداءبه|اهدایی به|اهداء|اهدا|به درخواست|به دستور|به امر|به فرمایش|به خواهش|به نام|'
+                        r'چاپ|آغاز(?: کتاب| متن)?|انجام(?: کتاب| متن)?|شرح و حواشی|شروح و حواشی|مترجم|اسم مترجم|اصل از)\s*:\s*(?P<v>.*)$')
+DATE_LABELS = ('تاریخ تألیف', 'تاریخ تالیف', 'سال تألیف', 'سال تالیف', 'زمان تألیف', 'زمان تالیف', 'تاریخ ترجمه', 'تألیف',
+               'تاریخ اجازه', 'اجازه')
+PATRON_LABELS = ('اهداء به', 'اهدا به', 'اهداءبه', 'اهدایی به', 'اهداء', 'اهدا', 'به درخواست', 'به دستور', 'به امر',
+                 'به فرمایش', 'به خواهش', 'به نام')
+# the date label printed with no colon, as the entry's first line: «تاریخ تألیف 1103ق», «تألیف میان 1240 تا 1250.»
+# (fahares backlog item 145: v1's author test took the line for an author who died in that year)
+# not a sentence that opens with the same words («تاریخ تألیف کتاب پس از سال 1077 بوده است.»)
+BARE_DATE_LINE = re.compile(r'^(?:(?:تاریخ|سال|زمان)\s+(?:تألیف|تالیف|ترجمه)\s+(?P<v>(?=[^\d]{0,25}\d)(?!.*(?:است|بوده|کتاب|رساله|این)).{1,70})'
+                            r'|تألیف\s+(?P<m>میان\s+\d.{1,30}))$')
+# a line with no transliteration under it that reads as a sentence about the work, not as a name: it has a word
+# no name has («در», «که», «مورخ» …) or opens a citation («[الذریعه …»). «معروف به», «ملقب به» belong to names
+# (fahares backlog item 145)
+SENTENCE_WORD = re.compile(r'(?:^|\s)(?:در|که|با|تا|بر|را|است|مورخ|سال|سال‌های|سالهای|تاریخ|مطابق|میان|جهت|طبق|سواد|نقل|ذکر|از|'
+                           r'(?<!معروف )(?<!ملقب )(?<!مشهور )(?<!متخلص )(?<!منسوب )به)(?=\s|$)')
+AUTHOR_HEDGE_HEAD = re.compile(r'^(?:[؟?\s:]|منسوب به|شاید از|ظاهراً از|ظاهرا از|ظاهراً|ظاهرا|احتمالاً از|احتمالا از|احتمالاً|احتمالا|'
+                               r'محتملا از|محتملاً از|گویا از|گویا|از)+')
+
+
+def is_sentence_line(line: str) -> bool:
+    if line.startswith('['):
+        return True
+    name, _ = extract_author_and_date(line)
+    return bool(SENTENCE_WORD.search(AUTHOR_HEDGE_HEAD.sub('', name or '').strip()))
 # a work's numbered incipit or explicit, which copies cite as «برابر2»: on a line of its own («آغاز 2: …»,
 # «آغاز1: …»), or as the value of the label («آغاز: 1: دیباچه: …», «آغاز کتاب: آغاز 1: …»)
 NUM_IE_LINE = re.compile(r'^(?P<side>آغاز|انجام)(?:\s+(?:کتاب|متن))?\s*\(?(?P<n>\d{1,2})\)?\s*:\s*(?P<v>\S.*)$')
@@ -348,7 +372,9 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
         elif mixed and len(cand) <= 150:
             w['author'] = parse_author(mixed.group('p').strip(), mixed.group('l').strip())
             i += 1
-        elif is_author_line(cand, nxt):
+        elif BARE_DATE_LINE.match(cand):
+            pass                     # read as the date of composition below
+        elif is_author_line(cand, nxt) and not is_sentence_line(cand):
             w['author'] = parse_author(cand, None)
             i += 1
     desc: List[str] = []
@@ -356,6 +382,7 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
     comm_mode = False
     parts_of = None                  # «آغاز: جلد اول: …» and the «جلد دوم: …» lines under it
     num_side = None                  # «آغاز: 1: …» and the «2: …» lines under it
+    translated = None                # the «تاریخ ترجمه: …» line the date of composition was read from
     for l in body[i:]:
         t = l.text
         if re.match(r'^(?:مؤلف\s+|پدیدآور\s+)?(?:ناشناخته|ناشناس|نامعلوم)\s*:?$', t):
@@ -399,6 +426,9 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
             if is_bib_citation(inner):
                 bib += split_bib_citations(inner)
                 continue
+        bm = BARE_DATE_LINE.match(t) if not desc and not w['composition'] else None
+        if bm:
+            t = 'تاریخ تألیف: ' + (bm.group('v') or bm.group('m')).rstrip(' .')
         m = LABEL_LINE.match(t)
         if m:
             lab, v = m.group('l').split()[0] if m.group('l').startswith(('آغاز', 'انجام')) else m.group('l'), m.group('v').strip()
@@ -423,11 +453,17 @@ def parse_work_header(lines: List[Line], vol: int, ordinal: int) -> Dict[str, An
                         w['explicit'] = part[pm.end():].strip()
             elif lab == 'وابسته به':
                 w['related_work'] = v
-            elif lab in ('تاریخ تألیف', 'تاریخ تالیف', 'تألیف', 'تاریخ اجازه', 'اجازه'):
+            elif lab == 'تاریخ ترجمه' and w['composition']:
+                desc.append(t)       # the work has its own date of composition; the translation's stays in the text
+                continue
+            elif lab in DATE_LABELS:
+                if translated and lab != 'تاریخ ترجمه':
+                    desc.append(translated)
+                translated = t if lab == 'تاریخ ترجمه' else None
                 pm = re.search(r'[؛،]\s*(?:محل\s*:?\s*تألیف|محل تألیف|محل تالیف|محل صدور|محل نگارش)\s*:?\s*(.+)$', v)
                 w['composition'] = {'date': (v[:pm.start()] if pm else v).strip(' ؛،'),
                                     'place': pm.group(1).strip() if pm else None}
-            elif lab in ('اهداء به', 'اهدا به', 'اهدایی به', 'به درخواست', 'به دستور', 'به فرمایش', 'به خواهش', 'به نام'):
+            elif lab in PATRON_LABELS:
                 w['dedication'] = v
             elif lab == 'چاپ':
                 w['print_info'] = v
