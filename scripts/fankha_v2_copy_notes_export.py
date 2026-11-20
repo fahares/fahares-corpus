@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""A copy's notes with their types, for the site's manuscript_notes table (fahares item 87, step 14.254).
+"""A copy's notes with their types, for the site's manuscript_notes table (fahares item 87, steps 14.254 and 14.260).
 Each v2 copy is matched to the site's copy by its text (raw_text, normalised as the comparison does): a text one site
 copy and one v2 copy hold. The copy's notes come from:
   - v2's `notes`, with the type a model read (reconciliations/fankha_note_types.jsonl); a piece the model read as the
     cut-off rest of a field is left out; a text the file lacks keeps v2's rule type;
   - v2's labelled fields: seals («مهر:») as seal, ownership («تملک:») as ownership, acquisition («اهدایی: …»،
-    «خریداری …») as acquisition, donor («واقف:») as endowment; typed_by is "field".
+    «خریداری …») as acquisition, donor («واقف:») as endowment, and the three the site has no column for:
+    copy_description as description, contents_scope as scope, defects («افتادگی:») as defect; typed_by is "field".
 The notes are in the order of the copy's text. Output: gzipped JSON lines, one copy a line:
 {"id", "shelfmark", "notes": [{"type", "text", "typed_by", "also"?, "by_author"?, "by_author_hedge"?, "hedge"?}]}
 """
@@ -17,7 +18,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 from fankha_v2_db_compare import query, rkey  # noqa: E402
 
-FIELDS = (('seals', 'seal'), ('ownership', 'ownership'), ('acquisition', 'acquisition'), ('donor', 'endowment'))
+FIELDS = (('seals', 'seal'), ('ownership', 'ownership'), ('acquisition', 'acquisition'), ('donor', 'endowment'),
+          ('copy_description', 'description'), ('contents_scope', 'scope'), ('defects', 'defect'))
 
 
 def main():
