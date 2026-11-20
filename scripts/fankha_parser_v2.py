@@ -739,12 +739,30 @@ def is_date_chunk(ch: str) -> bool:
     return bool(CENTURY_CHUNK.match(ch) or DATE_CHUNK.match(ch))
 
 
+FIX_LOG: Optional[list] = None      # set by fankha_label_fixes.py: every repair, as (line, kind, old, new)
+FIX_LINE: Optional[int] = None
+# a label that is the catalogue's own wording, not a slip: the text keeps it
+FIX_NOT = re.compile(r'^(?:نوع\s+جلد|«?اندازه\s+جلد|تعداد|بی[‌ ]?تا\s*:|بی\s*کاتب)|سطری')
+
+
+def log_fix(kind: str, old: str, new: str):
+    if FIX_LOG is not None and old != new:
+        FIX_LOG.append((FIX_LINE, kind, old, new))
+
+
 def repair_chunk(ch: str) -> List[str]:
+    out = _repair_chunk(ch)
+    if out != [ch] and not FIX_NOT.search(ch):
+        log_fix('chunk', ch, '، '.join(out))
+    return out
+
+
+def _repair_chunk(ch: str) -> List[str]:
     """A chunk whose label lost its mark or was misprinted, as the chunk(s) the catalogue meant (2.4.0): «بی‌کا تا قرن
     13», «تا رجب 1200ق», «اندازه 11×17سم», «ادنازه: 14×22سم», «نوع جلد: تیماج», «: جلد تیماج», «29سط (10×20)», «19 س»."""
     m = re.match(r'^بی[‌ ]?کا\s+(?P<r>بی[‌ ]?تا|تا\s*:?\s*\S.*)$', ch)
-    if m:
-        return ['بی‌کا'] + repair_chunk(m.group('r'))
+    if m and (rest := _repair_chunk(m.group('r'))) and (rest != [m.group('r')] or re.match(r'^(?:بی[‌ ]?تا$|تا\s*:)', m.group('r'))):
+        return ['بی‌کا'] + rest
     m = re.match(r'^تا\s+(?P<v>\S.*)$', ch)
     if m and (is_date_chunk(m.group('v')) or YEAR_CHUNK.match(m.group('v'))):
         return ['تا: ' + m.group('v')]
@@ -787,6 +805,7 @@ def parse_physical(c, text: str):
             ch = chunk.strip(' .')
             if pending:
                 if not re.match(r'^[^:،؛]{1,14}:', ch):
+                    log_fix('bare', pending, ch)
                     ch = pending + ': ' + ch
                 pending = None
             elif ch in BARE_LABELS:
@@ -805,6 +824,7 @@ def parse_physical(c, text: str):
             if m and (any(s['type'] for s in parse_scripts(m.group('v'))) or len(m.group('v').split()) <= 3):
                 c['script_raw'] = m.group('v').strip()
                 c['scripts'] = parse_scripts(c['script_raw'])
+                log_fix('chunk', ch, 'خط: ' + m.group('v').strip())
                 last = 'script'
                 continue
             m = re.match(r'^(?:کا|کاتب)\s*:\s*(?P<v>.*)$', ch) or re.match(r'^(?P<v>کاتب\s*=\s*.*)$', ch)
@@ -1003,20 +1023,31 @@ IE_BARE_NOT = re.compile(r'^(?:نسخه|کتاب|متن|رساله|جلد|دفت
                          r'از\s+(?:باب|فصل|جلد|کتاب|مقاله|بخش|قسمت|اول|میان|وسط))(?:\s|$)')
 
 
-def ie_marked(c, t: str) -> str:
+def ie_marked(c, t: str, log: bool = True) -> str:
+    global FIX_LOG
+    if not log:
+        keep, FIX_LOG = FIX_LOG, None
+        try:
+            return ie_marked(c, t)
+        finally:
+            FIX_LOG = keep
     """An incipit or explicit line printed without its «:», or with a bent label, as the line the catalogue meant
     (2.4.0): «آغاز و انجام برابر», «آغا و انجام: برابر», «آغاز حمد بیحد خدای را …؛ انجام یا اخیار …»."""
     if not t:
         return t
+    if (bm := IE_BOTH_BENT.match(t)):
+        log_fix('head', bm.group(0), 'آغاز و انجام: ')
     t = IE_BOTH_BENT.sub('آغاز و انجام: ', t, count=1)
     m = IE_BARE.match(t.split('؛')[0]) if not IE_START.match(t) else None
     side = {'آغاز': 'incipit', 'انجام': 'explicit'}
     if m and c[side[m.group('s')]] is None and not IE_BARE_NOT.match(m.group('v')) and len(m.group('v').split()) >= 3 \
             and not IE_BARE_PROSE.search(fa(m.group('v'))):
+        log_fix('head', m.group('s') + ' ' + ' '.join(m.group('v').split()[:3]), m.group('s') + ': ' + ' '.join(m.group('v').split()[:3]))
         t = m.group('s') + ': ' + t[len(m.group('s')):].lstrip()
     if IE_START.match(t):            # «…؛ انجام و بمجرد بیعة رفع …»: the explicit after it, with no mark
         em = re.search(r'؛\s*انجام\s+(?P<v>[^:؛]{12,})$', t)
         if em and not IE_BARE_NOT.match(em.group('v')) and not IE_BARE_PROSE.search(fa(em.group('v'))):
+            log_fix('explicit', 'انجام ' + ' '.join(em.group('v').split()[:3]), 'انجام: ' + ' '.join(em.group('v').split()[:3]))
             t = t[:em.start()] + '؛ انجام: ' + em.group('v')
     return t
 
@@ -1066,6 +1097,8 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
         merged.append(l)
     rest = merged
     for l in rest:
+        global FIX_LINE
+        FIX_LINE = l.no
         t = ie_marked(c, l.text)
         if not t:
             continue
@@ -1075,7 +1108,7 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
                 parse_line_body(c, tail, hetero, None)
             continue
         parse_line_body(c, t, hetero, l.tag_at)
-    body = ' '.join(l.text for l in rest if l.text and not IE_START.match(ie_marked(new_copy(), l.text)))
+    body = ' '.join(l.text for l in rest if l.text and not IE_START.match(ie_marked(new_copy(), l.text, log=False)))
     leaves = BINDING_TEXT.sub(' ', body)
     for f, rx in FLAG_RULES:
         if rx.search(leaves if f == 'ruled' else body):
