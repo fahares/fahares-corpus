@@ -30,7 +30,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.3.1'
+PARSER_VERSION = '2.4.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -516,6 +516,9 @@ PHYS_LABEL = (r'(?:خط\s*:|کا\s*:|بی[‌ ]?کا\b|تا\s*:|بی[‌ ]?تا\
               r'جا\s*:|\d+\s*گ\b|\d+\s*برگ\b|\d+\s*ص\s*\(|کاتب\s*=)')
 # «کاتب: …» opens the copy's own line only at its start; after «نسخه اصل: …؛» it is the original's scribe
 PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')|^(?=کاتب\s*:)')
+# labels printed without their mark (2.4.0): «خط تحریری، بی‌کا، …» and «جلد دوم؛ کاتب: …، تا: …» open the copy's own line
+# too, the second only where no original copy was named before it
+PHYS_GROUP_LOOSE = re.compile(r'(?:^|؛\s*)(?=خط\s+[^،؛:]{2,25}،\s*(?:بی[‌ ]?کا|کا\s*:|کاتب\s*[:=])|کاتب\s*:\s*[^،؛]{2,60}،\s*(?:تا\s*:|بی[‌ ]?تا))')
 ORIG_RE = re.compile(r'^(?:نسخه\s+اصل[یی]?|اصل\s+نسخه)\s*:\s*(?P<v>.*)$')
 # the label inside a line: after a sentence («… در 627. نسخه اصل: …»), after «؛» in the physical description, or after
 # «برابر» of «آغاز و انجام: برابر», or glued to «است» by the OCR («نوشته استنسخه اصل:») (fahares step 14.141); not «متن اصل نسخه:», «آغاز: اصل نسخه:», «پایان نسخه اصل:» or «با نسخه اصل:» (collated with it), which quote or compare the text
@@ -719,6 +722,55 @@ def is_fragment(ch: str) -> bool:
     return len(ch.split()) <= 7 and ':' not in ch and not NOTE_VERB.search(ch) and not re.search(r'\d{3,4}\s*گ', ch)
 
 
+_MONTH = (r'(?:فروردین|اردیبهشت|خرداد|تیر|مرداد|شهریور|مهر|آبان|آذر|دی|بهمن|اسفند|محرم|صفر|ربیع\s*\S+|جمادی\s*\S+|جمیدی\s*\S+|'
+          r'رجب|شعبان|رمضان|شوال|ذی\s?\S+|ذو\s?\S+)')
+_WEEKDAY = r'(?:(?:یک|دو|سه|چهار|پنج)\s*[‌ ]?\s*شنبه|شنبه|جمعه|آدینه)'
+CENTURY_CHUNK = re.compile(r'^(?:(?:اواخر|اوایل|اواسط|حدود|نیمه\s+(?:اول|دوم))\s+)?(?:قرن|سده)\s*\d{1,2}(?:\s*(?:و|-|–|یا)\s*\d{1,2})?\s*(?:ق|قمری|هجری)?$')
+# a whole date with its year: «پنج‌شنبه 9 رجب 907», «رجب 1200ق», «10 جمادی الثانی 1074ق»
+DATE_CHUNK = re.compile(r'^(?:' + _WEEKDAY + r'\s+)?(?:\d{1,2}\s+)?(?:(?:از|ماه|شهر|غره|سلخ|اوایل|اواخر|اواسط|دهه\s+\S+)\s+)?' + _MONTH
+                        + r'(?:\s+(?:سال|سنه))?\s+\d{3,4}\s*(?:ق|ش|م|قمری|شمسی)?$')
+YEAR_CHUNK = re.compile(r'^(?P<y>\d{3,4})\s*(?:ق|قمری)?$')
+DIMS = r'[\d/]+\s*[×xX*]\s*[\d/]+(?:\s*[×xX*]\s*[\d/]+)?\s*(?:سم|سانتی\s*متر)?'
+BARE_LABELS = {'کاغذ': 'کاغذ', 'جلد': 'جلد', 'جا': 'جا', 'نوع جلد': 'جلد'}
+LINES_QUALIFIER = r'(?:متن|جمعاً|جمعا|مجموعاً|مجموعا|حدود|غالباً|غالبا|بعضاً|بعضا|اکثراً|اکثرا|معمولاً|معمولا|میانگین)'
+
+
+def is_date_chunk(ch: str) -> bool:
+    return bool(CENTURY_CHUNK.match(ch) or DATE_CHUNK.match(ch))
+
+
+def repair_chunk(ch: str) -> List[str]:
+    """A chunk whose label lost its mark or was misprinted, as the chunk(s) the catalogue meant (2.4.0): «بی‌کا تا قرن
+    13», «تا رجب 1200ق», «اندازه 11×17سم», «ادنازه: 14×22سم», «نوع جلد: تیماج», «: جلد تیماج», «29سط (10×20)», «19 س»."""
+    m = re.match(r'^بی[‌ ]?کا\s+(?P<r>بی[‌ ]?تا|تا\s*:?\s*\S.*)$', ch)
+    if m:
+        return ['بی‌کا'] + repair_chunk(m.group('r'))
+    m = re.match(r'^تا\s+(?P<v>\S.*)$', ch)
+    if m and (is_date_chunk(m.group('v')) or YEAR_CHUNK.match(m.group('v'))):
+        return ['تا: ' + m.group('v')]
+    m = re.match(r'^بی[‌ ]?تا\s*:\s*(?P<v>\S.*)$', ch)
+    if m and is_date_chunk(m.group('v')):
+        return ['بی‌تا (' + m.group('v') + ')']
+    if re.match(r'^بی\s*کاتب$', ch):
+        return ['بی‌کا']
+    m = re.match(r'^«?(?:اندازه|ادنازه|انداز|اندزه|اندازده)(?:\s+جلد)?\s*:?\s*(?P<v>' + DIMS + r')$', ch)
+    if m:
+        return ['اندازه: ' + m.group('v')]
+    m = re.match(r'^(?:نوع\s+جلد\s*:|:\s*جلد)\s*(?P<v>\S.*)$', ch)
+    if m:
+        return ['جلد: ' + m.group('v')]
+    m = re.match(r'^:\s*کاغذ\s+(?P<v>\S.*)$', ch)
+    if m:
+        return ['کاغذ: ' + m.group('v')]
+    m = re.match(r'^تعداد\s+(?:صفحات|برگ‌ها|اوراق)\s*:\s*(?P<v>\d.*)$', ch)
+    if m:
+        return [m.group('v')]
+    m = re.match(r'^(?P<q>' + LINES_QUALIFIER + r'\s+)?(?P<n>\d+(?:\s*[-–]\s*\d+)?)\s*(?:سطری|سط|س)(?=\s*\(|\s*$)(?P<r>.*)$', ch)
+    if m:
+        return [(m.group('q') or '') + m.group('n') + ' سطر' + m.group('r')]
+    return [ch]
+
+
 GLUED_LEAVES = re.compile(r'\s+(?P<v>\d[\d/]*\s*(?:گ|برگ|ص)(?:\s*\([^()]*\))?)\s*$')
 WEEKDAY = re.compile(r'(?:یک|دو|سه|چهار|پنج)\s*[‌ ]?\s*شنبه|شنبه|جمعه|آدینه')
 
@@ -727,15 +779,30 @@ def parse_physical(c, text: str):
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
         last = None
-        for chunk in lines_apart(split_outside(group, '،')):
+        pending = None               # a label printed as a chunk of its own («کاغذ ،اصفهانی»): the next chunk is its value
+        chunks = [r for chunk in lines_apart(split_outside(group, '،')) if chunk for r in repair_chunk(chunk.strip(' .'))]
+        for chunk in chunks:
             if not chunk:
                 continue
             ch = chunk.strip(' .')
+            if pending:
+                if not re.match(r'^[^:،؛]{1,14}:', ch):
+                    ch = pending + ': ' + ch
+                pending = None
+            elif ch in BARE_LABELS:
+                pending = BARE_LABELS[ch]
+                continue
             lm = re.match(r'^[^:؛،]{1,12}(?::|$)', ch)          # a label printed with Arabic letter forms («كا:»، «بى‌تا»)
             if lm and re.search('[كيى]', lm.group(0)):
                 ch = fa(ch[:lm.end()]) + ch[lm.end():]
             m = re.match(r'^خط\s*:\s*(?P<v>.*)$', ch)
             if m:
+                c['script_raw'] = m.group('v').strip()
+                c['scripts'] = parse_scripts(c['script_raw'])
+                last = 'script'
+                continue
+            m = re.match(r'^خط\s+(?P<v>[^:]{2,40})$', ch) if c['script_raw'] is None and 'چلیپا' not in ch else None
+            if m and (any(s['type'] for s in parse_scripts(m.group('v'))) or len(m.group('v').split()) <= 3):
                 c['script_raw'] = m.group('v').strip()
                 c['scripts'] = parse_scripts(c['script_raw'])
                 last = 'script'
@@ -781,9 +848,11 @@ def parse_physical(c, text: str):
             if last == 'folios' and re.match(r'^\([^()]*\d[^()]*\)$', ch):
                 c['folios'] += ' ' + ch
                 continue
-            m = re.match(r'^(?:(?:متن|جمعاً|جمعا|حدود)\s+)?(?P<n>\d+(?:\s*(?:[-–+]|و|تا|یا)\s*\d+)*\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
+            m = re.match(r'^(?:(?P<q>' + LINES_QUALIFIER + r')\s+)?(?P<n>\d+(?:\s*(?:[-–+]|و|تا|یا)\s*\d+)*\s*سطر)\s*(?:\((?P<d>[^)]*)\))?\s*(?P<r>.*)$', ch)
             if m:
                 c['lines'] = m.group('n')
+                if m.group('q') and m.group('q') not in ('متن', 'جمعاً', 'جمعا', 'حدود'):
+                    c['lines_note'] = m.group('q')       # «غالباً 20 سطر»، «میانگین 15 سطر» (2.4.0)
                 if m.group('d'):
                     c['text_dimensions'] = m.group('d')
                 r = m.group('r').strip()
@@ -794,10 +863,12 @@ def parse_physical(c, text: str):
                     c['lines_note'] = r
                 last = None
                 continue
-            if re.search(r'سطور\s+چلیپا|چلیپایی|مختلف\s*السطر|مختلف\s*السطور', ch):
-                dm = re.search(r'\s*\(([\d/\s×x*]+)\)$', ch)
+            # «چلیپا», «سطور راسته و چلیپا», «چلیپا (10×15)», «چلیپا ابعاد متن: 10×15» (2.4.0: every short chunk of it)
+            if re.search(r'سطور\s+چلیپا|چلیپایی|مختلف\s*السطر|مختلف\s*السطور', ch) \
+                    or ('چلیپا' in ch and len(ch.split()) <= 6 and not NOTE_VERB.search(ch)):
+                dm = re.search(r'\s*(?:\(([\d/\s×x*]+)\)|ابعاد\s+متن\s*:\s*([\d/\s×x*]+))$', ch)
                 if dm:
-                    c['text_dimensions'], ch = c['text_dimensions'] or dm.group(1).strip(), ch[:dm.start()].strip()
+                    c['text_dimensions'], ch = c['text_dimensions'] or (dm.group(1) or dm.group(2)).strip(), ch[:dm.start()].strip()
                 c['lines_note'], last = ch, None
                 continue
             hit = False
@@ -845,6 +916,27 @@ def parse_physical(c, text: str):
                 elif re.match(r'^در\s+(?:زمان\s+)?(?:حیات|زندگی|زمان)\s+(?:مؤلف|مولف|مصنف|ناظم|شارح)', ch):
                     c['copy_date']['note'] = ch
                     continue
+            # a size with its unit and no label, where the copy has none («…، 15 سطر (169×6/5)، 13×22سم») (2.4.0)
+            if c['dimensions'] is None and re.match(r'^' + DIMS + r'$', ch) and re.search(r'سم|سانتی', ch):
+                c['dimensions'], last = ch, 'dimensions'
+                continue
+            # a date with no «تا:» after the scribe or the script («کاتب = مؤلف، قرن 11ق», «کا: …، 1147») is the copy's;
+            # after «بی‌تا» it is the cataloguer's estimate, as «بی‌تا (قرن 13)» is (2.4.0)
+            # ...and so is a date that is a whole «؛» group of its own («بی‌تا؛ اوایل قرن 14؛»). A date after an owner, a
+            # donor or an acquisition stays theirs.
+            alone = last is None and len(chunks) == 1
+            if c['copy_date'] is None and ((is_date_chunk(ch) and (last in ('scribe', 'bika', 'bita', 'script') or alone))
+                                           or (last in ('scribe', 'bika') and (ym := YEAR_CHUNK.match(ch)) and 600 <= int(ym.group('y')) <= 1450)):
+                if c['undated']:
+                    if last == 'bita' or (alone and CENTURY_CHUNK.match(ch) and not any(n['type'] == 'date_guess' for n in c['notes'])):
+                        c['notes'].append({'type': 'date_guess', 'text': ch, 'hedge': None})
+                        continue
+                else:
+                    v, h = split_hedge(ch)
+                    cent, sort_y, _ = parse_date_triad(v)
+                    c['copy_date'] = {'raw': v, 'hedge': h, 'century': cent, 'sort_year': sort_y}
+                    last = 'date'
+                    continue
             m = COMMISSION_RE.match(ch)
             if m and last in ('place', 'date', 'scribe'):
                 c['commissioned_by'], last = m.group('v').strip(), None
@@ -870,7 +962,8 @@ def parse_physical(c, text: str):
             if last in ('bika', 'bita') and h:
                 c['notes'].append({'type': 'scribe_guess' if last == 'bika' else 'date_guess', 'text': v, 'hedge': h})
                 continue
-            if last in ('paper', 'binding') and not re.search(r':', ch) and len(ch.split()) <= 4:
+            if last in ('paper', 'binding') and not re.search(r':', ch) and len(ch.split()) <= 4 \
+                    and not re.match(r'^(?:جلد|کاغذ)\s+\S', ch):       # «کاغذ ،اصفهانی، جلد مقوا»: the binding's own chunk
                 c[last] += '، ' + ch
                 continue
             if last == 'folios' and re.match(r'^\d+\s*[-–]\s*\d+$', ch):
@@ -900,6 +993,32 @@ def parse_physical(c, text: str):
                 continue
             c['notes'].append({'type': 'remark', 'text': ch, 'hedge': h})
             last = None
+
+
+IE_BOTH_BENT = re.compile(r'^(?:آغاز|آغا|آخا)\s+و\s+انجامک?\s*:?\s*(?=برابر)')
+IE_BARE = re.compile(r'^(?P<s>آغاز|انجام)\s+(?P<v>[^:]{12,})$')
+# what a description of the copy's state says, not the text itself: «آغاز در دیباچه و انجام در فصل 118 افتاده»
+IE_BARE_PROSE = re.compile(r'افتاد|ندارد|(?:^|\s)(?:دارد|ناقص|است|نیست|شده|می‌شود|تا|برگ|صفحه|شماره)(?:\s|$)|انجام\s+در\s|^(?:در|از\s+حرف|نمط|مانند|همان)\s')
+IE_BARE_NOT = re.compile(r'^(?:نسخه|کتاب|متن|رساله|جلد|دفتر|هر|آن|این|افتاده|افتادگی|ناقص|ندارد|موجود|ناتمام|تا|و\s+انجام|'
+                         r'از\s+(?:باب|فصل|جلد|کتاب|مقاله|بخش|قسمت|اول|میان|وسط))(?:\s|$)')
+
+
+def ie_marked(c, t: str) -> str:
+    """An incipit or explicit line printed without its «:», or with a bent label, as the line the catalogue meant
+    (2.4.0): «آغاز و انجام برابر», «آغا و انجام: برابر», «آغاز حمد بیحد خدای را …؛ انجام یا اخیار …»."""
+    if not t:
+        return t
+    t = IE_BOTH_BENT.sub('آغاز و انجام: ', t, count=1)
+    m = IE_BARE.match(t.split('؛')[0]) if not IE_START.match(t) else None
+    side = {'آغاز': 'incipit', 'انجام': 'explicit'}
+    if m and c[side[m.group('s')]] is None and not IE_BARE_NOT.match(m.group('v')) and len(m.group('v').split()) >= 3 \
+            and not IE_BARE_PROSE.search(fa(m.group('v'))):
+        t = m.group('s') + ': ' + t[len(m.group('s')):].lstrip()
+    if IE_START.match(t):            # «…؛ انجام و بمجرد بیعة رفع …»: the explicit after it, with no mark
+        em = re.search(r'؛\s*انجام\s+(?P<v>[^:؛]{12,})$', t)
+        if em and not IE_BARE_NOT.match(em.group('v')) and not IE_BARE_PROSE.search(fa(em.group('v'))):
+            t = t[:em.start()] + '؛ انجام: ' + em.group('v')
+    return t
 
 
 def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
@@ -947,7 +1066,7 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
         merged.append(l)
     rest = merged
     for l in rest:
-        t = l.text
+        t = ie_marked(c, l.text)
         if not t:
             continue
         if IE_START.match(t):
@@ -956,7 +1075,7 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
                 parse_line_body(c, tail, hetero, None)
             continue
         parse_line_body(c, t, hetero, l.tag_at)
-    body = ' '.join(l.text for l in rest if l.text and not IE_START.match(l.text))
+    body = ' '.join(l.text for l in rest if l.text and not IE_START.match(ie_marked(new_copy(), l.text)))
     leaves = BINDING_TEXT.sub(' ', body)
     for f, rx in FLAG_RULES:
         if rx.search(leaves if f == 'ruled' else body):
@@ -1007,6 +1126,8 @@ def parse_line_body(c, t: str, hetero: bool, tag_at: Optional[int]):
     for gm in PHYS_GROUP_START.finditer(fa(t)):            # «كا:» is «کا:» (fa keeps every offset)
         m = gm
         break
+    if m is None and (gm := PHYS_GROUP_LOOSE.search(fa(t))) and not re.search(r'نسخه\s+اصل|اصل\s+نسخه', t[:gm.start()]):
+        m = gm
     if m is None:
         om = ORIG_RE.match(t)
         if om:
