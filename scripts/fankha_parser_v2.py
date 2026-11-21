@@ -17,6 +17,7 @@ Main differences from v1:
 
 Usage: fankha_parser_v2.py [VOL ...]   (default: all 34 volumes; writes json/fankha_v2/)
 """
+import hashlib
 import json
 import os
 import re
@@ -30,7 +31,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.4.0'
+PARSER_VERSION = '2.5.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -793,13 +794,69 @@ GLUED_LEAVES = re.compile(r'\s+(?P<v>\d[\d/]*\s*(?:گ|برگ|ص)(?:\s*\([^()]*\)
 WEEKDAY = re.compile(r'(?:یک|دو|سه|چهار|پنج)\s*[‌ ]?\s*شنبه|شنبه|جمعه|آدینه')
 
 
+CONTINUES: Optional[Dict[str, str]] = None      # note id (sha1 of its text, 12 hex) → the field a model read it as the rest of
+# the field's name in the decisions → the parser's `last` after that field's value. A second scribe waits for its own
+# step; lines, folios, a size and the incipit and explicit are not read here.
+CONT_LAST = {'date': 'date', 'binding': 'binding', 'paper': 'paper', 'place': 'place', 'ownership': 'ownership',
+             'seal': 'seals', 'endowment': 'donor'}
+MORE_DATES = re.compile(r'^(?:\d{3,4}\s*(?:ق|ش|م)?)(?:\s*(?:و|-|–)\s*\d{3,4}\s*(?:ق|ش|م)?)*$')
+
+
+def continues(ch: str) -> Optional[str]:
+    global CONTINUES
+    if CONTINUES is None:
+        CONTINUES = {}
+        path = os.path.join(ROOT, 'reconciliations', 'fankha_note_types.jsonl')
+        if os.path.exists(path):
+            for line in open(path, encoding='utf-8'):
+                if '"c"' in line:
+                    r = json.loads(line)
+                    CONTINUES[r['id']] = r['c']
+    return CONT_LAST.get(CONTINUES.get(hashlib.sha1(ch.encode()).hexdigest()[:12]))
+
+
+def join_field(c, field: str, ch: str) -> bool:
+    """The piece joins the field whose value it stands right after (2.5.0)."""
+    # another field run on with no mark («کاغذ: دولت، آبادی جلد مقوایی…», «واقف: …، 25 دی 1368. کاغذ: نخودی») is a slip of
+    # the text, to be put right there
+    if field in ('paper', 'donor', 'place') and re.search(r'(?:جلد|کاغذ|خط)\s*:|(?:^|\s)جلد\s|\d\s*(?:گ|ص)(?:\s|$)|[\[\]]', ch):
+        return False
+    if re.search(r'\d\s*سطر|اندازه\s*:', ch):          # «جلد: تیماج، مشکی 24 سطر (14×24) اندازه: 19×32 سم»
+        return False
+    if field == 'date':
+        d = c['copy_date']
+        if not d:
+            return False
+        bare = re.sub(r'\s*\([^()]*\)\s*$', '', ch)
+        # a second date after a dated one: «تا: 1072، 1092», «تا: 10 صفر 1352ق، خرداد 1312ش»; the first still dates the
+        # copy (century and year stay). After a century alone it is a remark, or the year would stand for the copy's:
+        # «تا: قرن 11، 1226ق (تاریخ نونویسی)»
+        if (is_date_chunk(bare) or MORE_DATES.match(bare)) and re.search(r'\d{3,4}', d['raw']):
+            d['raw'] += '، ' + ch
+        else:                                                   # «تا: قرن 12، در عصر مؤلف»
+            d['note'] = (d['note'] + '، ' if d.get('note') else '') + ch
+    elif field == 'place':
+        if not c['copy_place']:
+            return False
+        c['copy_place']['v'] += '، ' + ch
+    elif field in LIST_FIELDS:
+        if not c[field]:
+            return False
+        c[field][-1] += '، ' + ch
+    else:
+        if not c[field]:
+            return False
+        c[field] += '، ' + ch
+    return True
+
+
 def parse_physical(c, text: str):
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
-        last = None
+        carry, last = last, None     # the field the group before ended on
         pending = None               # a label printed as a chunk of its own («کاغذ ،اصفهانی»): the next chunk is its value
         chunks = [r for chunk in lines_apart(split_outside(group, '،')) if chunk for r in repair_chunk(chunk.strip(' .'))]
-        for chunk in chunks:
+        for ci, chunk in enumerate(chunks):
             if not chunk:
                 continue
             ch = chunk.strip(' .')
@@ -1010,6 +1067,12 @@ def parse_physical(c, text: str):
                     c['donor'] += '، ' + ch
                 elif c[last]:
                     c[last][-1] += '، ' + ch
+                continue
+            # a piece a model read as the rest of a field, standing right after that field's value (in its group, or
+            # opening the next one: «کاغذ: شکری؛ فرنگی»), is that field's (2.5.0)
+            at = last or (carry if ci == 0 else None)
+            if at and continues(ch) == at and join_field(c, at, ch):
+                last = at
                 continue
             c['notes'].append({'type': 'remark', 'text': ch, 'hedge': h})
             last = None
