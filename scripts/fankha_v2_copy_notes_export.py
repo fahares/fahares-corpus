@@ -3,7 +3,9 @@
 Each v2 copy is matched to the site's copy by its text (raw_text, normalised as the comparison does): a text one site
 copy and one v2 copy hold. The copy's notes come from:
   - v2's `notes`, with the type a model read (reconciliations/fankha_note_types.jsonl); a piece the model read as the
-    cut-off rest of a field is left out; a text the file lacks keeps v2's rule type;
+    cut-off rest of a field, which the parser could not join to that field, is kept under the type nearest the
+    field (CONTINUES; the incipit, the explicit, the title and the author as other), unless it has fewer than four
+    letters; a text the file lacks keeps v2's rule type;
   - v2's labelled fields: seals («مهر:») as seal, ownership («تملک:») as ownership, acquisition («اهدایی: …»،
     «خریداری …») as acquisition, donor («واقف:») as endowment, and the three the site has no column for:
     copy_description as description, contents_scope as scope, defects («افتادگی:») as defect; typed_by is "field".
@@ -22,6 +24,11 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from fankha_v2_db_compare import query, rkey  # noqa: E402
 from fankha_v2_fill_columns_export import letters  # noqa: E402
 
+# the note type of a piece a model read as the rest of a field and the parser could not join to it
+CONTINUES = {'ownership': 'ownership', 'seal': 'seal', 'endowment': 'endowment', 'acquisition': 'acquisition',
+             'binding': 'codicology', 'paper': 'codicology', 'dimensions': 'codicology', 'lines': 'codicology',
+             'folios': 'codicology', 'script': 'transcription', 'scribe': 'transcription', 'date': 'transcription',
+             'place': 'transcription'}
 CITE = re.compile(r'\s*\[[^\[\]]*\]\s*\.?\s*$')
 FIELDS = (('seals', 'seal'), ('ownership', 'ownership'), ('acquisition', 'acquisition'), ('donor', 'endowment'),
           ('copy_description', 'description'), ('contents_scope', 'scope'), ('defects', 'defect'))
@@ -60,15 +67,22 @@ def main():
                     continue
                 t = types.get(hashlib.sha1(n['text'].encode()).hexdigest()[:12])
                 if t and 'c' in t:
-                    counts['pieces that continue a field, left out'] += 1
-                    continue
-                if t:
+                    # parser v2.5.0 joins such a piece to its field where it stands right after the field's value. One
+                    # still among the notes is kept for a reviewer, under the type nearest its field (step 14.289)
+                    if len(letters(n['text'])) < 4:
+                        counts['pieces that continue a field, too short, left out'] += 1
+                        continue
+                    counts['pieces that continue a field, kept as notes'] += 1
+                    note = {'type': CONTINUES.get(t['c'], 'other'), 'text': n['text'], 'typed_by': 'opus' if t.get('m') else 'sonnet'}
+                elif t:
                     note = {'type': t['t'], 'text': n['text'], 'typed_by': 'opus' if t.get('m') else 'sonnet'}
                     for a, b in (('a', 'also'), ('ba', 'by_author'), ('bh', 'by_author_hedge'), ('h', 'hedge')):
                         if t.get(a):
                             note[b] = t[a]
                 else:
-                    note = {'type': n['type'], 'text': n['text'], 'typed_by': 'rule'}
+                    # the parser's own guess types are the site's «کتابت»
+                    note = {'type': {'date_guess': 'transcription', 'scribe_guess': 'transcription'}.get(n['type'], n['type']),
+                            'text': n['text'], 'typed_by': 'rule'}
                     counts['notes typed by the rule'] += 1
                 notes.append(note)
             for field, typ in FIELDS:
