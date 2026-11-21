@@ -8,7 +8,7 @@ fankha_label_fixes_step14_282.jsonl), where its old text stands exactly once. A 
 it was made and the result reads as v2's new text; one with scripts and no «خط:» line is left (the site command would
 empty its scripts). Output: a decision file for `fahares:rebuild-copies`.
 
-Usage: fankha_label_fixes_site_export.py --before scratch/fankha_v2_240 --copies FILE [--db fahares_prod]
+Usage: fankha_label_fixes_site_export.py --before scratch/fankha_v2_240 --copies FILE [--step 14.302] [--db fahares_prod]
 """
 import argparse
 import glob
@@ -30,9 +30,11 @@ def main():
     ap.add_argument('--before', required=True)
     ap.add_argument('--copies', required=True)
     ap.add_argument('--db', default='fahares_prod')
+    ap.add_argument('--step', default='14.282', help="the step whose log of fixes is applied (reconciliations/fankha_label_fixes_step<N>.jsonl)")
     args = ap.parse_args()
+    log = f"fankha_label_fixes_step{args.step.replace('.', '_')}.jsonl"
     fixes = defaultdict(list)
-    for r in map(json.loads, open(ROOT / 'reconciliations/fankha_label_fixes_step14_282.jsonl', encoding='utf-8')):
+    for r in map(json.loads, open(ROOT / 'reconciliations' / log, encoding='utf-8')):
         fixes[r['vol']].append(r)
     changed, old_count = {}, Counter()          # old text key -> (new text, the copy's fixes)
     for f in sorted(glob.glob(str(ROOT / 'json/fankha_v2/*.json'))):
@@ -75,7 +77,7 @@ def main():
             records.append({'table': 'manuscripts', 'id': rows[0]['id'], 'shelfmark': rows[0]['shelfmark'], 'category': 'text', 'v2': 'label fixes',
                             'changes': {'raw_text': {'from': rows[0]['raw'], 'to': raw}}})
             counts['copies'] += 1
-    src = f"raw_text after the label fixes of the Fankha text (fankha_label_fixes_step14_282.jsonl), {date.today()}; fahares step 14.282"
+    src = f"raw_text after the label fixes of the Fankha text ({log}), {date.today()}; fahares step {args.step}"
     json.dump({'source': src, 'records': records}, open(args.copies, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{len(changed)} v2 copies changed; {dict(counts)}', file=sys.stderr)
 

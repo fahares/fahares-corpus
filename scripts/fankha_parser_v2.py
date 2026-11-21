@@ -31,7 +31,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.6.0'
+PARSER_VERSION = '2.7.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -767,6 +767,20 @@ def _repair_chunk(ch: str) -> List[str]:
     m = re.match(r'^تا\s+(?P<v>\S.*)$', ch)
     if m and (is_date_chunk(m.group('v')) or YEAR_CHUNK.match(m.group('v'))):
         return ['تا: ' + m.group('v')]
+    # «کاغذ: دولت آبادی نخودی جلد تیماج مشکی», «کاغذ سپاهانی جلد: تیماج»: the binding run on with no «،»
+    m = re.match(r'^کاغذ\s*:?\s*(?P<p>[^:،؛]{2,40}?)\s+جلد\s*:?\s*(?P<b>[^:]{2,})$', ch)
+    if m and not re.search(r'(?:^|\s)و$', m.group('p')):        # not «کاغذ و جلد: …», which speaks of both
+        return ['کاغذ: ' + m.group('p'), 'جلد: ' + m.group('b')]
+    # «348گ 21 سطر (10×21)», «99گ 15 سطر»: the leaves and the lines with no «،»
+    m = re.match(r'^(?P<f>\d[\d/]*\s*(?:گ|برگ|ص)(?:\s*\([^()]*\))?)\s+(?P<l>\d+(?:\s*[-–]\s*\d+)?\s*سطر(?:\s*\([^()]*\))?)$', ch)
+    if m:
+        return [m.group('f'), m.group('l')]
+    m = re.match(r'^کا\s+(?P<v>[^\d:=]{5,})$', ch)
+    if m and len(m.group('v').split()) >= 2 and not NOTE_VERB.search(re.sub(r'(?:^|\s)میر\S*', ' ', m.group('v'))):
+        return ['کا: ' + m.group('v')]
+    m = re.match(r'^تا\s+(?P<h>احتمالاً|احتمالا|حدود(?:\s+سال)?|ظاهراً|گویا)\s+(?P<v>\S.*)$', ch)      # «تا حدود سال 1103ق»
+    if m and (is_date_chunk(m.group('v')) or YEAR_CHUNK.match(m.group('v'))):
+        return ['تا: ' + m.group('h') + ' ' + m.group('v')]
     m = re.match(r'^بی[‌ ]?تا\s*:\s*(?P<v>\S.*)$', ch)
     if m and is_date_chunk(m.group('v')):
         return ['بی‌تا (' + m.group('v') + ')']
@@ -945,7 +959,35 @@ def join_scribe(c, ch: str) -> bool:
     return True
 
 
+SHIFT_WORD = r'(?:زیبا|خوش|خوب|تحریری|عالی|ممتاز|متوسط|پخته|جلی|خفی|ریز|درشت|کوچک|بزرگ)'
+# «خط: نسخ ،خوش بی‌کا», «کا: محمد تقی ،آشتیانی تا 15 ربیع الثانی 1266ق», «جلد تیماج ،مشکی 348گ»: the «،» stands one word
+# early, before the last word of the value instead of after it
+SHIFTED = re.compile(r'(?P<w>[^\s،؛:]+)(?P<k>:)? ،(?P<b>[^\s،؛:]+(?:\s(?!بی[‌ ]?کا|تا\s|کا\s|جلد\s)[^\s،؛:\d]+)?)(?P<c>:)?\s+'
+                     r'(?=(?:بی[‌ ]?کا(?:\s|$|،|؛)|تا\s*:?\s*\S|کا\s+\S|جلد\s*:?\s*\S|\d[\d/]*\s*(?:گ|ص|برگ|سطر)))')
+SHIFTED_WORD = re.compile(r'(?P<w>[^\s،؛:]+) ،(?P<b>' + SHIFT_WORD + r')(?=\s*[،؛]|\s*$)')
+SHIFT_LABELS = ('کاغذ', 'جلد', 'کا', 'خط', 'جا')
+
+
+def unshift(text: str) -> str:
+    """The physical line with each «،» that stands one word early put after that word (2.7.0); every place is logged
+    for the text file."""
+    def moved(m):
+        # «خط: نسخ کا ،شهدی …»: a label with no «،» before it either is left as it is
+        if m.group('w') in SHIFT_LABELS and m.string[:m.start()].rstrip()[-1:] not in ('', '،', '؛'):
+            return m.group(0)
+        new = (m.group('w') + (': ' if m.group('w') in SHIFT_LABELS else ' ') + m.group('b') + '، ')
+        log_fix('chunk', m.group(0).strip(), new.strip())
+        return new
+
+    def joined(m):
+        new = m.group('w') + (': ' if m.group('w') in SHIFT_LABELS else ' ') + m.group('b')
+        log_fix('chunk', m.group(0), new)
+        return new
+    return SHIFTED_WORD.sub(joined, SHIFTED.sub(moved, text))
+
+
 def parse_physical(c, text: str):
+    text = unshift(text)
     last = None                      # the field an unlabelled chunk may continue
     for gi, group in enumerate(split_outside(text, '؛')):
         carry, last = last, None     # the field the group before ended on
@@ -1136,6 +1178,10 @@ def parse_physical(c, text: str):
                 continue
             if last in ('paper', 'binding') and not re.search(r':', ch) and len(ch.split()) <= 4 \
                     and not re.match(r'^(?:جلد|کاغذ)\s+\S', ch):       # «کاغذ ،اصفهانی، جلد مقوا»: the binding's own chunk
+                lm = GLUED_LEAVES.search(ch)                           # «جلد: تیماج، قهوه ای 4گ»
+                if lm and lm.start() > 0:
+                    c['folios'] = c['folios'] or lm.group('v').strip()
+                    ch = ch[:lm.start()].strip()
                 c[last] += '، ' + ch
                 continue
             if last == 'folios' and re.match(r'^\d+\s*[-–]\s*\d+$', ch):

@@ -8,9 +8,10 @@ The parser (v2.4.0) finds each place while it reads a copy: «بی‌کا تا �
 «… سطر», «کاغذ ،اصفهانی» → «کاغذ: اصفهانی», «خط تحریری» → «خط: تحریری», «آغا و انجام: برابر» and «آغاز و انجام برابر» →
 «آغاز و انجام: برابر», «آغاز …» and «؛ انجام …» with no «:». Only the label and its mark change; every word of the
 value stays as printed. A place whose old text is not found exactly once on its line is reported and left.
-Each change is written to reconciliations/fankha_label_fixes_step14_282.jsonl ({vol, line, old, new}).
+Each change is written to reconciliations/fankha_label_fixes_step<N>.jsonl ({vol, line, old, new}), the file of the step
+that ran it (LOG): step 14.282 the first 703, step 14.302 the shifted commas and the run-on paper and binding.
 
-Usage: fankha_label_fixes.py [--apply] [VOL ...]
+Usage: fankha_label_fixes.py [--apply] [--all] [VOL ...]   (--all lists every place of a dry run)
 """
 import json
 import re
@@ -22,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 import fankha_parser_v2 as P  # noqa: E402
 
-LOG = ROOT / 'reconciliations' / 'fankha_label_fixes_step14_282.jsonl'
+LOG = ROOT / 'reconciliations' / 'fankha_label_fixes_step14_302.jsonl'      # the step whose fixes a run adds; step 14.282's are in their own file
 
 
 def pattern(kind, old, new):
@@ -73,7 +74,7 @@ def main(argv):
             for r in records:
                 f.write(json.dumps(r, ensure_ascii=False) + '\n')
     print(f"{'Fixed' if apply else 'Would fix'} {len(records)} places {dict(kinds)}; {len(missed)} not found on their line", file=sys.stderr)
-    for r in records[:0 if apply else 40]:
+    for r in records[:0 if apply else (None if '--all' in argv else 40)]:
         print(r['vol'], r['line'], '|', r['old'], '→', r['new'])
     for m in missed[:25]:
         print('MISSED', *m, file=sys.stderr)
