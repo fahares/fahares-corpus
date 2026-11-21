@@ -31,7 +31,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.5.0'
+PARSER_VERSION = '2.6.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -815,6 +815,11 @@ def continues(ch: str) -> Optional[str]:
     return CONT_LAST.get(CONTINUES.get(hashlib.sha1(ch.encode()).hexdigest()[:12]))
 
 
+def continued_field(ch: str) -> Optional[str]:
+    continues(ch)
+    return CONTINUES.get(hashlib.sha1(ch.encode()).hexdigest()[:12])
+
+
 def join_field(c, field: str, ch: str) -> bool:
     """The piece joins the field whose value it stands right after (2.5.0)."""
     # another field run on with no mark («کاغذ: دولت، آبادی جلد مقوایی…», «واقف: …، 25 دی 1368. کاغذ: نخودی») is a slip of
@@ -847,6 +852,96 @@ def join_field(c, field: str, ch: str) -> bool:
         if not c[field]:
             return False
         c[field] += '، ' + ch
+    return True
+
+
+SCRIBE_PART = r'(?:بخش|نیمه|جزء|جزو|جلد)\s+\S+'
+SCRIBE_LEAD = re.compile(r'^(?:و\s+)?(?:' + SCRIBE_PART + r'\s*:?\s*|(?:ما\s*)?بقی[هی]?\s+(?:نیز\s+)?)?(?:به\s+(?:خط|قلم)\s+)?(?:(?:نسخ|نستعلیق)\s+)?')
+SCRIBE_DATED = re.compile(r'^(?P<n>.+?)\s+(?P<d>(?:در|به[\s‌]*سال|به\s+تاریخ|سال|از)\s+.*\d.*)$')
+SCRIBE_PORTION = re.compile(r'جزء|جزو|جلد|بخش|کتاب|پایان|آخر|نیمه|(?:^|\s)تا\s|^کاتب\s|سوره|مشیخه')
+SCRIBE_SAME = re.compile(r'^(?:ابن|بن|فرزند|پسر|ولد|سبط|نجل)\s')
+SCRIBE_ABOUT = re.compile(r'^(?:(?:و\s+)?\S+(?:\s\S+)?\s+(?:ال)?(?:مسکن|مولد|اصل)(?:\s|$)|ساکن|از\s+(?:دهات|اهالی|شاگردان|نوادگان|طایفه)|که\s|مشهور\s+به|ملقب\s+به|معروف\s+به|متخلص\s+به)')
+SCRIBE_NOT = re.compile(r'عکس|قطعه|نامه|ادامه|دستور|تمامی|چند\s+کاتب|همه\s+به|[\[\]«»]|(?:^|\s)تا\s*:?\s*(?:\S+\s+){0,3}\d|:')
+SCRIBE_HEDGE = re.compile(r'\s*\((گویا|احتمالاً|احتمالا|ظاهراً|ظاهرا|؟|\?)\)$|\s*([؟?])$')
+
+
+def scribe_list(c) -> bool:
+    """A list of hands, as an album of calligraphy has: «کا: احمد نیریزی در 1134ق، محمد شفیع حسینی، درویش عبدالمجید…»"""
+    return len(c['scribes']) > 1 or bool(re.search(r'\sدر\s+\d{3,4}', c['scribes'][-1]['name']))
+
+
+def join_scribe(c, ch: str) -> bool:
+    """A piece a model read as the rest of the scribe, standing after a scribe or the date that follows one (2.6.0):
+    the copy's next scribe, more of the last scribe's name, or a remark on him. What is not clearly one of these
+    stays a note."""
+    last = c['scribes'][-1]
+    bare = re.sub(r'\s*\([^()]*\)\s*$', '', ch)
+    if not PERSIAN_LETTER.search(ch) or len(ch) < 3:
+        return False
+    if is_date_chunk(bare) or MORE_DATES.match(bare):                  # «…(پایان سوره نساء)، شعبان 1039ق»: his date
+        last['note'] = (last['note'] + '، ' if last.get('note') else '') + ch
+        return True
+    # «…(جزء دوم)، سه‌شنبه ششم جمادی الاول 865», «…، سال 1255», «…، در نجف اشرف»: when and where he wrote
+    if re.match(r'^(?:' + _WEEKDAY + r'\s|سال\s+\d|در\s|ظاهراً\s+در\s)', ch) and not SCRIBE_NOT.search(ch):
+        last['note'] = (last['note'] + '، ' if last.get('note') else '') + ch
+        return True
+    if SCRIBE_ABOUT.match(ch):                                         # «ساکن قریه کلنکانه»
+        last['note'] = (last['note'] + '، ' if last.get('note') else '') + ch
+        return True
+    if SCRIBE_SAME.match(ch):                                          # «…، ابن ابوطالب بن کربلائی اسماعیل»
+        last['name'] += '، ' + ch
+        return True
+    lead = SCRIBE_LEAD.match(ch)
+    body = ch[lead.end():].strip()
+    # «میر علی کاتب», «میرزا حسن» are names, not «می…» verbs
+    if not body or SCRIBE_NOT.search(body.split('(')[0]) or NOTE_VERB.search(re.sub(r'(?:^|\s)میر\S*', ' ', body)) or re.match(r'^\d', body):
+        return False
+    hedge = None
+    hm = SCRIBE_HEDGE.search(body)
+    if hm:
+        hedge, body = hm.group(1) or hm.group(2), body[:hm.start()].strip()
+    portion = remark = None
+    pm = re.match(r'^(?P<n>.*?)\s*\((?P<p>[^()]*)\)\s*(?P<r>.*)$', body)
+    if pm and pm.group('n'):
+        body, inner = (pm.group('n') + ' ' + pm.group('r')).strip(), pm.group('p').strip()
+        if SCRIBE_PORTION.search(inner):
+            portion = inner
+        else:
+            remark = inner
+    part = re.match(r'^(?:و\s+)?(' + SCRIBE_PART + r')', ch)
+    if part and not portion:
+        portion = part.group(1).rstrip(' :')
+    note = None
+    dm = SCRIBE_DATED.match(body)
+    if dm:
+        body, note = dm.group('n').strip(), dm.group('d').strip()
+    elif re.search(r'\d|قرن', body):                 # «سید محمد حسینی 27 محرم 1092ق»: the date with no «در»
+        words = body.split()
+        for i in range(1, len(words)):
+            tail = ' '.join(words[i:])
+            if is_date_chunk(tail) or MORE_DATES.match(tail):
+                body, note = ' '.join(words[:i]), tail
+                break
+        else:
+            return False
+    if not body or len(body.split()) > 12 or re.search(r'\d', body):
+        return False
+    # «کا: رفسنجانی، یوسف (گویا)», «کا: استرآبادی، محمد حسین بن محمدمؤمن»: the nisba first, as an index writes a name
+    if len(c['scribes']) == 1 and re.fullmatch(r'\S+ی', last['name']) and not last['portion'] and not lead.group(0) and not note:
+        last['name'] += '، ' + body
+        last['hedge'] = last['hedge'] or hedge
+        last['portion'] = portion
+        if remark:
+            last['note'] = remark
+        return True
+    # the copy's next scribe: one of a list of dated or parted hands, a hand named with its part, or a name after «و»
+    listed = len(c['scribes']) > 1 or last['portion'] or re.search(r'\sدر\s+\d{3,4}', last['name']) or last.get('note')
+    if remark or not (listed or lead.group(0) or note or portion):
+        return False
+    new = {'name': body, 'hedge': hedge, 'portion': portion}
+    if note:
+        new['note'] = note
+    c['scribes'].append(new)
     return True
 
 
@@ -1027,7 +1122,7 @@ def parse_physical(c, text: str):
                 continue
             # unlabelled chunk: continuation of the previous field, or a note
             v, h = split_hedge(ch)
-            if last == 'scribe' and c['scribes'] and not re.search(r'[\d:]', ch) and not h and (
+            if last == 'scribe' and c['scribes'] and not re.search(r'[\d:]', ch) and not h and not scribe_list(c) and (
                     len(ch.split()) <= 4 or ('،' not in c['scribes'][-1]['name'] and len(ch.split()) <= 7)):
                 c['scribes'][-1]['name'] += '، ' + ch
                 continue
@@ -1073,6 +1168,11 @@ def parse_physical(c, text: str):
             at = last or (carry if ci == 0 else None)
             if at and continues(ch) == at and join_field(c, at, ch):
                 last = at
+                continue
+            # …and one read as the rest of the scribe, after a scribe or the date of one, is his or the next hand's
+            if c['scribes'] and ((last in ('scribe', 'date') and continued_field(ch) == 'scribe')
+                                 or (last == 'scribe' and scribe_list(c))) and join_scribe(c, ch):
+                last = 'scribe'
                 continue
             c['notes'].append({'type': 'remark', 'text': ch, 'hedge': h})
             last = None
