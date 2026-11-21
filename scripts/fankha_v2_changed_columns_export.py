@@ -5,7 +5,7 @@
 The copies whose v2 value differs between two parser outputs (--before DIR, and json/fankha_v2 now) are matched to the
 site's copies by their text before the change. A column is written where the site holds what v2 held before (letters,
 digits and «×» alike; empty where v2 had none): the paper cut where the binding ran on («اصفهانی جلد تیماج مشکی» →
-«اصفهانی»), the binding, the date, the place, the size, the leaves and the lines it now reads, and «بی‌کا» where the
+«اصفهانی»), the binding, the date, the place, the size, the leaves and the lines it now reads (a count of pages is left: the site sets it from the text), and «بی‌کا» where the
 copy has no scribe's name. A scribe's name is left for its own step: a fuller name is another person's record.
 Output: a decision file for `fahares:rebuild-copies`, which leaves a column a reviewed correction protects.
 
@@ -35,7 +35,6 @@ TEXT = {
 }
 COUNTS = {
     'folios': lambda c: count_of(c['folios'], '(?:گ|برگ)'),
-    'pages': lambda c: count_of(c['folios'], 'ص'),
     'lines': lambda c: lead_int(c['lines']),
 }
 
