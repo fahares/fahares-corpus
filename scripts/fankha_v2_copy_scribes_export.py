@@ -9,7 +9,7 @@ his date in a list) and the scribes after him, each with a note of his part, his
 Left out: a copy whose text the site holds twice or not at all, and one whose first scribe became another person's
 name. Output: a file for `fahares:add-copy-scribes`, which writes only where the copy still has that one scribe.
 
-Usage: fankha_v2_copy_scribes_export.py --before scratch/fankha_v2_250 --out FILE [--db fahares_prod]
+Usage: fankha_v2_copy_scribes_export.py --before scratch/fankha_v2_250 --out FILE [--step 14.N] [--db fahares_prod]
 """
 import argparse
 import glob
@@ -65,6 +65,7 @@ def main():
     ap.add_argument('--before', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
+    ap.add_argument('--step', default='14.294')
     args = ap.parse_args()
     changed = defaultdict(list)
     for f in sorted(glob.glob(str(ROOT / 'json/fankha_v2/*.json'))):
@@ -72,7 +73,7 @@ def main():
         was = json.load(open(os.path.join(args.before, os.path.basename(f)), encoding='utf-8'))['works']
         for wn, wb in zip(now, was):
             for cn, cb in zip(wn['copies'], wb['copies']):
-                if cn['scribes'] != cb['scribes'] and cb['scribes']:
+                if cn['scribes'] != cb['scribes'] and cn['scribes']:
                     changed[rkey(cn['raw_text'])].append((cb['scribes'], cn['scribes']))
     site = defaultdict(list)
     for r in query(args.db, "select json_object('id', id, 'raw', raw_text, 'shelfmark', shelfmark) from manuscripts where catalog_id = 1"):
@@ -85,6 +86,8 @@ def main():
             counts['left: not one copy with this text on the site'] += 1
             continue
         was, now = pairs[0]
+        # a copy that had no scribe gets its first («کا نعمت الله بن محمد محسن», the label now marked in the text)
+        was = was or [{'name': ''}]
         if len(was) != 1 or not now[0]['name'].startswith(was[0]['name'].split('،')[0]):
             counts['left: the first scribe is another name, or there were several'] += 1
             continue
@@ -111,7 +114,7 @@ def main():
         counts['first scribe: a fuller name'] += first['from'] != first['to']
         counts['first scribe: a note'] += 'note' in first
     records.sort(key=lambda r: r['id'])
-    src = f"scribes parser v2.6.0 newly reads (before: {args.before}), {date.today()}; fahares step 14.294"
+    src = f"scribes parser v2.6.0 newly reads (before: {args.before}), {date.today()}; fahares step {args.step}"
     json.dump({'source': src, 'records': records}, open(args.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(dict(counts), file=sys.stderr)
 

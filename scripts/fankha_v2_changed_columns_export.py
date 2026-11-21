@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
-from fankha_v2_db_compare import query, rkey, count_of, lead_int  # noqa: E402
+from fankha_v2_db_compare import query, rkey, count_of, lead_int, ie_text  # noqa: E402
 from fankha_v2_fill_columns_export import site, tight  # noqa: E402
 
 TEXT = {
@@ -32,6 +32,8 @@ TEXT = {
     'paper': lambda c: c['paper'],
     'binding': lambda c: c['binding'],
     'dimensions': lambda c: c['dimensions'],
+    'incipit_text': lambda c: ie_text(c['incipit']),
+    'explicit_text': lambda c: ie_text(c['explicit']),
 }
 COUNTS = {
     'folios': lambda c: count_of(c['folios'], '(?:گ|برگ)'),
