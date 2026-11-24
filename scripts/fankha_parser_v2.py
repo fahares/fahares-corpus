@@ -31,7 +31,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.7.0'
+PARSER_VERSION = '2.8.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -519,7 +519,8 @@ PHYS_LABEL = (r'(?:خط\s*:|کا\s*:|بی[‌ ]?کا\b|تا\s*:|بی[‌ ]?تا\
 PHYS_GROUP_START = re.compile(r'(?:^|؛\s*)(?=' + PHYS_LABEL + r')|^(?=کاتب\s*:)')
 # labels printed without their mark (2.4.0): «خط تحریری، بی‌کا، …» and «جلد دوم؛ کاتب: …، تا: …» open the copy's own line
 # too, the second only where no original copy was named before it
-PHYS_GROUP_LOOSE = re.compile(r'(?:^|؛\s*)(?=خط\s+[^،؛:]{2,25}،\s*(?:بی[‌ ]?کا|کا\s*:|کاتب\s*[:=])|کاتب\s*:\s*[^،؛]{2,60}،\s*(?:تا\s*:|بی[‌ ]?تا))')
+PHYS_GROUP_LOOSE = re.compile(r'(?:^|؛\s*)(?=خط\s+[^،؛:]{2,25}،\s*(?:بی[‌ ]?کا|کا\s*:|کاتب\s*[:=])|کاتب\s*:\s*[^،؛]{2,60}،\s*(?:تا\s*:|بی[‌ ]?تا)'
+                              r'|کا\s*=\s*[^،؛]{2,40}،\s*(?:تا\s*:|بی[‌ ]?تا))')
 ORIG_RE = re.compile(r'^(?:نسخه\s+اصل[یی]?|اصل\s+نسخه)\s*:\s*(?P<v>.*)$')
 # the label inside a line: after a sentence («… در 627. نسخه اصل: …»), after «؛» in the physical description, or after
 # «برابر» of «آغاز و انجام: برابر», or glued to «است» by the OCR («نوشته استنسخه اصل:») (fahares step 14.141); not «متن اصل نسخه:», «آغاز: اصل نسخه:», «پایان نسخه اصل:» or «با نسخه اصل:» (collated with it), which quote or compare the text
@@ -1021,7 +1022,8 @@ def parse_physical(c, text: str):
                 log_fix('chunk', ch, 'خط: ' + m.group('v').strip())
                 last = 'script'
                 continue
-            m = re.match(r'^(?:کا|کاتب)\s*:\s*(?P<v>.*)$', ch) or re.match(r'^(?P<v>کاتب\s*=\s*.*)$', ch)
+            m = re.match(r'^(?:کا|کاتب)\s*:\s*(?P<v>.*)$', ch) or re.match(r'^(?P<v>کاتب\s*=\s*.*)$', ch) \
+                or ((km := re.match(r'^کا\s*=\s*(?P<v>.*)$', ch)) and re.match(r'^(?P<v>.*)$', 'کاتب = ' + km.group('v')))
             if m:
                 parse_scribe(c, m.group('v'))
                 last = 'scribe'
@@ -1224,6 +1226,8 @@ def parse_physical(c, text: str):
             last = None
 
 
+IE_BROKEN_HEAD = re.compile(r'^آغاز[^:؛]{0,25}:\s*(?!برابر)\S')
+IE_BROKEN_TAIL = re.compile(r'؛\s*انجام(?:\s+(?:نسخه|کتاب|متن))?\s*:?\s+\S')
 IE_BOTH_BENT = re.compile(r'^(?:آغاز|آغا|آخا)\s+و\s+انجامک?\s*:?\s*(?=برابر)')
 IE_BARE = re.compile(r'^(?P<s>آغاز|انجام)\s+(?P<v>[^:]{12,})$')
 # what a description of the copy's state says, not the text itself: «آغاز در دیباچه و انجام در فصل 118 افتاده»
@@ -1303,6 +1307,13 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
             p = merged[-1]
             merged[-1] = Line(p.no, p.text + ' ' + l.text, p.page_start, l.page_end, None)
             continue
+        # an incipit broken over two lines: the first has «آغاز:» and no explicit yet, the second runs on to «؛ انجام …»
+        # («آغاز: … تبه روزگار ...⏎شرح: شکر سپاس …؛ انجام: و آنها را …») (2.8.0)
+        if merged and IE_BROKEN_HEAD.match(merged[-1].text) and not IE_SPLIT.search(merged[-1].text) and not BARE_EXPLICIT.search(merged[-1].text) \
+                and IE_BROKEN_TAIL.search(l.text) and not IE_START.match(l.text) and not PHYS_GROUP_START.match(fa(l.text)):
+            p = merged[-1]
+            merged[-1] = Line(p.no, p.text + ' ' + l.text, p.page_start, l.page_end, None)
+            continue
         merged.append(l)
     rest = merged
     for l in rest:
@@ -1368,7 +1379,10 @@ def parse_line_body(c, t: str, hetero: bool, tag_at: Optional[int]):
     for gm in PHYS_GROUP_START.finditer(fa(t)):            # «كا:» is «کا:» (fa keeps every offset)
         m = gm
         break
-    if m is None and (gm := PHYS_GROUP_LOOSE.search(fa(t))) and not re.search(r'نسخه\s+اصل|اصل\s+نسخه', t[:gm.start()]):
+    # «…؛ کاتب: اسمعیل بن مجد الدین، تا: ذیحجه 1036ق؛ افتادگی: آغاز»: the scribe's group opens the copy's own line
+    # before the label that follows it (2.8.0), as it does where no label follows (2.4.0)
+    if (gm := PHYS_GROUP_LOOSE.search(fa(t))) and (m is None or gm.start() < m.start()) \
+            and not re.search(r'نسخه\s+اصل|اصل\s+نسخه', t[:gm.start()]):
         m = gm
     if m is None:
         om = ORIG_RE.match(t)
