@@ -29368,7 +29368,7 @@
    "found_id": 24905,
    "confidence": "high",
    "twins": [],
-   "why": "The record of the whole correspondence, by its own title; the first note of Dashtaki has no record of its own",
+   "why": "The record of the whole correspondence, by its own title",
    "round": 3,
    "row": 6921
   },
@@ -29800,6 +29800,32 @@
    "why": "Of three divans of Nawai, the record of Nawadir al-Shabab says it has a Turkish preface in prose by the author",
    "round": 3,
    "row": 7929
+  },
+  {
+   "work_id": 24900,
+   "side": "children",
+   "entry": "حل شبهة جذر الاصم (الاولی) = حل شبهة ابن کمونة (الاولی) = الفائدة الاولى من الامير صدرالدین فی جذر الاصم = نامه اول به دوانی در موضوع جذر اصم؛ دشتکی شیرازی، میر صدرالدین محمد (903-828)",
+   "kind": "several works of the title and author",
+   "verdict": "match",
+   "found_id": 24901,
+   "confidence": "high",
+   "twins": [],
+   "why": "The first note of Dashtaki: the record marked (الاولى) with these four titles; its author is misread in the record, so the rules did not see it",
+   "round": 3,
+   "row": 6920
+  },
+  {
+   "work_id": 24902,
+   "side": "related",
+   "entry": "حل شبهة جذر الاصم (الاولی) = حل شبهة ابن كمونة (الاولی) = الفائدة الاولى من الامير صدرالدين في جذر الاصم = نامه اول به دوانی در موضوع جذر اصم؛ دشتکی شیرازی، میر صدرالدین محمد (828-903)",
+   "kind": "several works of the title and author",
+   "verdict": "match",
+   "found_id": 24901,
+   "confidence": "high",
+   "twins": [],
+   "why": "The first note of Dashtaki: the record marked (الاولى) with these four titles; its author is misread in the record, so the rules did not see it",
+   "round": 3,
+   "row": 6927
   }
  ]
 }
