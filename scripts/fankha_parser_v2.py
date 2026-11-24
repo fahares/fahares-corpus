@@ -31,7 +31,7 @@ from fankha_parser import (  # noqa: E402
     extract_author_and_date, is_author_line, is_bib_citation, split_bib_citations, is_catalog_citation,
 )
 
-PARSER_VERSION = '2.8.0'
+PARSER_VERSION = '2.9.0'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = re.compile(r'<!--\s*page:\s*(\d+)\s*-->')
 INVISIBLE = re.compile(r'[‎‏‪-‮﻿]')
@@ -1226,6 +1226,7 @@ def parse_physical(c, text: str):
             last = None
 
 
+IE_IN_BODY = re.compile(r'^(?P<s>آغاز|انجام|پایان|آخر)(?:\s+(?:نسخه|موجود|کتاب|متن))?\s*:\s*(?P<v>\S.*)$')
 IE_BROKEN_HEAD = re.compile(r'^آغاز[^:؛]{0,25}:\s*(?!برابر)\S')
 IE_BROKEN_TAIL = re.compile(r'؛\s*انجام(?:\s+(?:نسخه|کتاب|متن))?\s*:?\s+\S')
 IE_BOTH_BENT = re.compile(r'^(?:آغاز|آغا|آخا)\s+و\s+انجامک?\s*:?\s*(?=برابر)')
@@ -1347,6 +1348,22 @@ def parse_copy(lines: List[Line], ordinal: int, hetero: bool) -> Dict[str, Any]:
     for n in c['notes']:
         if n['type'] == 'remark':
             t = fa(n['text'])
+            # «…، آغاز موجود: «کوشکها بر سر آنها …»، انجام: «نام آن ستونها است …»؛ واقف: …»: the copy's incipit or
+            # explicit given inside its description, where the copy has none of its own (2.9.0). One more beside
+            # «آغاز و انجام: برابر» is of a part or an annex, and stays a note.
+            im = IE_IN_BODY.match(n['text'])
+            if im:
+                side = 'incipit' if im.group('s') == 'آغاز' else 'explicit'
+                value = im.group('v').strip(' ،؛.')
+                # one quotation and nothing after it, or plain text with no second label: «…»، انجام: «…» and «…» (دنباله
+                # بحث را کاتب ننوشته) are the parts of a collection or carry a remark, and stay notes
+                if value.startswith('«'):
+                    value = value[1:-1].strip() if value.endswith('»') and value.count('«') == 1 and value.count('»') == 1 else ''
+                elif re.search(r'[«»]|(?:آغاز|انجام|پایان)\s*\d*\s*:|^برابر', value):
+                    value = ''
+                if c[side] is None and len(value) >= 8 and not IE_BARE_PROSE.search(value[:40]):
+                    c[side] = {'text': value, 'same_as_work': False}
+                    continue
             am = ACQ_RE.match(t)
             if am:
                 c['acquisition'].append(n['text'])
