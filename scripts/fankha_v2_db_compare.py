@@ -13,6 +13,9 @@ correction in the audit log (`protected`, the guard of step 11.6).
 
     python3 scripts/fankha_v2_db_compare.py [--out DIR] [--volumes 1 2 …] [--db fahares_prod]
 
+The two texts of related works (`related_work`, `commentaries_and_glosses`) are no columns of the site's works since
+fahares step 14.285: they are rows of work_text_relations, and are not compared here.
+
 Writes DIR/diffs.jsonl (every difference), DIR/other_work.jsonl (copies the site keeps under another work than v2),
 DIR/report.json (counts and samples) and DIR/report.md.
 """
@@ -43,17 +46,14 @@ WORK_FIELDS = {
     'explicit_text': lambda w: w['explicit'],
     'description': lambda w: w['description'],
     'dedication': lambda w: w['dedication'],
-    'related_work': lambda w: w['related_work'],
     'print_info': lambda w: w['print_info'],
     'bibliography': lambda w: w['bibliography'],
-    'commentaries_and_glosses': lambda w: w['commentaries'],
 }
 V1_WORK = {'clean_title': 'clean_title', 'author_name': 'author_name', 'transliteration': 'transliteration',
            'composition_date_raw': 'composition_date', 'composition_place': 'composition_place',
            'work_form': 'work_form', 'incipit_text': 'incipit', 'explicit_text': 'explicit',
-           'description': 'description', 'dedication': 'dedication', 'related_work': 'related_work',
-           'print_info': 'print_info', 'bibliography': 'bibliography',
-           'commentaries_and_glosses': 'commentaries_and_glosses'}
+           'description': 'description', 'dedication': 'dedication',
+           'print_info': 'print_info', 'bibliography': 'bibliography'}
 
 
 def lead_int(s):
@@ -451,7 +451,7 @@ def main():
             for field, get in WORK_FIELDS.items():
                 v1_val = v1.get(V1_WORK[field]) if v1 else MISSING
                 db_val = row.get(field)
-                if field in ('bibliography', 'commentaries_and_glosses') and isinstance(db_val, str):
+                if field == 'bibliography' and isinstance(db_val, str):
                     db_val = json.loads(db_val or 'null')
                 record('Work', row['id'], label, field, db_val, v1_val, get(w), w.get('raw_text'), wrest)
             for k, get in NEW_WORK.items():

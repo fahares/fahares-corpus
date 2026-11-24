@@ -823,10 +823,11 @@ def continues(ch: str) -> Optional[str]:
         CONTINUES = {}
         path = os.path.join(ROOT, 'reconciliations', 'fankha_note_types.jsonl')
         if os.path.exists(path):
-            for line in open(path, encoding='utf-8'):
-                if '"c"' in line:
-                    r = json.loads(line)
-                    CONTINUES[r['id']] = r['c']
+            with open(path, encoding='utf-8') as f:
+                for line in f:
+                    if '"c"' in line:
+                        r = json.loads(line)
+                        CONTINUES[r['id']] = r['c']
     return CONT_LAST.get(CONTINUES.get(hashlib.sha1(ch.encode()).hexdigest()[:12]))
 
 
