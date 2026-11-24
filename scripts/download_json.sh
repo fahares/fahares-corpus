@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# Configuration
-RELEASE_TAG="v1.1.6"
+# Configuration: `./scripts/download_json.sh` fetches parser v1's output (json/fankha/), `./scripts/download_json.sh v2`
+# parser v2's (json/fankha_v2/, another schema)
+if [ "${1:-}" = "v2" ]; then
+    RELEASE_TAG="v2.9.0"
+else
+    RELEASE_TAG="v1.1.6"
+fi
 REPO="fahares/fahares-corpus"
 ARCHIVE_NAME="fankha_json_${RELEASE_TAG}.tar.gz"
 DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ARCHIVE_NAME}"
