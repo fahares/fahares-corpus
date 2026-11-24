@@ -38,6 +38,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
     ap.add_argument('--db', default='fahares_prod')
+    ap.add_argument('--empty', action='store_true', help="also a matched copy with no note left, as an empty list (fahares:import-copy-notes then removes its rows)")
     args = ap.parse_args()
     types = {r['id']: r for r in map(json.loads, open(ROOT / 'reconciliations/fankha_note_types.jsonl', encoding='utf-8'))}
     v2 = defaultdict(list)
@@ -100,7 +101,7 @@ def main():
                         continue
                     notes.append({'type': 'other', 'text': piece, 'typed_by': 'site'})
                     held += ' ' + lp
-            if not notes:
+            if not notes and not args.empty:
                 continue
             raw = c['raw_text']
             notes = [n for _, _, n in sorted(((raw.find(n['text']) if n['text'] in raw else len(raw)), i, n) for i, n in enumerate(notes))]
