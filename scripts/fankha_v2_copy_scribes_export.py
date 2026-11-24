@@ -105,7 +105,7 @@ def main():
         if 'note' in first:
             first['note'] = first['note'].replace(':،', '،').rstrip(' :')
         # a first name that still holds a part, a date or a second hand is left for a reviewer
-        if re.search(r'\d|:|به\s+خط|ندارد', first['to']) or (not scribes and first['to'] == first['from'] and 'note' not in first):
+        if first['to'].startswith('=') or re.search(r'\d|:|به\s+خط|ندارد', first['to']) or (not scribes and first['to'] == first['from'] and 'note' not in first):
             counts['left: no scribe to add, or a first name that is not a name alone'] += 1
             continue
         records.append({'id': site[k][0]['id'], 'shelfmark': site[k][0]['shelfmark'], 'first': first, 'scribes': scribes})
