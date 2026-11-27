@@ -53,6 +53,7 @@ class Manuscript:
     is_bika: bool = False
     is_bita: bool = False
     is_autograph: bool = False
+    autograph_hedge: Optional[str] = None
     copy_date_raw: Optional[str] = None
     copy_place: Optional[str] = None
     script: Optional[str] = None
@@ -1518,7 +1519,15 @@ class FankhaParser:
                     extracted_spans.append(full_comm_span)
 
         # 13. Codicological labels
-        SCRIPT_STOP = r'(?:[؛\n\[]|،\s*(?:کا:|کاتب:|محرر:|تا:|جا:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر)))'
+        # Also a full stop, or a «،» before five words or more, that is followed by no script word: the copy's description
+        # that the catalogue wrote after the script (fahares step 14.434, backlog item 52). «خط: پهلوی، اشعار چهار ستونی
+        # فارسی ثبت شده …» is «پهلوی»; «خط: پهلوی، دین دبیره، فارسی. دستورهای قرائت …» is «پهلوی، دین دبیره، فارسی»;
+        # «خط: نستعلیق. آیات نسخ معرب» stays whole. The site's fahares:rebuild-scripts has the same stops.
+        SCRIPT_WORDS = (r'نسخ|نستعلیق|شکسته|تعلیق|ثلث|رقاع|رقعه|رقعی|کوفی|ریحان|محقق|توقیع|غبار|دیوانی|سیاق|مغربی|بهار|تحریری|تایپی|لاتین'
+                        r'|پهلوی|ارمنی|عبری|سریانی|گرجی|اویغوری|دیونا|اوستایی|سنسکریت|چاپی|سنگی|خط|کتابت|قلم')
+        SCRIPT_STOP = (r'(?:[؛\n\[]|،\s*(?:کا:|کاتب:|محرر:|تا:|جا:|کاغذ:|جلد:|قطع:|ابعاد|اندازه|مصحح|مجدول|مذهب|مصور|رکابه‌دار|\d+[\d\s\/\-–\.]*(?:ص|صص|گ|برگ|ورق|صفحه|سطر)|مختلف(?:[‌\s]السطور|[‌\s]السطر))'
+                       r'|(?<!\d)\.\s+(?![^،؛\n\[]*(?:' + SCRIPT_WORDS + r'))(?=\D)'
+                       r'|،\s*(?![^،؛\n\[]*(?:' + SCRIPT_WORDS + r'))(?=(?:[^\s،؛\n\[]+\s+){4}[^\s،؛\n\[]+))')
         script_m = re.search(r'(?:^|[؛،\.\n])\s*(خط:\s*[^؛\n\[]+?)(?=' + SCRIPT_STOP + r'|$)', rem_text)
         if script_m:
             full_script_span = script_m.group(1).strip()
@@ -1543,10 +1552,17 @@ class FankhaParser:
             if scribe_m:
                 s_val = scribe_m.group(1).strip()
                 extracted_spans.append(scribe_m.group(0))
-                if re.search(r'^(?:(?:کاتب|محرر)\s*=\s*)?مؤلف(?:\s*\(گویا\))?$', s_val):
+                # «کاتب = مؤلف», «= مؤلف (احتمالاً)», «= مؤلف ؟», «= مؤلف، 1312ش»: an autograph, with the catalogue's doubt, and a
+                # date glued to it becomes the copy date (fahares step 14.434, backlog item 52)
+                auto_m = re.search(r'^(?:(?:(?:کاتب|محرر)\s*)?=\s*)?مؤلف\s*(?:\((?P<h>گویا|احتمالاً|احتمالا|شاید|ظاهراً|ظاهرا|؟)\)|(?P<q>؟))?'
+                                   r'(?:\s*،?\s*(?:تا:?\s*)?(?P<date>[^،]*\d[^،]*))?$', s_val)
+                if auto_m and (auto_m.group('date') is None or s_val.lstrip().startswith(('=', 'کاتب', 'محرر'))):
                     ms.is_autograph = True
+                    ms.autograph_hedge = auto_m.group('h') or auto_m.group('q')
                     ms.scribe = None
                     ms.scribe_name = None
+                    if auto_m.group('date') and not ms.copy_date_raw:
+                        ms.copy_date_raw = auto_m.group('date').strip()
                 else:
                     ms.scribe = s_val
                     ms.scribe_name = s_val
