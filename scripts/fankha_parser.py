@@ -1521,7 +1521,7 @@ class FankhaParser:
         # 13. Codicological labels
         # Also a full stop, or a «،» before five words or more, that is followed by no script word: the copy's description
         # that the catalogue wrote after the script (fahares step 14.434, backlog item 52). «خط: پهلوی، اشعار چهار ستونی
-        # فارسی ثبت شده …» is «پهلوی»; «خط: پهلوی، دین دبیره، فارسی. دستورهای قرائت …» is «پهلوی، دین دبیره، فارسی»;
+        # فارسی ثبت شده …» is «پهلوی»; «خط: نستعلیق خوش. دستورهای قرائت با جوهر قرمز» is «نستعلیق خوش»;
         # «خط: نستعلیق. آیات نسخ معرب» stays whole. The site's fahares:rebuild-scripts has the same stops.
         SCRIPT_WORDS = (r'نسخ|نستعلیق|شکسته|تعلیق|ثلث|رقاع|رقعه|رقعی|کوفی|ریحان|محقق|توقیع|غبار|دیوانی|سیاق|مغربی|بهار|تحریری|تایپی|لاتین'
                         r'|پهلوی|ارمنی|عبری|سریانی|گرجی|اویغوری|دیونا|اوستایی|سنسکریت|چاپی|سنگی|خط|کتابت|قلم')
