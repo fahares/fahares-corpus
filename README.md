@@ -40,7 +40,7 @@
 | `text/fankha/` | متن پیراستۀ جلدها، `fankha_vol_01.txt` تا `fankha_vol_34.txt` |
 | `scripts/fankha_parser.py` | پارسر یک جلد (پایتون، بی وابستگی بیرونی) |
 | `scripts/parse_all_volumes.py` | اجرای موازی پارسر روی همۀ جلدها |
-| `scripts/fankha_parser_v2.py` | نگارش دوم پارسر، در دست کار (پایین را ببینید) |
+| `scripts/fankha_parser_v2.py` | نگارش دوم پارسر، که خروجی ریلیزهای v2 را می‌سازد (پایین را ببینید) |
 | `scripts/` (دیگر فایل‌ها) | ممیزی متن، و اسکریپت‌هایی که فایل تصمیم برای اصلاح دادۀ سایت می‌سازند |
 | `tests/` | آزمون‌های پارسر و نمونه‌های طلایی (`tests/gold/`) |
 | `catalogs/` | فهرست منابع مقدمۀ جلد اول فنخا و راهنمای رموز آن ([راهنما](catalogs/README.md)) |
@@ -100,7 +100,8 @@ mkdir -p json
 curl -L https://github.com/fahares/fahares-corpus/releases/download/v2.9.0/fankha_json_v2.9.0.tar.gz | tar -xz -C json/
 ```
 
-خروجی در `json/fankha_v2/fankha_vol_NN.json` است. شمارها در نگارش v2.9.0:
+خروجی در `json/fankha_v2/fankha_vol_NN.json` است. متن جلدها در git ممکن است از متن آخرین ریلیز تازه‌تر باشد؛
+`text_commit` هر فایل نشان می‌دهد از کدام کامیت متن ساخته شده است. شمارها در نگارش v2.9.0:
 
 | | شمار |
 | :--- | ---: |
