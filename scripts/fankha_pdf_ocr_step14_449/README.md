@@ -11,3 +11,4 @@ These scripts were run once from `fahares-sources/fankha/pdf-check/`; their path
 6. `apply.py --corpus text/fankha --write`: replaces the PRINT words, but not on heading lines (●) and not where the PDF drops an alef of «اا».
 
 The outcome is in `reconciliations/fankha_*_step14_449.tsv`.
+7. `site_patches.py` (step 14.451): finds each fix in the site's text fields (a copy of the production database read as JSON lines) and writes the decision file for `fahares:patch-text-words`. A fix that reaches an author's or scribe's name is only listed.
